@@ -1,16 +1,23 @@
 
 
-composable("components.Introspective_isAssigned", function (require, global, environment) {
+composable("components.Introspective_isAssigned", function (require, global, internalBaseEnvironment) {
 
 
   "use strict";
+
+
+  /*
+   *  all additional functionality this module needs
+   *  is covered already by the [internalBaseEnvironment]
+   *  of the "composable :: core"
+   */
 
 
   var
     Trait, // the "Introspective_isAssigned" Trait Module.
 
 
-    isString   = environment.introspective.isString
+    isString   = internalBaseEnvironment.introspective.isString
   ;
 
 
@@ -26,9 +33,10 @@ composable("components.Introspective_isAssigned", function (require, global, env
      *  >> Introspective.call(global.Object.prototype); <<
      *  then enriches the global Objects prototype by [respondTo].
      */
-    this.isAssigned = function (propertyName) {
+    this.isAssigned = function (key/*propertyName*/) { // @TODO - merge the final change into other branches of this type detection module.
 
-      return (isString(propertyName) && (propertyName in this));
+      return (isString(key) && (key in this));
+    //return (isString(key) && (key.trim() in this));
     };
   };
 

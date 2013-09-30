@@ -1,66 +1,78 @@
 
 
-composable("components.Introspective_isFunction_isCallable", function (require, global, environment) {
+composable("components.Introspective_isFunction_isCallable", function (require, global, internalBaseEnvironment) {
 
 
-  "use strict";
+  "use strict"; // @TODO - merge the final change into other branches of this type detection module.
 
 
   var
     Trait, // the "Introspective_isFunction_isCallable" Trait Module.
 
 
-    Function  = global.Function,
+  //Function  = global.Function,
+  //
+  //functionPrototype = Function.prototype,
+  //expose_type_signature = functionPrototype.toString, // see @COMMEND beneath.
 
-    functionPrototype = Function.prototype,
-
-
-    getCallability = function (type) {
-      var callability;
+    testCallability = function (type) {
+      var callability = true;
       try {
         type();
-        callability = true;
-      //functionPrototype.call.call(type);    // merciless.
+      //functionPrototype.call.call(type);      // merciless.
       } catch (exc) {
-        try {                                 // forgiving.
-          functionPrototype.call.call(type);  //
-          callability = true;                 //
-        } catch (exc) {                       //
-          callability = false;
-        }
+        callability = false;
       }
       return callability;
-    },
-    respondsToFunction = function (type) {  // due to firefox' implementations of [[Node]], [[Element]], [[HTMLElement]], ...
-      var validation;                       // ... that all pass the [isFunction] test, even though none of them is callable.
+    }/*,
+    respondsAsFunctionType = function (type) {  // due to firefox' implementations of [[Node]], [[Element]], [[HTMLElement]], ...
+      var validation = true;                    // ... that all pass the [isFunction] test, even though none of them is callable.
       try {
-        functionPrototype.toString.call(type);
-        validation = true;
+        expose_type_signature.call(type);
       } catch (exc) {
         validation = false;
       }
       return validation;
-    },
+    }*/,
 
-  // @TODO - think about how to categorize and how to deal with non callable objects that pretend to be real functions.
+  // @COMMEND - was @TODO - think about how to categorize and how to deal with non callable objects that pretend to be real functions.
+  //
+  // also check back with the so far three iterations of the jsperf test [http://jsperf.com/iscallable-isfunction-isfunctiontype/3]
+
+    isCallable = function (type) {
+      return (type ? testCallability(type) : !!type);
+    },
     isFunction = function (type) {
       /*
-       *  - x-frame-safe and also filters e.g. [[RegExp]] implementation of older mozilla's
-       *    as well as e.g. modern browser implementations of [[Element]], [[Node]] and of
-       *    related DOM elements that claim to be functional but are not at all callable.
+       *  - x-frame-safe and also filters e.g. [[RegExp]] implementations of ancient mozilla's
+       *    as well as e.g. some modern browser implementations of [[Element]], [[Node]] and
+       *    related DOM Element Classes that claim to be functions but are not callable at all.
+       *
+       *  - NOTE: all firefox and chrome based implementations of [[Element]], [[Node]] and
+       *          related DOM Element Classes do pass this otherwise very reliable [isFunction]
+       *          check even though none of those implementations can be called/invoked.
        */
       return ((typeof type == "function") && (typeof type.call == "function") && (typeof type.apply == "function"));
-    },
-    isFunctional = function (type) {
-      /*
-       *  - there needs to be a last [respondsToFunction] check due to firefox' DOM Node Element implementations
-       *    that all pass the basic [isFunction] check even though none of those implementations is callable.
-       */
-      return (isFunction(type) && respondsToFunction(type));
-    },
-    isCallable = function (type) {
-      return (isFunctional(type) || getCallability(type));
     }
+
+//  isFunctionType = function (type) {
+//    /*
+//     *  - there needs to be a last [respondsAsFunctionType] check due to firefox' DOM Node Element implementations
+//     *    that all pass the basic [isFunction] check even though none of those implementations is callable.
+//     */
+//    return (isFunction(type) && respondsAsFunctionType(type));
+//  },
+//  isFunctionType = function (type) {
+//    /*
+//     *  - chrome implementations of [[Element]], [[Node]] and related DOM nodes still pass
+//     *    the [respondsAsFunctionType] filter of the commented version above - there needs
+//     *    to be a more radical solution that combines [isFunction] and [isCallable].
+//     */
+//    return (isFunction(type) && testCallability(type));
+//  },
+//  isCallable = function (type) {
+//    return (isFunctionType(type) || testCallability(type));
+//  }
   ;
 
 
@@ -81,11 +93,11 @@ composable("components.Introspective_isFunction_isCallable", function (require, 
      *  does enrich [introspective] independently of (and parallel to) any
      *  other existing implementations of [isFunction] / [isCallable].
      */
-    this.isFunction   = isFunction;
-    this.isCallable   = isCallable;
-  //this.isFunctional = isFunctional; // see @TODO above.
+    this.isCallable     = isCallable;
+    this.isFunction     = isFunction;
+  //this.isFunctionType = isFunctionType; // see @COMMEND above.
   };
-  Trait.apply(environment.introspective); // progressively build/enrich "composable"s internal [baseEnvironment] object.
+  Trait.apply(internalBaseEnvironment.introspective); // progressively build/enrich "composable"s internal [baseEnvironment] object.
 
 
   return Trait;
@@ -101,8 +113,8 @@ composable("components.Introspective_isFunction_isCallable", function (require, 
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          -   457 byte
-composable("components.Introspective_isFunction_isCallable",function(b,e,f){var g=e.Function.prototype,h=function(a){return"function"==typeof a&&"function"==typeof a.call&&"function"==typeof a.apply},j=function(a){var c;if(c=h(a)){var b;try{g.toString.call(a),b=!0}catch(e){b=!1}c=b}if(!c){var d;try{a(),d=!0}catch(f){try{g.call.call(a),d=!0}catch(j){d=!1}}c=d}return c};b=function(){this.isFunction=h;this.isCallable=j};b.apply(f.introspective);return b});
+- Simple          -   339 byte
+composable("components.Introspective_isFunction_isCallable",function(b,f,c){var d=function(a){if(a){var b=!0;try{a()}catch(c){b=!1}a=b}else a=!!a;return a},e=function(a){return"function"==typeof a&&"function"==typeof a.call&&"function"==typeof a.apply};b=function(){this.isCallable=d;this.isFunction=e};b.apply(c.introspective);return b});
 
 
 */

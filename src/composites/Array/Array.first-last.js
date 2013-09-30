@@ -1,10 +1,12 @@
 
 
-composable("", function (require, global/*, environment*/) {
+composable(/*"composites.Array_first_last"*/"", function (require, global/*, internalBaseEnvironment*/) {
 
   "use strict";
 
   require("components.Enumerable_first_last").call(global.Array.prototype);
+
+//return global.Array;
 
 });
 

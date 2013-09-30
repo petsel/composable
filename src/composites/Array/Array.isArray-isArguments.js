@@ -1,10 +1,12 @@
 
 
-composable("", function (require, global/*, environment*/) {
+composable(/*"composites.Array_isArray_isArguments"*/"", function (require, global/*, internalBaseEnvironment*/) {
 
   "use strict";
 
   require("components.Introspective_isArray_isArguments").call(global.Array);
+
+//return global.Array;
 
 });
 

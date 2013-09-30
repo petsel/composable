@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+  <head>
+    <meta charset="UTF-8">
+
+    <title>Jasmine Spec Runner</title>
+
+    <link rel="stylesheet" href="./src/lib/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="./src/jasmine-bootstrap.css" type="text/css">
+  </head>
+
+
+  <body>
+
+
+  <!-- load test candidate(s) -->
+  <!-- load test candidate(s) -->
+
+    <!-- composable :: core :: MANDATORY -->                                                                                  <!-- Core //-->
+    <script src="../../src/composable.js"></script>                                                                           <!-- Core //-->
+
+    <!-- composable :: core :: MANDATORY - heavily used core type detection methods -->                                       <!-- Core :: Introspection //-->
+    <script src="../../src/components/Introspective/Introspective.isFunction-isCallable.js"></script>                         <!-- Core :: Introspection //-->
+    <script src="../../src/components/Introspective/Introspective.isArray-isArguments.js"></script>                           <!-- Core :: Introspection //-->
+
+    <!-- composable :: core :: MANDATORY - so far most reliable [Enumerable.toArray] / [makeArray] implementation -->         <!-- Core :: Enumerable //-->
+    <script src="../../src/components/Enumerable/Enumerable.toArray.js"></script>                                             <!-- Core :: Enumerable //-->
+
+    <!-- composable :: core :: MANDATORY - internal base environment that gets passed into all modules -->                    <!-- Core :: Base Environment //-->
+    <script src="../../src/environment/environment.js"></script>                                                              <!-- Core :: Base Environment //-->
+
+
+
+    <!-- composable :: STRONGLY RECOMMENDED :: fundamental tools - reliable language core TYPE DETECTION BASE -->             <!-- Introspection //-->
+    <script src="../../src/components/Introspective/Introspective.typeDetection.core.js"></script>                            <!-- Introspection //-->
+    <script src="../../src/environment/environment.extended.introspective.core.js"></script>                                  <!-- Introspection //-->
+
+
+    <!-- composable :: NOT REALLY NECESSARY :: nice to have tools - testing for properties -->                                <!-- Introspection //-->
+    <script src="../../src/components/Introspective/Introspective.isAssigned.js"></script>                                    <!-- Introspection //-->
+    <script src="../../src/components/Introspective/Introspective.respondTo.js"></script>                                     <!-- Introspection //-->
+    <script src="../../src/composites/Object/Object.respondTo-isAssigned.js"></script>                                        <!-- Introspection //-->
+
+
+    <!-- composable :: RECOMMENDED for custom comparison :: elegant flexible customizable type comparison patterns base -->   <!-- Comparison //-->
+    <script src="../../src/components/Comparable/Comparable.js"></script>                                                     <!-- Comparison //-->
+
+
+    <!-- composable :: RECOMMENDED for better generic list handling :: useful additional enumerable behaviors -->             <!-- Enumerable //-->
+    <script src="../../src/components/Enumerable/Enumerable.first-last.js"></script>                                          <!-- Enumerable //-->
+    <script src="../../src/components/Enumerable/Enumerable.first-last-item.js"></script>                                     <!-- Enumerable //-->
+    <script src="../../src/components/Enumerable/Enumerable.first-last-item.list-wrapper.js"></script>                        <!-- Enumerable //-->
+    <script src="../../src/components/Enumerable/Enumerable.first-last-item.list-getter-shorthands.js"></script>              <!-- Enumerable //-->
+
+    <!-- composable :: RECOMMENDED for better handling of native Array's :: useful additional enumerable behaviors -->        <!-- Enumerable //-->
+    <script src="../../src/composites/Array/Array.isArray-isArguments.js"></script>                                           <!-- Enumerable //-->
+    <script src="../../src/composites/Array/Array.from.js"></script>                                                          <!-- Enumerable //-->
+    <script src="../../src/composites/Array/Array.first-last.js"></script>                                                    <!-- Enumerable //-->
+
+
+
+  <!-- load jasmine -->
+  <!-- load jasmine -->
+    <script src="../../jasmine-1.1.0.js"></script>
+    <script src="./src/jasmine-bootstrap.js"></script>
+
+
+
+  <!-- load your spec files -->
+  <!-- load your spec files -->
+
+    <!-- composable :: core :: MANDATORY -->                                                                                  <!-- Core //-->
+    <script src="../specs/composable.core.spec.js"></script>                                                                  <!-- Core //-->
+
+    <!-- composable :: core :: MANDATORY - heavily used core type detection methods -->                                       <!-- Core :: Introspection //-->
+    <script src="../specs/composable.components.Introspective_isFunction_isCallable.spec.js"></script>                        <!-- Core :: Introspection //-->
+    <script src="../specs/composable.components.Introspective_isArray_isArguments.spec.js"></script>                          <!-- Core :: Introspection //-->
+
+    <!-- composable :: core :: MANDATORY - internal base environment that gets passed into all modules -->                    <!-- Core :: Base Environment //-->
+    <script src="../specs/composable.environment.base.spec.js"></script>                                                      <!-- Core :: Base Environment //-->
+
+
+
+    <!-- composable :: STRONGLY RECOMMENDED :: fundamental tools - reliable language core TYPE DETECTION BASE -->             <!-- Introspection //-->
+    <script src="../specs/composable.environment.extended.introspective.core.spec.js"></script>                               <!-- Introspection //-->
+
+    <!-- composable :: NOT REALLY NECESSARY :: nice to have tools - testing for properties -->                                <!-- Introspection //-->
+    <script src="../specs/composable.components.Introspective_isAssigned.spec.js"></script>                                   <!-- Introspection //-->
+    <script src="../specs/composable.components.Introspective_respondTo.spec.js"></script>                                    <!-- Introspection //-->
+    <script src="../specs/composable.composites.Object_respondTo_isAssigned.spec.js"></script>                                <!-- Introspection //-->
+
+    <!-- composable :: RECOMMENDED for custom comparison :: elegant flexible customizable type comparison patterns base -->   <!-- Comparison //-->
+    <script src="../specs/composable.components.Comparable.spec.js"></script>                                                 <!-- Comparison //-->
+
+
+
+    <!-- composable :: core :: MANDATORY - so far most reliable [Enumerable.toArray] / [makeArray] implementation -->         <!-- Core :: Enumerable //-->
+    <script src="../specs/composable.components.Enumerable_toArray.spec.js"></script>                                         <!-- Core :: Enumerable //-->
+
+
+
+    <!-- composable :: RECOMMENDED for better generic list handling :: useful additional enumerable behaviors -->             <!-- Enumerable //-->
+    <script src="../specs/composable.components.Enumerable_first_last_item.spec.js"></script>                                 <!-- Enumerable //-->
+    <script src="../specs/composable.components.Enumerable_first_last_item_listWrapper.spec.js"></script>                     <!-- Enumerable //-->
+    <script src="../specs/composable.components.Enumerable_first_last_item_listGetterShorthands.spec.js"></script>            <!-- Enumerable //-->
+
+    <!-- composable :: RECOMMENDED for better handling of native Array's :: useful additional enumerable behaviors -->        <!-- Enumerable //-->
+    <script src="../specs/composable.composites.Array_isArray_isArguments.spec.js"></script>                                  <!-- Enumerable //-->
+    <script src="../specs/composable.composites.Array_from.spec.js"></script>                                                 <!-- Enumerable //-->
+    <script src="../specs/composable.composites.Array_first_last.spec.js"></script>                                           <!-- Enumerable //-->
+
+
+
+  <!-- run specs -->
+  <!-- run specs -->
+    <script>
+      jasmine.getEnv().addReporter(new jasmine.BootstrapReporter());
+      jasmine.getEnv().execute();
+    </script>
+
+
+  </body>
+</html>

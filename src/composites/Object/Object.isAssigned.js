@@ -1,6 +1,6 @@
 
 
-composable("composites.Object_isAssigned", function (require, global/*, environment*/) {
+composable("composites.Object_isAssigned", function (require, global/*, internalBaseEnvironment*/) {
 
   "use strict";
 
@@ -20,10 +20,6 @@ composable("composites.Object_isAssigned", function (require, global/*, environm
 
 - Simple          -   124 byte  - named module
 composable("composites.Object_isAssigned",function(a,b){a("components.Introspective_isAssigned").call(b.Object.prototype)});
-
-
-- Simple          -    96 byte  - anonymous module
-composable("",function(a,b){a("components.Introspective_isAssigned").call(b.Object.prototype)});
 
 
 */

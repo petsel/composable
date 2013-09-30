@@ -196,7 +196,6 @@
     noop = function () {},
 
     keys = Object.keys,
-    parseFloat = global.parseFloat,
 
 
     baseEnvironment = {
@@ -209,12 +208,16 @@
         noop                : noop
       },
       helpers : {
+      //makeArray           : makeArray,    // will soon be provided by     "components.Enumerable_toArray"
         compareTypes                    : compareTypes,
         createClassSignaturePattern     : createClassSignaturePattern,
         protectBehaviorFromInstantiation: protectBehaviorFromInstantiation
       },
       introspective : {
-        isFunction          : isFunction,
+        isFunction          : isFunction,   // will soon be overwritten by  "components.Introspective_isFunction_isCallable"
+      //isCallable          : isCallable,   // will soon be provided by     "components.Introspective_isFunction_isCallable"
+      //isArray             : isArray,      // will soon be provided by     "components.Introspective_isArray_isArguments"
+      //isArguments         : isArguments,  // will soon be provided by     "components.Introspective_isArray_isArguments"
         isString            : isString,
         baseValueOf         : baseValueOf,
         getClassSignature   : getClassSignature
@@ -292,12 +295,12 @@
 
     return keys(moduleIndex).length;
   };
-  module.require = require; // for development/debugging only.
+  module.require = require; // @TODO - do not forget to switch exposing and hiding according to development/debugging or production.
 
 
   (function () {
     /**
-     *  implementing the "Enumerable_first_last_item" Trait Module
+     *  implementing the "Enumerable_first_last_item" Trait Module.
      *
      *  ... that's accessor methods will work as shorthands on a
      *  list getter (method) they were applied to; thus saving a
@@ -307,8 +310,12 @@
      *
      *  >> all()         << is a list getter that returns a list/array.
      *  >> all().first() << will return the first item of a list/array if such a structure does respond to this method.
-     *  >> all.first()   << will return the first item of the very same list/array as of calling >> all() <<.
+     *  >> all.first()   << will return the first item of the very same list/array as of calling >> all().first() <<.
      */
+    var
+      parse_float = global.parseFloat,
+      math_floor  = global.Math.floor
+    ;
     this.first = function () {
 
       return (this()[0]);
@@ -320,9 +327,10 @@
     };
     this.item = function (idx) {
 
-      return (this()[parseFloat(idx, 10)]);
+      return (this()[math_floor(parse_float(idx, 10))]);
     };
-  }).call(module.all); // methods of the anonymous trait module get applied to the "composable"'s Core Module [module.all].
+  }).call(module.all);  // applying the [first], [last] and [item] shorthand functionality of the anonymous
+                        // Enumerable Trait onto the list getter method [all] of the "composable" Core Module.
 
 
   return (namespace[moduleName] = module);
@@ -338,16 +346,8 @@
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          - 1.803 byte  - straight forward featuring [require], [global] and [environment] as arguments of a module callback.
-(function(r,j){var b,c=this;b=c.Object;var e=b.prototype,k=c.Array.prototype,d=c.RegExp.prototype,s=c.String.prototype,t=e.toString,u=e.valueOf,v=d.compile,g=/(?:)/;""+g.compile("(?:)","")!==""+g&&(d.compile=function(){v.apply(this,arguments);return this});var e=function(a){return["^\\[object\\s+",a,"\\]$"].join("")},m=function(a){return t.call(a)},w=e("String"),n=function(a){return void 0===a||null===a?a:u.call(a).valueOf()},f=function(a){return"function"==typeof a&&"function"==typeof a.call&&"function"==typeof a.apply},l=function(a){return g.compile(w).test(m(a))},d=function(a,b){return new c.ReferenceError(["A valid implementation of ",a," is missing.\n\nPlease provide the basic shims of ES5. Have a look at e.g.\nhttps://github.com/kriskowal/es5-shim/blob/master/es5-shim.js",b].join(""))};if(!f(b.keys))throw d("[Object.keys]","#L542");if(!f(s.trim))throw d("[String.prototype.trim]","#L899");if(!f(k.indexOf))throw d("[Array.prototype.indexOf]","#L479");if(!f(k.forEach))throw d("[Array.prototype.forEach]","#L238");if(!f(k.reduce))throw d("[Array.prototype.reduce]","#L382");var p=b.keys,x=c.parseFloat,y={global:c,objects:{regX:g},methods:{noop:function(){}},helpers:{compareTypes:function(a,b,c){c=f(c)&&c||n;var d,e;return(d=c(a))>(e=c(b))&&1||d<e&&-1||(d===e?0:void 0)},createClassSignaturePattern:e,protectBehaviorFromInstantiation:function(a,c){if(c instanceof a)throw new TypeError("Traits and Mixins always need to be applied onto objects but never get instantiated.");}},introspective:{isFunction:f,isString:l,baseValueOf:n,getClassSignature:m}},h={},q=function(a){return h[l(a)&&a.trim()||""]};j=j||c;b=function(a,b){a=l(a)&&a.trim()||"";var d=f(b)&&b(q,c,y);if(d&&a)return h[a]=d};b.all=function(){return p(h)};b.all.size=function(){return p(h).length};b.require=q;(function(){this.first=function(){return this()[0]};this.last=function(){var a;return(a=this())[a.length-1]};this.item=function(a){return this()[x(a,10)]}}).call(b.all);return j[r]=b}).call(null,"composable");
-
-
-- Simple          - 2.010 byte  - featuring [include] as additional 4th argument of a module callback; relies on the implementation of [Function.modifiers.aop.base]
-(function(s,l){var c,d=this;c=d.Object;var f=c.prototype,h=d.Array.prototype,b=d.RegExp.prototype,t=d.String.prototype,u=f.toString,v=f.valueOf,w=h.slice,x=b.compile,j=/(?:)/;""+j.compile("(?:)","")!==""+j&&(b.compile=function(){x.apply(this,arguments);return this});var b=null,f=function(a){return["^\\[object\\s+",a,"\\]$"].join("")},p=function(a){return u.call(a)},y=f("String"),q=function(a){return v.call(a).valueOf()},e=function(a){return"function"==typeof a&&"function"==typeof a.call&&"function"==typeof a.apply},m=function(a){return j.compile(y).test(p(a))},b=function(a,c){return new d.ReferenceError(["A valid implementation of ",a," is missing.\n\nPlease provide the basic shims of ES5. Have a look at e.g.\nhttps://github.com/kriskowal/es5-shim/blob/master/es5-shim.js",c].join(""))};if(!e(c.keys))throw b("[Object.keys]","#L542");if(!e(t.trim))throw b("[String.prototype.trim]","#L899");if(!e(h.indexOf))throw b("[Array.prototype.indexOf]","#L479");if(!e(h.forEach))throw b("[Array.prototype.forEach]","#L238");if(!e(h.reduce))throw b("[Array.prototype.reduce]","#L382");var r=c.keys,z=d.parseFloat,A={objects:{global:d,regX:j},methods:{noop:function(){}},helpers:{compareTypes:function(a,c,g){g=e(g)&&g||q;var d,b;return(d=g(a))>(b=g(c))&&1||d<b&&-1||(d===b?0:void 0)},createClassSignaturePattern:f},introspective:{isFunction:e,isString:m,baseValueOf:q,getClassSignature:p}},k={},n=function(a){return k[m(a)&&a.trim()||""]},B=function(a,c,d){var b=[],e=function(a){(a=n(a))&&b.push(a)},f=a(d[0],d[1],d[2],function(){w.call(arguments).forEach(e)});f&&b.length&&b.forEach(function(a){a.call(f)});return f};l=l||d;c=function(a,b){a=m(a)&&a.trim()||"";var c=e(b)&&(b=b.around(B))&&b(n,d,A);c&&a&&(k[a]=c)};c.all=function(){return r(k)};c.all.size=function(){return r(k).length};c.require=n;(function(){this.first=function(){return this()[0]};this.last=function(){var a;return(a=this())[a.length-1]};this.item=function(a){return this()[z(a,10)]}}).call(c.all);return l[s]=c}).call(null,"composable");
-
-
-//composable("",function(c,a,d,b){b("components.Iterable_Character_next_previous");return a.String.prototype});
-//composable("",function(c,a,d,b){b("components.Iterable_Integer_next_previous");return a.Number.prototype});
+- Simple          - 2.023 byte  - straight forward featuring [require], [global] and [baseEnvironment] as arguments of a module callback.
+(function(t,l){var b,c=this;b=c.Object;var g=b.prototype,m=c.Array.prototype,d=c.RegExp.prototype,u=c.String.prototype,v=g.toString,w=g.valueOf,x=d.compile,h=/(?:)/;""+h.compile("(?:)","")!==""+h&&(d.compile=function(){x.apply(this,arguments);return this});var g=function(a){return["^\\[object\\s+",a,"\\]$"].join("")},p=function(a){return v.call(a)},y=g("String"),q=function(a){return void 0===a||null===a?a:w.call(a).valueOf()},e=function(a){return"function"==typeof a&&"function"==typeof a.call&&"function"==typeof a.apply},n=function(a){return h.compile(y).test(p(a))},d=function(a,b){return new c.ReferenceError(["A valid implementation of ",a," is missing.\n\nPlease provide the basic shims of ES5. Have a look at e.g.\nhttps://github.com/kriskowal/es5-shim/blob/master/es5-shim.js",b].join(""))};if(!e(b.keys))throw d("[Object.keys]","#L542");if(!e(u.trim))throw d("[String.prototype.trim]","#L899");if(!e(m.indexOf))throw d("[Array.prototype.indexOf]","#L479");if(!e(m.forEach))throw d("[Array.prototype.forEach]","#L238");if(!e(m.reduce))throw d("[Array.prototype.reduce]","#L382");var r=b.keys,z={global:c,objects:{regX:h},methods:{noop:function(){}},helpers:{compareTypes:function(a,b,f){f=e(f)&&f||q;var c,d;return(c=f(a))>(d=f(b))&&1||c<d&&-1||(c===d?0:void 0)},createClassSignaturePattern:g,protectBehaviorFromInstantiation:function(a,b){if(b instanceof a)throw new TypeError("Traits and Mixins always need to be applied onto objects but never get instantiated.");}},introspective:{isFunction:e,isString:n,baseValueOf:q,getClassSignature:p}},k={},s=function(a){return k[n(a)&&a.trim()||""]};l=l||c;b=function(a,b){a=n(a)&&a.trim()||"";var f=e(b)&&b(s,c,z);if(f&&a)return k[a]=f};b.all=function(){return r(k)};b.all.size=function(){return r(k).length};b.require=s;(function(){var a=c.parseFloat,b=c.Math.floor;this.first=function(){return this()[0]};this.last=function(){var a;return(a=this())[a.length-1]};this.item=function(c){return this()[b(a(c,10))]}}).call(b.all);return l[t]=b}).call(null,"composable");
 
 
 */

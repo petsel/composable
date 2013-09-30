@@ -1,15 +1,53 @@
 
 
-composable("components.Enumerable_first_last_item_listGetterShorthands", function (require, global/*, environment*/) {
+composable("components.Enumerable_first_last_item_listGetterShorthands", function (require, global/*, internalBaseEnvironment*/) {
 
 
-  "use strict";
+  "use strict"; // @TODO - merge the final change into other branches of this type detection module.
 
 
   var
-    Trait, // the "Enumerable_first_last_item" Trait Module.
+    Trait, // the "Enumerable_first_last_item" Trait Module that works on getter methods that again return list structures.
 
-    parse_float = global.parseFloat
+
+    parse_float = global.parseFloat,
+    math_floor  = global.Math.floor,
+
+//  parseFloat("1.999999999999999" , 10); // 1.999999999999999
+//  parseFloat( 1.999999999999999  , 10); // 1.999999999999999
+//  parseInt  ("1.999999999999999" , 10); // 1
+//  parseInt  ( 1.999999999999999  , 10); // 1
+//
+//  parseFloat("1.9999999999999999", 10); // 2
+//  parseFloat( 1.9999999999999999 , 10); // 2
+//  parseInt  ("1.9999999999999999", 10); // 1  // inconsistency ...
+//  parseInt  ( 1.9999999999999999 , 10); // 2  // ... witin [parseInt]
+//
+//  Math.floor(parseFloat("1.999999999999999" , 10)); // 1
+//  Math.floor(parseFloat( 1.999999999999999  , 10)); // 1
+//  Math.floor(parseFloat("1.9999999999999999", 10)); // 2  // no inconsistency anymore ...
+//  Math.floor(parseFloat( 1.9999999999999999 , 10)); // 2  // ... where it had been before.
+
+
+    first = function () {
+
+      return (this()[0]);
+    //return ((typeof this == "function") && this()[0]) || this[0];                                       // hybrid / guarded
+    },
+    last = function () {
+
+      var list;
+      return ((list = this())[list.length - 1]);
+    //return ((list = this())[math_floor(parse_float(list.length - 1))]); // in case the [length property was spoofed]
+
+    //return ((typeof this == "function") && (list = this())[list.length - 1]) || this[this.length - 1];  // hybrid / guarded / not spoof proof
+    },
+    item = function (idx) {
+
+      return (this()[math_floor(parse_float(idx, 10))]);
+    //idx = math_floor(parse_float(idx, 10));                                                             //
+    //return ((typeof this == "function") && this()[idx]) || this[idx];                                   // hybrid / guarded
+    }
   ;
 
 
@@ -29,23 +67,9 @@ composable("components.Enumerable_first_last_item_listGetterShorthands", functio
      *
      *  >> global.Enumerable_first_last_item_listGetterShorthands.call(all) << does apply all of its implemented methods to [all].
      */
-    this.first = function () {
-
-      return (this()[0]);
-    //return ((typeof this == "function") && this()[0]) || this[0];                                       // hybrid / guarded
-    };
-    this.last = function () {
-
-      var list;
-      return ((list = this())[list.length - 1]);
-    //return ((typeof this == "function") && (list = this())[list.length - 1]) || this[this.length - 1];  // hybrid / guarded
-    };
-    this.item = function (idx) {
-
-      return (this()[parse_float(idx, 10)]);
-    //idx = parse_float(idx, 10);                                                                         //
-    //return ((typeof this == "function") && this()[idx]) || this[idx];                                   // hybrid / guarded
-    };
+    this.first = first;
+    this.last = last;
+    this.item = item;
   };
 
 
@@ -62,8 +86,8 @@ composable("components.Enumerable_first_last_item_listGetterShorthands", functio
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          -   269 byte
-composable("components.Enumerable_first_last_item_listGetterShorthands",function(d,b){var c=b.parseFloat;return function(){this.first=function(){return this()[0]};this.last=function(){var a;return(a=this())[a.length-1]};this.item=function(a){return this()[c(a,10)]}}});
+- Simple          -   299 byte
+composable("components.Enumerable_first_last_item_listGetterShorthands",function(h,b){var c=b.parseFloat,d=b.Math.floor,e=function(){return this()[0]},f=function(){var a;return(a=this())[a.length-1]},g=function(a){return this()[d(c(a,10))]};return function(){this.first=e;this.last=f;this.item=g}});
 
 
 */

@@ -1,31 +1,33 @@
 /**
  *
- *  - implementation tries to convert objects
- *    that might be considered to be list alike
- *    or in any way enumerable into real array objects.
+ *  - implementation tries to convert objects that
+ *    might be considered to be list alike or in
+ *    any way enumerable into real array objects.
  *
  *  - implemented convert/parse method:
  *
  *    [toArray]
  */
-composable("components.Enumerable_toArray", function (require, global, environment) {
+composable("components.Enumerable_toArray", function (require, global, internalBaseEnvironment) {
 
 
-  "use strict";
+  "use strict"; // @TODO - merge the final change into other branches of this type detection module.
 
 
-//require("components.Introspective_isFunction_isCallable");
-  require("components.Introspective_isArray_isArguments");
+  /*
+   *  all additional functionality this module needs
+   *  is covered already by the [internalBaseEnvironment]
+   *  of the "composable :: core"
+   */
 
 
   var
     Trait, // the "Enumerable_toArray" Trait Module.
 
 
-    env_introspective = environment.introspective,
+    env_introspective = internalBaseEnvironment.introspective,
 
-    Array   = global.Array,
-
+    Array           = global.Array,
     arrayPrototype  = Array.prototype,
 
 
@@ -80,7 +82,7 @@ composable("components.Enumerable_toArray", function (require, global, environme
 
         /**
          *  - so far fastest available, most reliable [Enumerable.toArray] implementation.
-         *  - doe throw a [RangeError] or returns an [Array] object or an UNDEFINED value.
+         *  - does throw a [RangeError] or returns an [Array] object or an UNDEFINED value.
          *  - supported by all browsers that pass all of the above tests.
          */
         toArray = function () {
@@ -174,6 +176,12 @@ composable("components.Enumerable_toArray", function (require, global, environme
   };
 
 
+  // progressively build/enrich "composable"s internal [baseEnvironment] object.
+  internalBaseEnvironment.helpers.makeArray = function (listAlike) {
+    return toArray.call(listAlike);
+  };
+
+
   return Trait;
 
 
@@ -188,7 +196,7 @@ composable("components.Enumerable_toArray", function (require, global, environme
 
 
 - Simple          -   989 byte
-composable("components.Enumerable_toArray",function(a,d,h){a("components.Introspective_isArray_isArguments");a=h.introspective;var e=d.Array.prototype.slice,j=a.isFunction,k=a.isString,n=a.isArguments,p=a.isArray,l=d.isFinite,f=d.document,q=function(){var a,b,g,d=f&&f.forms||[],m=f&&j(f.getElementsByTagName)&&f.getElementsByTagName("")||d;try{b=e.call(d);b=e.call(m);b=e.call(arguments);g=b.join("");if(3!=b.length||"Array.make"!=g)throw Error();b=e.call(g);if(10!==b.length||"."!=b[5])throw Error();a=function(){var a,c=(this||k(this))&&this.length;"number"==typeof c&&l(c)&&(a=[],a.length=c,a=e.call(this));return a}}catch(h){a=function(){var a,c,b=(p(this)||n(this))&&e.call(this)||k(this)&&this.split("")||a;if(!b&&(c=0!==this&&this&&this.length,"number"==typeof c&&l(c)))if(b=[],b.length=c,j(this.item))for(;c--;)a=this.item(c),c in this&&(b[c]=a);else for(;c--;)a=this[c],c in this&&(b[c]=a);return b}}b=g=d=m=null;return a}("Array",".","make");return function(){this.toArray=q}});
+composable("components.Enumerable_toArray",function(a,e,g){a=g.introspective;var f=e.Array.prototype.slice,m=a.isFunction,n=a.isString,q=a.isArguments,r=a.isArray,p=e.isFinite,h=e.document,l=function(){var a,d,k,e=h&&h.forms||[],g=h&&m(h.getElementsByTagName)&&h.getElementsByTagName("")||e;try{d=f.call(e);d=f.call(g);d=f.call(arguments);k=d.join("");if(3!=d.length||"Array.make"!=k)throw Error();d=f.call(k);if(10!==d.length||"."!=d[5])throw Error();a=function(){var c,b=(this||n(this))&&this.length;"number"==typeof b&&p(b)&&(c=[],c.length=b,c=f.call(this));return c}}catch(l){a=function(){var c,b,a=(r(this)||q(this))&&f.call(this)||n(this)&&this.split("")||c;if(!a&&(b=0!==this&&this&&this.length,"number"==typeof b&&p(b)))if(a=[],a.length=b,m(this.item))for(;b--;)c=this.item(b),b in this&&(a[b]=c);else for(;b--;)c=this[b],b in this&&(a[b]=c);return a}}d=k=e=g=null;return a}("Array",".","make");g.helpers.makeArray=function(a){return l.call(a)};return function(){this.toArray=l}});
 
 
 */

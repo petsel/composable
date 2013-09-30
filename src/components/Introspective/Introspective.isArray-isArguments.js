@@ -13,20 +13,24 @@
  *    [isArray],
  *    [isArguments]
  */
-composable("components.Introspective_isArray_isArguments", function (require, global, environment) {
+composable("components.Introspective_isArray_isArguments", function (require, global, internalBaseEnvironment) {
 
 
-  "use strict";
+  "use strict"; // @TODO - merge the final change into other branches of this type detection module.
 
 
-  require("components.Introspective_isFunction_isCallable");
+  /*
+   *  all additional functionality this module needs
+   *  is covered already by the [internalBaseEnvironment]
+   *  of the "composable :: core"
+   */
 
 
   var
     Trait, // the "Introspective_isArray_isArguments" Trait Module.
 
 
-    env_introspective = environment.introspective,
+    env_introspective = internalBaseEnvironment.introspective,
 
 
     Object  = global.Object,
@@ -66,9 +70,9 @@ composable("components.Introspective_isArray_isArguments", function (require, gl
     }(objectPrototype.propertyIsEnumerable)),
 
 
-    createClassSignaturePattern = environment.helpers.createClassSignaturePattern,
+    createClassSignaturePattern = internalBaseEnvironment.helpers.createClassSignaturePattern,
 
-    regX = environment.objects.regX,
+    regX = internalBaseEnvironment.objects.regX,
 
     PATTERN_CLASS_SIGNATURE_OBJECT    = createClassSignaturePattern("Object"),
     PATTERN_CLASS_SIGNATURE_ARRAY     = createClassSignaturePattern("Array"),
@@ -143,8 +147,8 @@ composable("components.Introspective_isArray_isArguments", function (require, gl
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          -   908 byte
-composable("components.Introspective_isArray_isArguments",function(d,b,c){d("components.Introspective_isFunction_isCallable");d=c.introspective;var e=b.Array,j,a=b.Object.prototype.propertyIsEnumerable;try{a.call(null,"length");var l=a,a=function(h,a){return l.call(h,a)}}catch(t){var m=a,a=function(h,a){var b;try{b=m.call(h,a)}catch(c){b=!0}return b}}j=a;var a=c.helpers.createClassSignaturePattern,f=c.objects.regX,n=a("Object"),p=a("Array"),k=a("Arguments"),g=d.getClassSignature;c=d.isFunction;var q=b.isFinite,r=c(e.isArray)&&e.isArray||function(a){return f.compile(p).test(g(a))};if(!(b=c(e.isArguments)&&e.isArguments))b=function(){return f.compile(k).test(g(arguments))}()?function(a){return f.compile(k).test(g(a))}:function(a){return!!a&&f.compile(n).test(g(a))&&"number"==typeof a.length&&q(a.length)&&!j(a,"length")};var s=b;b=function(){this.isArray=r;this.isArguments=s};b.apply(d);return b});
+- Simple          -   905 byte
+composable("components.Introspective_isArray_isArguments",function(d,b,c){d=c.introspective;var e=b.Array,l=function(a){try{a.call(null,"length"),a=function(a){return function(b,c){return a.call(b,c)}}(a)}catch(b){a=function(a){return function(b,c){var d;try{d=a.call(b,c)}catch(e){d=!0}return d}}(a)}return a}(b.Object.prototype.propertyIsEnumerable),h=c.helpers.createClassSignaturePattern,f=c.objects.regX,m=h("Object"),n=h("Array"),k=h("Arguments"),g=d.getClassSignature;c=d.isFunction;var p=b.isFinite,q=c(e.isArray)&&e.isArray||function(a){return f.compile(n).test(g(a))},r=c(e.isArguments)&&e.isArguments||function(){return function(){return f.compile(k).test(g(arguments))}()?function(a){return f.compile(k).test(g(a))}:function(a){return!!a&&f.compile(m).test(g(a))&&"number"==typeof a.length&&p(a.length)&&!l(a,"length")}}();b=function(){this.isArray=q;this.isArguments=r};b.apply(d);return b});
 
 
 */

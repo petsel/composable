@@ -1,6 +1,6 @@
 
 
-composable("environment_extended_introspective_core", function (require/*, global, internalEnvironmentBase*/) {
+composable("environment_extended_introspective_core", function (require/*, global, internalBaseEnvironment*/) {
 
 
   "use strict";
@@ -9,7 +9,7 @@ composable("environment_extended_introspective_core", function (require/*, globa
   var
     /**
      *  make use of and extend the already available base "environment" module
-     *  instead of creating again a prototypal copy of [internalEnvironmentBase].
+     *  instead of creating again a prototypal copy of [internalBaseEnvironment].
      */
     environment = require("environment"),
 
@@ -18,7 +18,7 @@ composable("environment_extended_introspective_core", function (require/*, globa
   Introspective_typeDetection_core.call(environment.introspective);
 
 
-  return environment;
+  return environment; // return a reference of the most recently extended "environment" module.
 
 
 });

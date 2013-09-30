@@ -1,19 +1,23 @@
 
 
-composable("components.Introspective_respondTo", function (require, global, environment) {
+composable("components.Introspective_respondTo", function (require, global, internalBaseEnvironment) {
 
 
   "use strict";
 
 
-  require("components.Introspective_isFunction_isCallable");
+  /*
+   *  all additional functionality this module needs
+   *  is covered already by the [internalBaseEnvironment]
+   *  of the "composable :: core"
+   */
 
 
   var
     Trait, // the "Introspective_respondTo" Trait Module.
 
 
-    env_introspective = environment.introspective,
+    env_introspective = internalBaseEnvironment.introspective,
 
 
     isCallable = env_introspective.isCallable,
@@ -33,9 +37,10 @@ composable("components.Introspective_respondTo", function (require, global, envi
      *  >> Introspective.call(global.Object.prototype); <<
      *  then enriches the global Objects prototype by [respondTo].
      */
-    this.respondTo = function (methodName) {
+    this.respondTo = function (key/*methodName*/) { // @TODO - merge the final change into other branches of this type detection module.
 
-      return isCallable(this[(isString(methodName) && methodName/*.trim()*/) || ""]);
+      return (isString(key) && isCallable(this[key]));
+    //return (isString(key) && isCallable(this[key.trim()]));
     };
   };
 
@@ -53,8 +58,8 @@ composable("components.Introspective_respondTo", function (require, global, envi
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          -   243 byte
-composable("components.Introspective_respondTo",function(a,e,b){a("components.Introspective_isFunction_isCallable");a=b.introspective;var c=a.isCallable,d=a.isString;return function(){this.respondTo=function(a){return c(this[d(a)&&a||""])}}});
+- Simple          -   187 byte
+composable("components.Introspective_respondTo",function(a,e,b){a=b.introspective;var c=a.isCallable,d=a.isString;return function(){this.respondTo=function(a){return d(a)&&c(this[a])}}});
 
 
 */
