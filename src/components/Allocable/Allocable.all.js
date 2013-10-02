@@ -1,13 +1,16 @@
 
 
-composable("components.Allocable_all", function (require, global, environment) {
+composable("components.Allocable_all", function (require, global, internalBaseEnvironment) {
 
 
-  "use strict";
+  "use strict"; // @TODO - merge the final change into other branches of this type detection module.
 
 
-//require("components.Introspective_isFunction_isCallable");  // implicitly by "composites.Array_make"
-  require("composites.Array_make");
+  /*
+   *  all additional functionality this module needs
+   *  is covered already by the [internalBaseEnvironment]
+   *  of the "composable :: core"
+   */
 
 
   var
@@ -20,13 +23,13 @@ composable("components.Allocable_all", function (require, global, environment) {
     Array = global.Array,
 
 
-    isFunction = environment.introspective.isFunction,
+    isFunction = internalBaseEnvironment.introspective.isFunction,
 
-    makeArray = (isFunction(Array.make) && Array.make) || environment.helpers.makeArray
+    array_from = (isFunction(Array.from) && Array.from) || internalBaseEnvironment.helpers.makeArray
   ;
 
 
-  Trait = function (list) {
+  Trait = function (list) { // Privileged Trait.
     /**
      *  implementing the privileged "Allocable_all" Trait Module.
      *
@@ -40,14 +43,22 @@ composable("components.Allocable_all", function (require, global, environment) {
     ;
     allocable.all = function () {
 
-      return makeArray(list);
+      return array_from(list);
     };
     allocable.all.size = function () {
 
       return list.length;
     };
-    Enumerable_listGetterShorthands.call(allocable.all);
-  };
+    Enumerable_listGetterShorthands.call(allocable.all);  // applying the [first], [last] and [item] shorthand
+  };                                                      // functionality onto this Trait's list getter method [all].
+
+
+  /**
+   *  due to "Allocable_all" being a privileged Trait that encapsulates [list] it
+   *  is not able to delegate its accessor methods [all] and [all.size] as shared
+   *  references to objects - each object gets its own set of methods applied that
+   *  do not equal amongst each other even though they are equally implemented.
+   */
 
 
   return Trait;
@@ -63,8 +74,8 @@ composable("components.Allocable_all", function (require, global, environment) {
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          -   349 byte
-composable("components.Allocable_all",function(a,b,c){a("composites.Array_make");var d=a("components.Enumerable_first_last_item_listGetterShorthands");a=b.Array;b=c.introspective.isFunction;var e=b(a.make)&&a.make||c.helpers.makeArray;return function(a){this.all=function(){return e(a)};this.all.size=function(){return a.length};d.call(this.all)}});
+- Simple          -   322 byte
+composable("components.Allocable_all",function(a,b,c){var d=a("components.Enumerable_first_last_item_listGetterShorthands");a=b.Array;b=c.introspective.isFunction;var e=b(a.from)&&a.from||c.helpers.makeArray;return function(a){this.all=function(){return e(a)};this.all.size=function(){return a.length};d.call(this.all)}});
 
 
 */

@@ -54,6 +54,12 @@ files = [
   "src/composites/Array/Array.first-last.js",                                                                         //  Enumerable
 
 
+  // composable :: RECOMMENDED for custom collection types that encapsulate lists that need to be exposed again       //  Allocable
+  "src/components/Allocable/Allocable.js",                                                                            //  Allocable
+  "src/components/Allocable/Allocable.all.js",                                                                        //  Allocable
+  "src/components/Allocable/Allocable.all.removeItem.js",                                                             //  Allocable
+
+
 
 // load your spec files
 // load your spec files
@@ -94,6 +100,12 @@ files = [
  *  composable.components.Enumerable_first_last_item.spec                                                             //  Enumerable
  *  composable.components.Enumerable_first_last_item_listWrapper.spec                                                 //  Enumerable
  *  composable.components.Enumerable_first_last_item.listGetterShorthands.spec                                        //  Enumerable
+ *
+ *
+ *  // composable :: RECOMMENDED for custom collection types that encapsulate lists that need to be exposed again     //  Allocable
+ *  composable.components.Allocable.spec                                                                              //  Allocable
+ *  composable.components.Allocable_all.spec                                                                          //  Allocable
+ *  composable.components.Allocable_all_removeItem.spec                                                               //  Allocable
  */
 
 ];

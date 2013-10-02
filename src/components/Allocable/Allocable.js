@@ -1,13 +1,16 @@
 
 
-composable("components.Allocable", function (require, global, environment) {
+composable("components.Allocable", function (require, global, internalBaseEnvironment) {
 
 
-  "use strict";
+  "use strict"; // @TODO - merge the final change into other branches of this type detection module.
 
 
-//require("components.Introspective_isFunction_isCallable");  // implicitly by "composites.Array_make"
-  require("composites.Array_make");
+  /*
+   *  all additional functionality this module needs
+   *  is covered already by the [internalBaseEnvironment]
+   *  of the "composable :: core"
+   */
 
 
   var
@@ -20,13 +23,13 @@ composable("components.Allocable", function (require, global, environment) {
     Array = global.Array,
 
 
-    isFunction = environment.introspective.isFunction,
+    isFunction = internalBaseEnvironment.introspective.isFunction,
 
-    makeArray = (isFunction(Array.make) && Array.make) || environment.helpers.makeArray
+    array_from = (isFunction(Array.from) && Array.from) || internalBaseEnvironment.helpers.makeArray
   ;
 
 
-  Trait = function (list) {
+  Trait = function (list) { // Privileged Trait.
     /**
      *  implementing the privileged "Allocable" Trait Module.
      *
@@ -40,7 +43,7 @@ composable("components.Allocable", function (require, global, environment) {
     ;
     allocable.valueOf = allocable.toArray = function () {
 
-      return makeArray(list);
+      return array_from(list);
     };
     allocable.toString = function () {
 
@@ -50,8 +53,17 @@ composable("components.Allocable", function (require, global, environment) {
 
       return list.length;
     };
-    Enumerable_listWrapper.call(allocable, list);
-  };
+    Enumerable_listWrapper.call(allocable, list); // applying the [first], [last] and [item]
+  };                                              // list getter functionality onto this Trait.
+
+
+  /**
+   *  due to "Allocable" being a privileged Trait that encapsulates [list] it is
+   *  not able to delegate its accessor methods [valueOf] / [toArray], [toString]
+   *  and [size] as shared references to objects - each object gets its own set
+   *  of methods applied that do not equal amongst each other even though they
+   *  are equally implemented.
+   */
 
 
   return Trait;
@@ -67,8 +79,8 @@ composable("components.Allocable", function (require, global, environment) {
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          -   384 byte
-composable("components.Allocable",function(a,b,c){a("composites.Array_make");var d=a("components.Enumerable_first_last_item_listWrapper");a=b.Array;b=c.introspective.isFunction;var e=b(a.make)&&a.make||c.helpers.makeArray;return function(a){this.valueOf=this.toArray=function(){return e(a)};this.toString=function(){return""+a};this.size=function(){return a.length};d.call(this,a)}});
+- Simple          -   357 byte
+composable("components.Allocable",function(a,b,c){var d=a("components.Enumerable_first_last_item_listWrapper");a=b.Array;b=c.introspective.isFunction;var e=b(a.from)&&a.from||c.helpers.makeArray;return function(a){this.valueOf=this.toArray=function(){return e(a)};this.toString=function(){return""+a};this.size=function(){return a.length};d.call(this,a)}});
 
 
 */

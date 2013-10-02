@@ -1,13 +1,16 @@
 
 
-composable("components.Allocable_all_removeItem", function (require, global, environment) {
+composable("components.Allocable_all_removeItem", function (require, global, internalBaseEnvironment) {
 
 
-  "use strict";
+  "use strict"; // @TODO - merge the final change into other branches of this type detection module.
 
 
-//require("components.Introspective_isFunction_isCallable");  // implicitly by "composites.Array_make"
-  require("composites.Array_make");
+  /*
+   *  all additional functionality this module needs
+   *  is covered already by the [internalBaseEnvironment]
+   *  of the "composable :: core"
+   */
 
 
   var
@@ -18,13 +21,12 @@ composable("components.Allocable_all_removeItem", function (require, global, env
 
 
     Array = global.Array,
-
     arrayPrototype = Array.prototype,
 
 
-    isFunction = environment.introspective.isFunction,
+    isFunction = internalBaseEnvironment.introspective.isFunction,
 
-    makeArray = (isFunction(Array.make) && Array.make) || environment.helpers.makeArray,
+    array_from = (isFunction(Array.from) && Array.from) || internalBaseEnvironment.helpers.makeArray,
 
     removeItem = (isFunction(arrayPrototype.reject) && function (list, item) {
 
@@ -51,7 +53,7 @@ composable("components.Allocable_all_removeItem", function (require, global, env
   ;
 
 
-  Mixin = function (list) {
+  Mixin = function (list) { // Privileged Mixin.
     /**
      *  implementing the privileged "Allocable_all_removeItem" Mixin Module.
      *
@@ -65,18 +67,27 @@ composable("components.Allocable_all_removeItem", function (require, global, env
     ;
     allocable.all = function () {
 
-      return makeArray(list);
+      return array_from(list);
     };
     allocable.all.size = function () {
 
       return list.length;
     };
-    allocable.all.removeItem = function (item) {
+    allocable.all.removeItem = function (item) {          // does mutate state of the enclosed [list].
 
       return removeItem(list, item);
     };
-    Enumerable_listGetterShorthands.call(allocable.all);
-  };
+    Enumerable_listGetterShorthands.call(allocable.all);  // applying the [first], [last] and [item] shorthand
+  };                                                      // functionality onto this Mixin's list getter method [all].
+
+
+  /**
+   *  due to "Allocable_all_removeItem" being a privileged Mixin that encapsulates
+   *  [list] it is not able to delegate its accessor methods [all], [all.size] and
+   *  [all.removeItem] as shared references to objects - each object gets its own
+   *  set of methods applied that do not equal amongst each other even though they
+   *  are equally implemented.
+   */
 
 
   return Mixin;
@@ -92,8 +103,8 @@ composable("components.Allocable_all_removeItem", function (require, global, env
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          -   700 byte
-composable("components.Allocable_all_removeItem",function(b,c,e){b("composites.Array_make");var g=b("components.Enumerable_first_last_item_listGetterShorthands");b=c.Array;c=b.prototype;var f=e.introspective.isFunction,h=f(b.make)&&b.make||e.helpers.makeArray,j=f(c.reject)&&function(a,b){return a.reject(function(a){return a===b})[0]}||function(a,b){var d=a.reduce(function(a,c){return a[c===b?"rejected":"retained"].push(c)&&a},{retained:[],rejected:[]}),c=d.retained,d=d.rejected;for(a.length=0;c.length;)a.push(c.shift());return d[0]};return function(a){this.all=function(){return h(a)};this.all.size=function(){return a.length};this.all.removeItem=function(b){return j(a,b)};g.call(this.all)}});
+- Simple          -   673 byte
+composable("components.Allocable_all_removeItem",function(b,c,e){var g=b("components.Enumerable_first_last_item_listGetterShorthands");b=c.Array;c=b.prototype;var f=e.introspective.isFunction,h=f(b.from)&&b.from||e.helpers.makeArray,k=f(c.reject)&&function(a,b){return a.reject(function(a){return a===b})[0]}||function(a,b){var d=a.reduce(function(a,c){return a[c===b?"rejected":"retained"].push(c)&&a},{retained:[],rejected:[]}),c=d.retained,d=d.rejected;for(a.length=0;c.length;)a.push(c.shift());return d[0]};return function(a){this.all=function(){return h(a)};this.all.size=function(){return a.length};this.all.removeItem=function(b){return k(a,b)};g.call(this.all)}});
 
 
 */
