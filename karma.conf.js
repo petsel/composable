@@ -60,6 +60,10 @@ files = [
   "src/components/Allocable/Allocable.all.removeItem.js",                                                             //  Allocable
 
 
+  // composable :: STRONGLY RECOMMENDED if one needs to rely on a type safe event systems                             //  Observable
+  "src/components/Observable/Observable.SignalsAndSlots.js",                                                          //  Observable
+
+
 
 // load your spec files
 // load your spec files
@@ -106,6 +110,9 @@ files = [
  *  composable.components.Allocable.spec                                                                              //  Allocable
  *  composable.components.Allocable_all.spec                                                                          //  Allocable
  *  composable.components.Allocable_all_removeItem.spec                                                               //  Allocable
+ *
+ *  // composable :: STRONGLY RECOMMENDED if one needs to rely on a type safe event systems                           //  Observable
+ *  composable.components.Observable_SignalsAndSlots.spec                                                             //  Observable
  */
 
 ];

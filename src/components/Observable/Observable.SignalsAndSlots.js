@@ -1,36 +1,50 @@
 
 
-composable("components.Observable_SignalsAndSlots", function (require, global, environment) {
+composable("components.Observable_SignalsAndSlots", function (require, global, internalBaseEnvironment) {
 
 
-  "use strict";
+  "use strict"; // @TODO - merge the final change into other branches of this type detection module.
 
 
-//require("components.Introspective_isFunction_isCallable");  // implicitly by "composites.Array_make"
-  require("composites.Array_make");
+  /*
+   *  all additional functionality this module needs
+   *  is covered already by the [internalBaseEnvironment]
+   *  of the "composable :: core"
+   */
 
 
   var
     Array       = global.Array,
-    Date        = global.Date,
+  //Date        = global.Date,
+
+    math_random = global.Math.random,
 
 
-    env_introspective = environment.introspective,
+    env_introspective = internalBaseEnvironment.introspective,
 
 
     isFunction  = env_introspective.isFunction,
-    isCallable  = env_introspective.isCallable,
+  //isCallable  = env_introspective.isCallable, // can not be used for testing a callbacks "callability" within an event system since this test actually tries to invoke its test candidate.
     isString    = env_introspective.isString,
 
 
-//  makeArray = (function (proto_slice) {
+//  array_from = (function (proto_slice) {
 //    return function (list) {
 //
 //      return proto_slice.call(list);
 //    };
 //  }(global.Array.prototype.slice))
 
-    makeArray = (isFunction(Array.make) && Array.make) || environment.helpers.makeArray
+    array_from = (isFunction(Array.from) && Array.from) || internalBaseEnvironment.helpers.makeArray,
+
+
+    createId = (
+      /*  [https://github.com/broofa/node-uuid] - Robert Kieffer  */
+      (global.uuid && isFunction(global.uuid.v4) && global.uuid.v4)
+
+      /*  [https://gist.github.com/jed/982883]  - Jed Schmidt     */
+      || function b(a){return a?(a^math_random()*16>>a/4).toString(16):([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,b)}
+    )
   ;
 
 
@@ -46,8 +60,8 @@ composable("components.Observable_SignalsAndSlots", function (require, global, e
 
       event.target    = target;
       event.type      = type;
-    //event.uuid      = uuid.create();
-      event.timeStamp = (new Date);
+      event.uuid      = createId();
+    //event.timeStamp = (new Date);
     },
 
 
@@ -68,16 +82,16 @@ composable("components.Observable_SignalsAndSlots", function (require, global, e
 
           evt.target    = defaultEvent.target;    //  - stay strictly typesafe - [dispatchEvent] never will take
           evt.type      = defaultEvent.type;      //    control of [defaultEvent] e.g trying to delegate another
-        //evt.uuid      = defaultEvent.uuid;      //    [target] by manipulating its event-object-like argument.
-          evt.timeStamp = defaultEvent.timeStamp; //
+          evt.uuid      = defaultEvent.uuid;      //    [target] by manipulating its event-object-like argument.
+        //evt.timeStamp = defaultEvent.timeStamp; //
 
         } else {
 
           evt = {                                 //  - create a [defaultEvent] copy.
             target      : defaultEvent.target,
             type        : defaultEvent.type,
-          //uuid        : defaultEvent.uuid,
-            timeStamp   : defaultEvent.timeStamp
+            uuid        : defaultEvent.uuid
+          //timeStamp   : defaultEvent.timeStamp
           };
         }
         handler(evt);
@@ -138,15 +152,16 @@ composable("components.Observable_SignalsAndSlots", function (require, global, e
       ;
 
 
-      addEventListenerAlias = ((isString(config[addEventListenerAlias]) && config[addEventListenerAlias]) || addEventListenerAlias);
-      removeEventListenerAlias = ((isString(config[removeEventListenerAlias]) && config[removeEventListenerAlias]) || removeEventListenerAlias);
-      hasEventListenerAlias = ((isString(config[hasEventListenerAlias]) && config[hasEventListenerAlias]) || hasEventListenerAlias);
-      dispatchEventAlias = ((isString(config[dispatchEventAlias]) && config[dispatchEventAlias]) || dispatchEventAlias);
+      addEventListenerAlias = isString(config[addEventListenerAlias]) ? config[addEventListenerAlias] : addEventListenerAlias;
+      removeEventListenerAlias = isString(config[removeEventListenerAlias]) ? config[removeEventListenerAlias] : removeEventListenerAlias;
+      hasEventListenerAlias = isString(config[hasEventListenerAlias]) ? config[hasEventListenerAlias] : hasEventListenerAlias;
+      dispatchEventAlias = isString(config[dispatchEventAlias]) ? config[dispatchEventAlias] : dispatchEventAlias;
 
 
       observable[addEventListenerAlias] = function (type/*:[string|String]*/, handler/*:[Function]*/) { /*:[EventListener|undefined]*/
         var reference;
-        if (type && isString(type) && isCallable(handler)) {
+      //if (type && isString(type) && isCallable(handler)) {
+        if (type && isString(type) && isFunction(handler)) {
           var
             event = eventMap[type],
             listener = new EventListener(this, type, handler)
@@ -181,7 +196,8 @@ composable("components.Observable_SignalsAndSlots", function (require, global, e
         return ((
 
           isString(typeOrListener)
-          && isCallable(handler)
+        //&& isCallable(handler)
+          && isFunction(handler)
           && removeEventListener(typeOrListener, handler)
 
         ) || (
@@ -197,7 +213,8 @@ composable("components.Observable_SignalsAndSlots", function (require, global, e
         return ((
 
           isString(typeOrListener)
-          && isCallable(handler)
+        //&& isCallable(handler)
+          && isFunction(handler)
           && hasEventListener(typeOrListener, handler)
 
         ) || (
@@ -220,7 +237,7 @@ composable("components.Observable_SignalsAndSlots", function (require, global, e
           //handlers = [],                                //  - additional list ...
 
           //listeners = event.listeners,
-            listeners = (event.listeners && makeArray(event.listeners)),
+            listeners = (event.listeners && array_from(event.listeners)),
             len = ((listeners && listeners.length) || 0),
             idx = -1
           ;
@@ -241,6 +258,17 @@ composable("components.Observable_SignalsAndSlots", function (require, global, e
         }
         return successfully;
       };
+
+
+      /*
+       *  in order to delete properties that were omitted with
+       *  the optional configuration object that will be used
+       *  for altering the naming of the [Observable] API methods.
+       */
+      if ("" in observable) {
+        delete observable[""];
+      }
+    //("" in observable) && (delete observable[""])
     }
   ;
 
@@ -258,8 +286,8 @@ composable("components.Observable_SignalsAndSlots", function (require, global, e
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          - 1.712 byte
-composable("components.Observable_SignalsAndSlots",function(h,c,p){h("composites.Array_make");h=c.Array;var r=c.Date;c=p.introspective;var s=c.isFunction,n=c.isCallable,f=c.isString,t=s(h.make)&&h.make||p.helpers.makeArray,q=function(a,g){this.constructor=q;this.target=a;this.type=g;this.timeStamp=new r},m=function(a,g,f){var d=new q(a,g);this.constructor=m;this.handleEvent=function(a){a&&"object"==typeof a?(a.target=d.target,a.type=d.type,a.timeStamp=d.timeStamp):a={target:d.target,type:d.type,timeStamp:d.timeStamp};f(a)};this.getType=function(){return g};this.getHandler=function(){return f}};return function(a){a="object"==typeof a&&a||{};var g={},c="addEventListener",d="removeEventListener",k="hasEventListener",l="dispatchEvent",h=function(j,a){var b=g[j],e=!1;if(b){var c=b.handlers,b=b.listeners,f=c.indexOf(a);0<=f&&(c.splice(f,1),b.splice(f,1),e=!0)}return e},c=f(a[c])&&a[c]||c,d=f(a[d])&&a[d]||d,k=f(a[k])&&a[k]||k,l=f(a[l])&&a[l]||l;this[c]=function(j,a){var b;if(j&&f(j)&&n(a)){var e=g[j];b=new m(this,j,a);if(e){var c=e.handlers,e=e.listeners,d=c.indexOf(a);-1==d?(c.push(b.getHandler()),e.push(b)):b=e[d]}else e=g[j]={},e.handlers=[b.getHandler()],e.listeners=[b]}return b};this[d]=function(a,c){return f(a)&&n(c)&&h(a,c)||a instanceof m&&h(a.getType(),a.getHandler())||!1};this[k]=function(a,c){var b;if(!(b=f(a)&&n(c)&&(g[a]||!1)&&0<=g[a].handlers.indexOf(c))){if(b=a instanceof m){b=a.getType();var e=a.getHandler();b=(g[b]||!1)&&0<=g[b].handlers.indexOf(e)}b=b||!1}return b};this[l]=function(a){var c=!1,b=a&&"object"==typeof a&&f(a.type)&&a.type||f(a)&&a;if(b=b&&g[b]){var e=(b=b.listeners&&t(b.listeners))&&b.length||0,d=-1;if(1<=e){for(;++d<e;)b[d].handleEvent(a);c=!0}}return c}}});
+- Simple          - 1.802 byte
+composable("components.Observable_SignalsAndSlots",function(k,d,q){k=d.Array;var t=d.Math.random,r=q.introspective,l=r.isFunction,g=r.isString,u=l(k.from)&&k.from||q.helpers.makeArray,v=d.uuid&&l(d.uuid.v4)&&d.uuid.v4||function a(e){return e?(e^16*t()>>e/4).toString(16):([1E7]+-1E3+-4E3+-8E3+-1E11).replace(/[018]/g,a)},s=function(a,e){this.constructor=s;this.target=a;this.type=e;this.uuid=v()},p=function(a,e,g){var c=new s(a,e);this.constructor=p;this.handleEvent=function(a){a&&"object"==typeof a?(a.target=c.target,a.type=c.type,a.uuid=c.uuid):a={target:c.target,type:c.type,uuid:c.uuid};g(a)};this.getType=function(){return e};this.getHandler=function(){return g}};return function(a){a="object"==typeof a&&a||{};var e={},d="addEventListener",c="removeEventListener",m="hasEventListener",n="dispatchEvent",k=function(h,a){var b=e[h],f=!1;if(b){var g=b.handlers,b=b.listeners,c=g.indexOf(a);0<=c&&(g.splice(c,1),b.splice(c,1),f=!0)}return f},d=g(a[d])?a[d]:d,c=g(a[c])?a[c]:c,m=g(a[m])?a[m]:m,n=g(a[n])?a[n]:n;this[d]=function(h,a){var b;if(h&&g(h)&&l(a)){var f=e[h];b=new p(this,h,a);if(f){var c=f.handlers,f=f.listeners,d=c.indexOf(a);-1==d?(c.push(b.getHandler()),f.push(b)):b=f[d]}else f=e[h]={},f.handlers=[b.getHandler()],f.listeners=[b]}return b};this[c]=function(a,c){return g(a)&&l(c)&&k(a,c)||a instanceof p&&k(a.getType(),a.getHandler())||!1};this[m]=function(a,c){var b;if(!(b=g(a)&&l(c)&&(e[a]||!1)&&0<=e[a].handlers.indexOf(c))){if(b=a instanceof p){b=a.getType();var f=a.getHandler();b=(e[b]||!1)&&0<=e[b].handlers.indexOf(f)}b=b||!1}return b};this[n]=function(a){var c=!1,b=a&&"object"==typeof a&&g(a.type)&&a.type||g(a)&&a;if(b=b&&e[b]){var f=(b=b.listeners&&u(b.listeners))&&b.length||0,d=-1;if(1<=f){for(;++d<f;)b[d].handleEvent(a);c=!0}}return c};""in this&&delete this[""]}});
 
 
 */
