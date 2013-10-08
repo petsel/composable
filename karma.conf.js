@@ -64,6 +64,13 @@ files = [
   "src/components/Observable/Observable.SignalsAndSlots.js",                                                          //  Observable
 
 
+  // composable :: STRONGLY RECOMMENDED if one needs an AOP inspired pre stage for method modification/modifying      //  Controllable
+  "src/components/Controllable/Controllable.adviceTypes.before-after-around.js",                                      //  Controllable
+  "src/components/Controllable/Controllable.adviceTypes.afterThrowing-afterFinally.js",                               //  Controllable
+  "src/composites/Function/Function.modifiers.adviceTypes.before-after-around.js",                                    //  Controllable
+  "src/composites/Function/Function.modifiers.adviceTypes.afterThrowing-afterFinally.js",                             //  Controllable
+
+
 
 // load your spec files
 // load your spec files
@@ -113,6 +120,12 @@ files = [
  *
  *  // composable :: STRONGLY RECOMMENDED if one needs to rely on a type safe event systems                           //  Observable
  *  composable.components.Observable_SignalsAndSlots.spec                                                             //  Observable
+ *
+ *  // composable :: STRONGLY RECOMMENDED if one needs an AOP inspired pre stage for method modification/modifying    //  Controllable
+ *  composable.components.Controllable_adviceTypes_before_after_around.spec                                           //  Controllable
+ *  composable.components.Controllable_adviceTypes_afterThrowing_afterFinally.spec                                    //  Controllable
+ *  composable.composites.Function_modifiers_adviceTypes_before_after_around.spec                                     //  Controllable
+ *  composable.composites.Function_modifiers_adviceTypes_afterThrowing_afterFinally.spec                              //  Controllable
  */
 
 ];

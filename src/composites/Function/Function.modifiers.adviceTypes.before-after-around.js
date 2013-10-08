@@ -1,6 +1,6 @@
 
 
-composable("composites.Function_modifiers_adviceTypes_before_after_around", function (require, global/*, environment*/) {
+composable("composites.Function_modifiers_adviceTypes_before_after_around", function (require, global/*, internalBaseEnvironment*/) {
 
   "use strict";
 

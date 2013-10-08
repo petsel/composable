@@ -1,23 +1,27 @@
 
 
-composable("components.Controllable_adviceTypes_before_after_around", function (require, global, environment) {
+composable("components.Controllable_adviceTypes_before_after_around", function (require, global, internalBaseEnvironment) {
 
 
-  "use strict";
+  "use strict"; // @TODO - merge the final change into other branches of this type detection module.
 
 
-  require("components.Introspective_isFunction_isCallable");
+  /*
+   *  all additional functionality this module needs
+   *  is covered already by the [internalBaseEnvironment]
+   *  of the "composable :: core"
+   */
 
 
   var
     Trait, // the "Controllable_adviceTypes_before_after_around" Trait Module.
 
 
-    env_introspective = environment.introspective,
+    env_introspective = internalBaseEnvironment.introspective,
 
 
     isFunction = env_introspective.isFunction,
-    isCallable = env_introspective.isCallable,
+  //isCallable = env_introspective.isCallable,
 
 
     NULL_VALUE = null,
@@ -28,26 +32,23 @@ composable("components.Controllable_adviceTypes_before_after_around", function (
       return function () {
         var args = arguments;
 
-        behavior.call(target, args, joinpoint);
+        behavior.call(target, args, joinpoint/*provided by and passed only from within aspect oriented systems*/);
         return proceed.apply(target, args);
       };
     },
-    makeModificationAfterFinally = function (proceed, behavior, target, joinpoint) {    // after
+    makeModificationAfterReturning = function (proceed, behavior, target, joinpoint) {  // after
       return function () {
         var ret, args = arguments;
-        try {
-          ret = proceed.apply(target, args);
-        } finally {
-          behavior.call(target, args, ret, joinpoint);  // TODO - think about >>behavior.call(target, ret, args, joinpoint);<<
-        }
+
+        ret = proceed.apply(target, args);
+        behavior.call(target, ret, args, joinpoint/*provided by and passed only from within aspect oriented systems*/);
+
         return ret;
       };
     },
     makeModificationAround = function (proceed, behavior, target, joinpoint) {          // around
       return function () {
-
-      //return behavior.call(target, arguments, proceed, behavior, target, joinpoint);
-        return behavior.call(target, proceed, behavior, arguments, target, joinpoint);  // TODO - think about >>behavior.call(target, target, proceed, behavior, arguments, joinpoint);<<
+        return behavior.call(target, proceed, behavior, arguments, joinpoint/*provided by and passed only from within aspect oriented systems*/);
       };
     },
 
@@ -57,29 +58,32 @@ composable("components.Controllable_adviceTypes_before_after_around", function (
     },
 
 
-    before = function (adviceHandler/*:function*/, target/*:object(should not be optional)*/, joinpoint/*:Joinpoint(optional)*/) {
+    before = function (adviceHandler/*:function*/, target/*:object(optional, but recommended to be applied)*/, joinpoint/*:Joinpoint(optional)*/) {
       var proceedAfter = this;
       return ((
 
+      //isCallable(proceedAfter) && isCallable(adviceHandler)
         isFunction(proceedAfter) && isFunction(adviceHandler)
         && makeModificationBefore(proceedAfter, adviceHandler, getSanitizedTarget(target), getSanitizedTarget(joinpoint))
 
       ) || proceedAfter);
     },
-    after/*Finally*/ = function (adviceHandler/*:function*/, target/*:object(should not be optional)*/, joinpoint/*:Joinpoint(optional)*/) {
+    after/*Returning*/ = function (adviceHandler/*:function*/, target/*:object(optional, but recommended to be applied)*/, joinpoint/*:Joinpoint(optional)*/) {
       var proceedBefore = this;
       return ((
 
+      //isCallable(proceedBefore) && isCallable(adviceHandler)
         isFunction(proceedBefore) && isFunction(adviceHandler)
-        && makeModificationAfterFinally(proceedBefore, adviceHandler, getSanitizedTarget(target), getSanitizedTarget(joinpoint))
+        && makeModificationAfterReturning(proceedBefore, adviceHandler, getSanitizedTarget(target), getSanitizedTarget(joinpoint))
 
       ) || proceedBefore);
     },
-    around = function (adviceHandler/*:function*/, target/*:object(should not be optional)*/, joinpoint/*:Joinpoint(optional)*/) {
+    around = function (adviceHandler/*:function*/, target/*:object(optional, but recommended to be applied)*/, joinpoint/*:Joinpoint(optional)*/) {
       var proceedEnclosed = this;
       return ((
 
-        isCallable(proceedEnclosed) && isFunction(adviceHandler)
+      //isCallable(proceedEnclosed) && isCallable(adviceHandler)
+        isFunction(proceedEnclosed) && isFunction(adviceHandler)
         && makeModificationAround(proceedEnclosed, adviceHandler, getSanitizedTarget(target), getSanitizedTarget(joinpoint))
 
       ) || proceedEnclosed);
@@ -93,9 +97,9 @@ composable("components.Controllable_adviceTypes_before_after_around", function (
      */
     var controllable = this;
 
-    controllable.before         = before;
-    controllable.after          = after/*Finally*/;
-    controllable.around         = around;
+    controllable.before = before;
+    controllable.after  = after/*Returning*/;
+    controllable.around = around;
   };
 
 
@@ -112,8 +116,8 @@ composable("components.Controllable_adviceTypes_before_after_around", function (
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          -   770 byte
-composable("components.Controllable_adviceTypes_before_after_around",function(k,r,l){k("components.Introspective_isFunction_isCallable");k=l.introspective;var e=k.isFunction,m=k.isCallable,c=function(b){return!b&&(void 0===b||null===b)?null:b},n=function(b,f,g){var a;if(a=e(this))if(a=e(b)){var h=this,d=c(f),j=c(g);a=function(){var a=arguments;b.call(d,a,j);return h.apply(d,a)}}return a||this},p=function(b,f,g){var a;if(a=e(this))if(a=e(b)){var h=this,d=c(f),j=c(g);a=function(){var a,c=arguments;try{a=h.apply(d,c)}finally{b.call(d,c,a,j)}return a}}return a||this},q=function(b,f,g){var a;if(a=m(this))if(a=e(b)){var h=this,d=c(f),j=c(g);a=function(){return b.call(d,h,b,arguments,d,j)}}return a||this};return function(){this.before=n;this.after=p;this.around=q}});
+- Simple          -   695 byte
+composable("components.Controllable_adviceTypes_before_after_around",function(q,r,g){var b=g.introspective.isFunction,h=function(a,e,c,b){return function(){var d=arguments;e.call(c,d,b);return a.apply(c,d)}},k=function(a,e,c,d){return function(){var b,f=arguments;b=a.apply(c,f);e.call(c,b,f,d);return b}},l=function(a,b,c,d){return function(){return b.call(c,a,b,arguments,d)}},d=function(a){return a||void 0!==a&&null!==a?a:null},m=function(a,e,c){return b(this)&&b(a)&&h(this,a,d(e),d(c))||this},n=function(a,e,c){return b(this)&&b(a)&&k(this,a,d(e),d(c))||this},p=function(a,e,c){return b(this)&&b(a)&&l(this,a,d(e),d(c))||this};return function(){this.before=m;this.after=n;this.around=p}});
 
 
 */
