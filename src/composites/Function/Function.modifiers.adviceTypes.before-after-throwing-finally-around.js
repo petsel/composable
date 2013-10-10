@@ -6,6 +6,8 @@ composable("composites.Function_modifiers_adviceTypes_before_after_throwing_fina
 
   require("components.Controllable_adviceTypes_before_after_throwing_finally_around").call(global.Function.prototype);
 
+//return global.Function;
+
 });
 
 
@@ -18,6 +20,10 @@ composable("composites.Function_modifiers_adviceTypes_before_after_throwing_fina
 
 - Simple          -   213 byte
 composable("composites.Function_modifiers_adviceTypes_before_after_throwing_finally_around",function(a,b){a("components.Controllable_adviceTypes_before_after_throwing_finally_around").call(b.Function.prototype)});
+
+
+- Simple          -   135 byte
+composable("",function(a,b){a("components.Controllable_adviceTypes_before_after_throwing_finally_around").call(b.Function.prototype)});
 
 
 */
