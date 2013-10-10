@@ -17,7 +17,7 @@ describe("»components.Controllable_adviceTypes_before_after_around« module", f
     isFunction  = env_introspective.isFunction,
     isArguments = env_introspective.isArguments,
 
-    functionPrototype = Function.prototype,
+    functionPrototype = GLOBAL_OBJECT.Function.prototype,
 
 
     precedenceLog = [],
@@ -63,7 +63,7 @@ describe("»components.Controllable_adviceTypes_before_after_around« module", f
 
 
     throwException = function () {
-      throw (new TypeError(throwExceptionMessage));
+      throw (new GLOBAL_OBJECT.TypeError(throwExceptionMessage));
     },
     catchedErrorMessage = "",
     throwExceptionMessage = "type inferences between function objects",
