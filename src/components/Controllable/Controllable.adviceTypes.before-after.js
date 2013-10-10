@@ -36,7 +36,7 @@ composable("components.Controllable_adviceTypes_before_after", function (require
         return proceed.apply(target, args);
       };
     },
-    makeModificationAfterReturning = function (proceed, behavior, target, joinpoint) {  // after
+    makeModificationAfterReturning = function (proceed, behavior, target, joinpoint) {  // after - implemented as afterReturning
       return function () {
         var ret, args = arguments;
 
@@ -82,8 +82,8 @@ composable("components.Controllable_adviceTypes_before_after", function (require
      */
     var controllable = this;
 
-    controllable.before = before;
-    controllable.after  = after/*Returning*/;
+    controllable.before         = before;
+    controllable.after          = after/*Returning*/;
   };
 
 

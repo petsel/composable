@@ -36,7 +36,7 @@ composable("components.Controllable_adviceTypes_before_after_throwing_finally_ar
         return proceed.apply(target, args);
       };
     },
-    makeModificationAfterReturning = function (proceed, behavior, target, joinpoint) {  // after
+    makeModificationAfterReturning = function (proceed, behavior, target, joinpoint) {  // after - implemented as afterReturning
       return function () {
         var ret, args = arguments;
 
@@ -46,26 +46,30 @@ composable("components.Controllable_adviceTypes_before_after_throwing_finally_ar
         return ret;
       };
     },
-    makeModificationAfterFinally = function (proceed, behavior, target, joinpoint) {    // afterFinally
+    makeModificationAfterThrowing = function (proceed, behavior, target, joinpoint) {   // afterThrowing
       return function () {
         var ret, args = arguments;
         try {
           ret = proceed.apply(target, args);
-        } finally {
-          behavior.call(target, ret, args, joinpoint/*provided by and passed only from within aspect oriented systems*/);
+        } catch (exc) {
+          behavior.call(target, exc, args, joinpoint/*provided by and passed only from within aspect oriented systems*/);
+        //throw exc;
         }
         return ret;
       };
     },
-    makeModificationAfterThrowing = function (proceed, behavior, target, joinpoint) {   // afterThrowing
+    makeModificationAfterFinally = function (proceed, behavior, target, joinpoint) {    // afterFinally
       return function () {
-        var args = arguments;
+        var ret, err, args = arguments;
         try {
-          proceed.apply(target, args);
+          ret = proceed.apply(target, args);
         } catch (exc) {
-          behavior.call(target, exc, args, joinpoint/*provided by and passed only from within aspect oriented systems*/);
-          throw exc;
-        }
+          err = exc;
+        } // finally { ... }
+        ret = (err || ret);
+        behavior.call(target, ret, args, joinpoint/*provided by and passed only from within aspect oriented systems*/);
+
+        return ret;
       };
     },
     makeModificationAround = function (proceed, behavior, target, joinpoint) {          // around
@@ -100,6 +104,16 @@ composable("components.Controllable_adviceTypes_before_after_throwing_finally_ar
 
       ) || proceedBefore);
     },
+    afterThrowing = function (adviceHandler/*:function*/, target/*:object(optional, but recommended to be applied)*/, joinpoint/*:Joinpoint(optional)*/) {
+      var proceedBefore = this;
+      return ((
+
+        //isCallable(proceedBefore) && isCallable(adviceHandler)
+        isFunction(proceedBefore) && isFunction(adviceHandler)
+          && makeModificationAfterThrowing(proceedBefore, adviceHandler, getSanitizedTarget(target), getSanitizedTarget(joinpoint))
+
+        ) || proceedBefore);
+    },
     afterFinally = function (adviceHandler/*:function*/, target/*:object(optional, but recommended to be applied)*/, joinpoint/*:Joinpoint(optional)*/) {
       var proceedBefore = this;
       return ((
@@ -107,16 +121,6 @@ composable("components.Controllable_adviceTypes_before_after_throwing_finally_ar
       //isCallable(proceedBefore) && isCallable(adviceHandler)
         isFunction(proceedBefore) && isFunction(adviceHandler)
         && makeModificationAfterFinally(proceedBefore, adviceHandler, getSanitizedTarget(target), getSanitizedTarget(joinpoint))
-
-      ) || proceedBefore);
-    },
-    afterThrowing = function (adviceHandler/*:function*/, target/*:object(optional, but recommended to be applied)*/, joinpoint/*:Joinpoint(optional)*/) {
-      var proceedBefore = this;
-      return ((
-
-      //isCallable(proceedBefore) && isCallable(adviceHandler)
-        isFunction(proceedBefore) && isFunction(adviceHandler)
-        && makeModificationAfterThrowing(proceedBefore, adviceHandler, getSanitizedTarget(target), getSanitizedTarget(joinpoint))
 
       ) || proceedBefore);
     },
@@ -141,8 +145,8 @@ composable("components.Controllable_adviceTypes_before_after_throwing_finally_ar
 
     controllable.before         = before;
     controllable.after          = after/*Returning*/;
-    controllable.afterFinally   = afterFinally;
     controllable.afterThrowing  = afterThrowing;
+    controllable.afterFinally   = afterFinally;
     controllable.around         = around;
   };
 
@@ -160,8 +164,8 @@ composable("components.Controllable_adviceTypes_before_after_throwing_finally_ar
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          -  1105 byte
-composable("components.Controllable_adviceTypes_before_after_throwing_finally_around",function(v,w,h){var c=h.introspective.isFunction,k=function(a,d,b,c){return function(){var f=arguments;d.call(b,f,c);return a.apply(b,f)}},l=function(a,d,b,c){return function(){var f,e=arguments;f=a.apply(b,e);d.call(b,f,e,c);return f}},m=function(a,d,b,c){return function(){var e,g=arguments;try{e=a.apply(b,g)}finally{d.call(b,e,g,c)}return e}},n=function(a,d,b,e){return function(){var c=arguments;try{a.apply(b,c)}catch(g){throw d.call(b,g,c,e),g;}}},p=function(a,d,b,c){return function(){return d.call(b,a,d,arguments,c)}},e=function(a){return a||void 0!==a&&null!==a?a:null},q=function(a,d,b){return c(this)&&c(a)&&k(this,a,e(d),e(b))||this},r=function(a,d,b){return c(this)&&c(a)&&l(this,a,e(d),e(b))||this},s=function(a,d,b){return c(this)&&c(a)&&m(this,a,e(d),e(b))||this},t=function(a,d,b){return c(this)&&c(a)&&n(this,a,e(d),e(b))||this},u=function(a,d,b){return c(this)&&c(a)&&p(this,a,e(d),e(b))||this};return function(){this.before=q;this.after=r;this.afterFinally=s;this.afterThrowing=t;this.around=u}});
+- Simple          -  1122 byte
+composable("components.Controllable_adviceTypes_before_after_throwing_finally_around",function(w,x,h){var d=h.introspective.isFunction,l=function(a,e,c,d){return function(){var f=arguments;e.call(c,f,d);return a.apply(c,f)}},m=function(a,e,c,d){return function(){var f,b=arguments;f=a.apply(c,b);e.call(c,f,b,d);return f}},n=function(a,e,c,d){return function(){var f,b=arguments;try{f=a.apply(c,b)}catch(g){e.call(c,g,b,d)}return f}},p=function(a,e,c,d){return function(){var b,k,g=arguments;try{b=a.apply(c,g)}catch(h){k=h}b=k||b;e.call(c,b,g,d);return b}},q=function(a,b,c,d){return function(){return b.call(c,a,b,arguments,d)}},b=function(a){return a||void 0!==a&&null!==a?a:null},r=function(a,e,c){return d(this)&&d(a)&&l(this,a,b(e),b(c))||this},s=function(a,e,c){return d(this)&&d(a)&&m(this,a,b(e),b(c))||this},t=function(a,e,c){return d(this)&&d(a)&&n(this,a,b(e),b(c))||this},u=function(a,e,c){return d(this)&&d(a)&&p(this,a,b(e),b(c))||this},v=function(a,e,c){return d(this)&&d(a)&&q(this,a,b(e),b(c))||this};return function(){this.before=r;this.after=s;this.afterThrowing=t;this.afterFinally=u;this.around=v}});
 
 
 */

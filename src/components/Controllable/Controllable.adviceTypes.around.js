@@ -57,7 +57,7 @@ composable("components.Controllable_adviceTypes_around", function (require, glob
     /**
      *  implementing the "Controllable_adviceTypes_around" Trait Module.
      */
-    this.around = around;
+    this.around         = around;
   };
 
 

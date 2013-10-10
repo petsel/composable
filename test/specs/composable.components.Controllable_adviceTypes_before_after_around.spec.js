@@ -65,6 +65,7 @@ describe("»components.Controllable_adviceTypes_before_after_around« module", f
     throwException = function () {
       throw (new TypeError(throwExceptionMessage));
     },
+    catchedErrorMessage = "",
     throwExceptionMessage = "type inferences between function objects",
 
 
@@ -131,15 +132,15 @@ describe("»components.Controllable_adviceTypes_before_after_around« module", f
     },
 
 
-    restoreFunctionPrototype = function () {
+    resetFunctionPrototype = function () {
       delete functionPrototype.before;
-      delete functionPrototype.after; // afterFinally
+      delete functionPrototype.after; // afterReturning
       delete functionPrototype.around;
-      delete functionPrototype.afterReturning;
+      delete functionPrototype.afterFinally;
       delete functionPrototype.afterThrowing;
     }
   ;
-  restoreFunctionPrototype();
+  resetFunctionPrototype();
 
 
   Enumerable_first_last_item.call(fooBarBazList);
@@ -147,6 +148,8 @@ describe("»components.Controllable_adviceTypes_before_after_around« module", f
   Controllable_before_after_around.call(fooBarBazList.first);
   Controllable_before_after_around.call(fooBarBazList.last);
   Controllable_before_after_around.call(fooBarBazList.item);
+
+  Controllable_before_after_around.call(throwException);
 
 
   it("should - if required via »( composable. )require(\"components.Controllable_adviceTypes_before_after_around\")« - always be a \"function\" type.", function () {
@@ -163,7 +166,7 @@ describe("»components.Controllable_adviceTypes_before_after_around« module", f
 
     ].join(" "), function () {
 
-      restoreFunctionPrototype();
+      resetFunctionPrototype();
       expect(functionPrototype.before).toBeUndefined();
       expect(functionPrototype.after).toBeUndefined();
       expect(functionPrototype.around).toBeUndefined();
@@ -196,8 +199,8 @@ describe("»components.Controllable_adviceTypes_before_after_around« module", f
         "it accepts up to 3 parameters - firstly the mandatory [adviceHandler] that provides the additional",
         "behavior that is going to be invoked just before the original functionality gets invoked as well.",
         "Secondly the optional but recommended [target] that provides the target object within that's context",
-        "all methods get invoked. At last the so far optional [joinpoint] argument that only will be passed to",
-        "methods that have become part of a real Aspect Oriented System."
+        "all methods get invoked. At last a [joinpoint] argument that only is of relevance in case [before]",
+        "is used from within a real Aspect Oriented System."
 
       ].join(" "), function () {
 
@@ -208,7 +211,7 @@ describe("»components.Controllable_adviceTypes_before_after_around« module", f
 
       it([
 
-        "should - if used properly - return a function object, that - if invoked - executes the code",
+        "it should - if used properly - return a function object, that - if invoked - executes the code",
         "of the additionally provided function just before it executes the very same function [before]",
         "did operate on - the return value of the modified function should equal the return value of the",
         "operated function. The additionally provided function is able to access as its first argument",
@@ -266,6 +269,32 @@ describe("»components.Controllable_adviceTypes_before_after_around« module", f
         expect(returnValue).toBe(fooBarBazList[2]);
         expect(precedenceLog[0]).toBe("passed");
       });
+
+      describe("... as for the returned function object ...", function () {
+        it([
+
+          "it should not provide on itself any internal exception handling",
+          "for all of its wrapped/enclosed functionality."
+
+        ].join(" "), function () {
+
+          try {
+            catchedErrorMessage = "";
+            (getFoo.before(throwException)).call();
+          } catch (exc) {
+            catchedErrorMessage = exc.message;
+          }
+          expect(catchedErrorMessage).toBe(throwExceptionMessage);
+
+          try {
+            catchedErrorMessage = "";
+            (throwException.before(getBar)).call();
+          } catch (exc) {
+            catchedErrorMessage = exc.message;
+          }
+          expect(catchedErrorMessage).toBe(throwExceptionMessage);
+        });
+      });
     });
 
 
@@ -276,8 +305,8 @@ describe("»components.Controllable_adviceTypes_before_after_around« module", f
         "it accepts up to 3 parameters - firstly the mandatory [adviceHandler] that provides the additional",
         "behavior that is going to be invoked right after the original functionality was invoked.",
         "Secondly the optional but recommended [target] that provides the target object within that's context",
-        "all methods get invoked. At last the so far optional [joinpoint] argument that only will be passed to",
-        "methods that have become part of a real Aspect Oriented System."
+        "all methods get invoked. At last a [joinpoint] argument that only is of relevance in case [after]",
+        "is used from within a real Aspect Oriented System."
 
       ].join(" "), function () {
 
@@ -347,6 +376,33 @@ describe("»components.Controllable_adviceTypes_before_after_around« module", f
         expect(returnValue).toBe(fooBarBazList[0]);
         expect(precedenceLog[0]).toBe("passed");
       });
+
+      describe("... as for the returned function object ...", function () {
+        it([
+
+          "it should not provide on itself any internal exception handling",
+          "for all of its wrapped/enclosed functionality.",
+          "Thus [after] is intended to work as and therefore is implemented too as [afterReturning]."
+
+        ].join(" "), function () {
+
+          try {
+            catchedErrorMessage = "";
+            (getBar.after(throwException)).call();
+          } catch (exc) {
+            catchedErrorMessage = exc.message;
+          }
+          expect(catchedErrorMessage).toBe(throwExceptionMessage);
+
+          try {
+            catchedErrorMessage = "";
+            (throwException.after(getBaz)).call();
+          } catch (exc) {
+            catchedErrorMessage = exc.message;
+          }
+          expect(catchedErrorMessage).toBe(throwExceptionMessage);
+        });
+      });
     });
 
 
@@ -357,8 +413,8 @@ describe("»components.Controllable_adviceTypes_before_after_around« module", f
         "it accepts up to 3 parameters - firstly the mandatory [adviceHandler] that provides the additional",
         "behavior that is going to be invoked right after the original functionality was invoked.",
         "Secondly the optional but recommended [target] that provides the target object within that's context",
-        "all methods get invoked. At last the so far optional [joinpoint] argument that only will be passed to",
-        "methods that have become part of a real Aspect Oriented System."
+        "all methods get invoked. At last a [joinpoint] argument that only is of relevance in case [around]",
+        "is used from within a real Aspect Oriented System."
 
       ].join(" "), function () {
 
@@ -409,6 +465,40 @@ describe("»components.Controllable_adviceTypes_before_after_around« module", f
         returnValue = writeIntoLog();
         expect(precedenceLog.join("")).toBe(getFoo() + getFoo() + getBar());
         expect(returnValue).toBe(true);
+      });
+
+      describe("... as for the returned function object ...", function () {
+        it([
+
+          "it should not provide on itself any internal exception handling",
+          "for all of its wrapped/enclosed functionality."
+
+        ].join(" "), function () {
+
+          try {
+            catchedErrorMessage = "";
+            (throwException.around(fooBarInterceptor)).call();
+          } catch (exc) {
+            catchedErrorMessage = exc.message;
+          }
+          expect(catchedErrorMessage).toBe(throwExceptionMessage);
+
+          try {
+            catchedErrorMessage = "";
+            (getFoo.around(function (proceed/*, interceptor, argsArray*/) { proceed(); throwException(); })).call();
+          } catch (exc) {
+            catchedErrorMessage = exc.message;
+          }
+          expect(catchedErrorMessage).toBe(throwExceptionMessage);
+
+          try {
+            catchedErrorMessage = "";
+            (throwException.around(function (proceed/*, interceptor, argsArray*/) { proceed(); getFoo(); })).call();
+          } catch (exc) {
+            catchedErrorMessage = exc.message;
+          }
+          expect(catchedErrorMessage).toBe(throwExceptionMessage);
+        });
       });
     });
   });
