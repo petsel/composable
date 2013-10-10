@@ -11,7 +11,7 @@ describe("\"/src/composites/Array/Array.from.js\" is an anonymous module - only 
     Array = GLOBAL_OBJECT.Array
   ;
 
-  describe("It is a module that at soon as it accesses »composable« modules at compile time ...", function () {
+  describe("It is a module that as soon as it accesses »composable« modules at compile time ...", function () {
 
     it([
 

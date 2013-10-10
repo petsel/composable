@@ -13,7 +13,7 @@ describe("\"/src/composites/Array/Array.first-last.js\" is an anonymous module -
     arr = str.split(str)
   ;
 
-  describe("It is a module that at soon as it accesses »composable« modules at compile time ...", function () {
+  describe("It is a module that as soon as it accesses »composable« modules at compile time ...", function () {
 
     it([
 
