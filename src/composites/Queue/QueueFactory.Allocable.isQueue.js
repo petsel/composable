@@ -1,6 +1,6 @@
 
 
-composable("composites.QueueFactory_Allocable", function (require/*, global, internalBaseEnvironment*/) {
+composable("composites.QueueFactory_Allocable_isQueue", function (require, global, internalBaseEnvironment) {
 
 
   "use strict";
@@ -13,10 +13,13 @@ composable("composites.QueueFactory_Allocable", function (require/*, global, int
     Allocable_all         = require("components.Allocable_all"),
     Enumerable_first_last = require("components.Enumerable_first_last"),
 
+    isFunction  = internalBaseEnvironment.introspective.isFunction,
+
 
     Factory,
     Queue,
 
+    isQueue,
     createQueue,
 
     queueList = [],
@@ -33,6 +36,25 @@ composable("composites.QueueFactory_Allocable", function (require/*, global, int
     }*/,
     onEmpty = function (queue) {
       queue.dispatchEvent("empty");                       // string type flag alternatively to {type: "empty"}.
+    },
+
+
+    methodAPIKeys = (function (obj) {
+      Observable.call(obj);
+      Allocable.call(obj);
+      return global.Object.keys(obj).filter(function (key/*, idx, list*/) {
+        return isFunction(obj[key]);
+      });
+    }({
+      enqueue: "",
+      dequeue: ""
+    })),
+
+    doesMatchMethodAPI = function (type) {
+      return methodAPIKeys.every(function (key/*, idx, list*/) {
+
+        return isFunction(type[key]);
+      });
     }
   ;
 
@@ -69,6 +91,9 @@ composable("composites.QueueFactory_Allocable", function (require/*, global, int
   };
 
 
+  isQueue = function (type) {
+    return (type instanceof Queue) || doesMatchMethodAPI(type);
+  };
   createQueue = function () {
 
     queueList.push(new Queue);
@@ -78,6 +103,7 @@ composable("composites.QueueFactory_Allocable", function (require/*, global, int
 
   Factory = {
 
+    isQueue : isQueue,
     create  : createQueue
   };
   Enumerable_first_last.call(queueList);
@@ -97,8 +123,8 @@ composable("composites.QueueFactory_Allocable", function (require/*, global, int
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          -   603 byte
-composable("composites.QueueFactory_Allocable",function(a){var g=a("components.Observable_SignalsAndSlots"),h=a("components.Allocable"),k=a("components.Allocable_all");a=a("components.Enumerable_first_last");var e,f,d=[];f=function(){var b=this,a=[];b.constructor=f;b.enqueue=function(c){a.push(c);b.dispatchEvent({type:"enqueue",item:c});return c};b.dequeue=function(){var c=a.shift();b.dispatchEvent({type:"dequeue",item:c});a.length||b.dispatchEvent("empty");return c};g.call(b,{hasEventListener:""});h.call(b,a)};e={create:function(){d.push(new f);return d.last()}};a.call(d);k.call(e,d);return e});
+- Simple          -   870 byte
+composable("composites.QueueFactory_Allocable_isQueue",function(b,l,d){var g=b("components.Observable_SignalsAndSlots"),h=b("components.Allocable"),m=b("components.Allocable_all");b=b("components.Enumerable_first_last");var k=d.introspective.isFunction,e,f=[],n=function(a){g.call(a);h.call(a);return l.Object.keys(a).filter(function(c){return k(a[c])})}({enqueue:"",dequeue:""}),p=function(a){return n.every(function(c){return k(a[c])})};e=function(){var a=this,c=[];a.constructor=e;a.enqueue=function(b){c.push(b);a.dispatchEvent({type:"enqueue",item:b});return b};a.dequeue=function(){var b=c.shift();a.dispatchEvent({type:"dequeue",item:b});c.length||a.dispatchEvent("empty");return b};g.call(a,{hasEventListener:""});h.call(a,c)};d={isQueue:function(a){return a instanceof e||p(a)},create:function(){f.push(new e);return f.last()}};b.call(f);m.call(d,f);return d});
 
 
 */

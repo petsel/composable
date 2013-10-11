@@ -77,6 +77,13 @@
     <script src="../../src/composites/Function/Function.modifiers.adviceTypes.afterThrowing-afterFinally.js"></script>        <!-- Controllable //-->
 
 
+    <!-- composable :: RECOMMENDED if one is in need of [Queue]s that e.g. do dispatch "enqueue" / "dequeue" events -->       <!-- QueueFactory composite //-->
+    <script src="../../src/composites/Queue/QueueFactory.js"></script>                                                        <!-- QueueFactory composite //-->
+    <script src="../../src/composites/Queue/QueueFactory.isQueue.js"></script>                                                <!-- QueueFactory composite //-->
+    <script src="../../src/composites/Queue/QueueFactory.Allocable.js"></script>                                              <!-- QueueFactory composite //-->
+    <script src="../../src/composites/Queue/QueueFactory.Allocable.isQueue.js"></script>                                      <!-- QueueFactory composite //-->
+
+
 
   <!-- load jasmine -->
   <!-- load jasmine -->
@@ -144,6 +151,13 @@
     <script src="../specs/composable.components.Controllable_adviceTypes_afterThrowing_afterFinally.spec.js"></script>        <!-- Controllable //-->
     <script src="../specs/composable.composites.Function_modifiers_adviceTypes_before_after_around.spec.js"></script>         <!-- Controllable //-->
     <script src="../specs/composable.composites.Function_modifiers_adviceTypes_afterThrowing_afterFinally.spec.js"></script>  <!-- Controllable //-->
+
+
+    <!-- composable :: RECOMMENDED if one is in need of [Queue]s that e.g. do dispatch "enqueue" / "dequeue" events -->       <!-- QueueFactory composite //-->
+    <script src="../specs/composable.composites.QueueFactory.spec.js"></script>                                               <!-- QueueFactory composite //- ->
+    <script src="../specs/composable.composites.QueueFactory_isQueue.js"></script>                                            <!-- QueueFactory composite //- ->
+    <script src="../specs/composable.composites.QueueFactory_Allocable.js"></script>                                          <!-- QueueFactory composite //- ->
+    <script src="../specs/composable.composites.QueueFactory_Allocable_isQueue.js"></script>                                  <!-- QueueFactory composite //-->
 
   <!-- run specs -->
   <!-- run specs -->

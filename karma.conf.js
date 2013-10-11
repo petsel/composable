@@ -71,6 +71,13 @@ files = [
   "src/composites/Function/Function.modifiers.adviceTypes.afterThrowing-afterFinally.js",                             //  Controllable
 
 
+  // composable :: RECOMMENDED if one is in need of [Queue]s that e.g. do dispatch "enqueue" / "dequeue" events       //  QueueFactory composites
+  "src/composites/Queue/QueueFactory.js",                                                                             //  QueueFactory composites
+  "src/composites/Queue/QueueFactory.isQueue.js",                                                                     //  QueueFactory composites
+  "src/composites/Queue/QueueFactory.Allocable.js",                                                                   //  QueueFactory composites
+  "src/composites/Queue/QueueFactory.Allocable.isQueue.js",                                                           //  QueueFactory composites
+
+
 
 // load your spec files
 // load your spec files
@@ -126,6 +133,12 @@ files = [
  *  composable.components.Controllable_adviceTypes_afterThrowing_afterFinally.spec                                    //  Controllable
  *  composable.composites.Function_modifiers_adviceTypes_before_after_around.spec                                     //  Controllable
  *  composable.composites.Function_modifiers_adviceTypes_afterThrowing_afterFinally.spec                              //  Controllable
+ *
+ *  // composable :: RECOMMENDED if one is in need of [Queue]s that e.g. do dispatch "enqueue" / "dequeue" events     //  QueueFactory composite
+ *  composable.composites.QueueFactory.spec                                                                           //  QueueFactory composite
+ *  composable.composites.QueueFactory_isQueue.spec                                                                   //  QueueFactory composite
+ *  composable.composites.QueueFactory_Allocable.spec                                                                 //  QueueFactory composite
+ *  composable.composites.QueueFactory_Allocable_isQueue.spec                                                         //  QueueFactory composite
  */
 
 ];

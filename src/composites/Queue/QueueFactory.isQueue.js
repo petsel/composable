@@ -1,6 +1,6 @@
 
 
-composable("composites.QueueFactory_Allocable", function (require/*, global, internalBaseEnvironment*/) {
+composable("composites.QueueFactory_isQueue", function (require, global, internalBaseEnvironment) {
 
 
   "use strict";
@@ -10,16 +10,14 @@ composable("composites.QueueFactory_Allocable", function (require/*, global, int
     Observable  = require("components.Observable_SignalsAndSlots"),
     Allocable   = require("components.Allocable"),
 
-    Allocable_all         = require("components.Allocable_all"),
-    Enumerable_first_last = require("components.Enumerable_first_last"),
+    isFunction  = internalBaseEnvironment.introspective.isFunction,
 
 
     Factory,
     Queue,
 
+    isQueue,
     createQueue,
-
-    queueList = [],
 
 
     onEnqueue = function (queue, type) {
@@ -33,6 +31,25 @@ composable("composites.QueueFactory_Allocable", function (require/*, global, int
     }*/,
     onEmpty = function (queue) {
       queue.dispatchEvent("empty");                       // string type flag alternatively to {type: "empty"}.
+    },
+
+
+    methodAPIKeys = (function (obj) {
+      Observable.call(obj);
+      Allocable.call(obj);
+      return global.Object.keys(obj).filter(function (key/*, idx, list*/) {
+        return isFunction(obj[key]);
+      });
+    }({
+      enqueue: "",
+      dequeue: ""
+    })),
+
+    doesMatchMethodAPI = function (type) {
+      return methodAPIKeys.every(function (key/*, idx, list*/) {
+
+        return isFunction(type[key]);
+      });
     }
   ;
 
@@ -69,19 +86,19 @@ composable("composites.QueueFactory_Allocable", function (require/*, global, int
   };
 
 
+  isQueue = function (type) {
+    return (type instanceof Queue) || doesMatchMethodAPI(type);
+  };
   createQueue = function () {
-
-    queueList.push(new Queue);
-    return queueList.last();
+    return (new Queue);
   };
 
 
   Factory = {
 
+    isQueue : isQueue,
     create  : createQueue
   };
-  Enumerable_first_last.call(queueList);
-  Allocable_all.call(Factory, queueList);
 
 
   return Factory;
@@ -97,8 +114,8 @@ composable("composites.QueueFactory_Allocable", function (require/*, global, int
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          -   603 byte
-composable("composites.QueueFactory_Allocable",function(a){var g=a("components.Observable_SignalsAndSlots"),h=a("components.Allocable"),k=a("components.Allocable_all");a=a("components.Enumerable_first_last");var e,f,d=[];f=function(){var b=this,a=[];b.constructor=f;b.enqueue=function(c){a.push(c);b.dispatchEvent({type:"enqueue",item:c});return c};b.dequeue=function(){var c=a.shift();b.dispatchEvent({type:"dequeue",item:c});a.length||b.dispatchEvent("empty");return c};g.call(b,{hasEventListener:""});h.call(b,a)};e={create:function(){d.push(new f);return d.last()}};a.call(d);k.call(e,d);return e});
+- Simple          -   735 byte
+composable("composites.QueueFactory_isQueue",function(e,k,l){var f=e("components.Observable_SignalsAndSlots"),g=e("components.Allocable"),h=l.introspective.isFunction,d,m=function(a){f.call(a);g.call(a);return k.Object.keys(a).filter(function(b){return h(a[b])})}({enqueue:"",dequeue:""}),n=function(a){return m.every(function(b){return h(a[b])})};d=function(){var a=this,b=[];a.constructor=d;a.enqueue=function(c){b.push(c);a.dispatchEvent({type:"enqueue",item:c});return c};a.dequeue=function(){var c=b.shift();a.dispatchEvent({type:"dequeue",item:c});b.length||a.dispatchEvent("empty");return c};f.call(a,{hasEventListener:""});g.call(a,b)};return{isQueue:function(a){return a instanceof d||n(a)},create:function(){return new d}}});
 
 
 */

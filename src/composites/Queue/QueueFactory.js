@@ -1,6 +1,6 @@
 
 
-composable("composites.QueueFactory", function (require, global, environment) {
+composable("composites.QueueFactory", function (require/*, global, internalBaseEnvironment*/) {
 
 
   "use strict";
@@ -12,10 +12,23 @@ composable("composites.QueueFactory", function (require, global, environment) {
 
 
     Factory,
-
-
     Queue,
-    createQueue
+
+    createQueue,
+
+
+    onEnqueue = function (queue, type) {
+      queue.dispatchEvent({type: "enqueue", item: type}); // object based for passing additional properties.
+    },
+    onDequeue = function (queue, type) {
+      queue.dispatchEvent({type: "dequeue", item: type}); // object based for passing additional properties.
+    }/*,
+    onEmpty = function (queue, type) {
+      queue.dispatchEvent({type: "empty", item: type});   // object based for passing additional properties.
+    }*/,
+    onEmpty = function (queue) {
+      queue.dispatchEvent("empty");                       // string type flag alternatively to {type: "empty"}.
+    }
   ;
 
 
@@ -25,50 +38,40 @@ composable("composites.QueueFactory", function (require, global, environment) {
      */
     var
       queue = this,
-
-      list = [],
-
-      onEnqueue = function (type) {
-        queue.dispatchEvent({target: queue, type: "enqueue", item: type/*, even more key:value pairs */});
-      },
-      onDequeue = function (type) {
-        queue.dispatchEvent({target: queue, type: "dequeue", item: type/*, even more key:value pairs */});
-      },
-      onEmpty = function () {
-        queue.dispatchEvent({target: queue, type: "empty"/*, even more key:value pairs */});
-      }
+      list = []
     ;
-    Observable.call(queue);
-    Allocable.call(queue, list);
-
     queue.constructor = Queue;
 
     queue.enqueue = function (type/*:[Object]*/) { /* enqueue | line up | [Array.push] */
 
       list.push(type);
-      onEnqueue(type);
+      onEnqueue(queue, type);
+
+      return type;
     };
     queue.dequeue = function () { /* dequeue | line up | [Array.shift] */
 
       var type = list.shift();
-      if (list.length <= 0) {
+      onDequeue(queue, type);
 
-        onEmpty();
-      }
-      onDequeue(type);
+      (list.length || onEmpty(queue));
 
       return type;
     };
-  };
-  createQueue = function () {
 
+    Observable.call(queue, {hasEventListener: ""}); // - applying the Observable Mixin API without [hasEventListener].
+    Allocable.call(queue, list);                    // - applying the privileged Allocable Trait.
+  };
+
+
+  createQueue = function () {
     return (new Queue);
   };
 
 
   Factory = {
 
-    create: createQueue
+    create  : createQueue
   };
 
 
@@ -85,8 +88,8 @@ composable("composites.QueueFactory", function (require, global, environment) {
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          -   472 byte
-composable("composites.QueueFactory",function(e){var f=e("components.Observable_SignalsAndSlots"),g=e("components.Allocable"),d;d=function(){var a=this,c=[];f.call(a);g.call(a,c);a.constructor=d;a.enqueue=function(b){c.push(b);a.dispatchEvent({target:a,type:"enqueue",item:b})};a.dequeue=function(){var b=c.shift();0>=c.length&&a.dispatchEvent({target:a,type:"empty"});a.dispatchEvent({target:a,type:"dequeue",item:b});return b}};return{create:function(){return new d}}});
+- Simple          -   466 byte
+composable("composites.QueueFactory",function(e){var f=e("components.Observable_SignalsAndSlots"),g=e("components.Allocable"),d;d=function(){var a=this,c=[];a.constructor=d;a.enqueue=function(b){c.push(b);a.dispatchEvent({type:"enqueue",item:b});return b};a.dequeue=function(){var b=c.shift();a.dispatchEvent({type:"dequeue",item:b});c.length||a.dispatchEvent("empty");return b};f.call(a,{hasEventListener:""});g.call(a,c)};return{create:function(){return new d}}});
 
 
 */
