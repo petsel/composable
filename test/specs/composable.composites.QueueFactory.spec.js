@@ -327,7 +327,7 @@ describe("»composites.QueueFactory« module", function () {
               queue_3.enqueue(word);
             });
 
-            expect(queue_3.size()).toBe(wordListLength)
+            expect(queue_3.size()).toBe(wordListLength);
           });
 
           it([
