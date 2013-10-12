@@ -40,8 +40,8 @@ composable("composites.QueueFactory_Allocable_isQueue", function (require, globa
 
 
     methodAPIKeys = (function (obj) {
-      Observable.call(obj);
-      Allocable.call(obj);
+      Observable.call(obj, {hasEventListener: ""}); // - applying the Observable Mixin API without [hasEventListener].
+      Allocable.call(obj);                          // - applying the privileged Allocable Trait.
       return global.Object.keys(obj).filter(function (key/*, idx, list*/) {
         return isFunction(obj[key]);
       });
@@ -92,7 +92,7 @@ composable("composites.QueueFactory_Allocable_isQueue", function (require, globa
 
 
   isQueue = function (type) {
-    return (type instanceof Queue) || doesMatchMethodAPI(type);
+    return !!(type && ((type instanceof Queue) || doesMatchMethodAPI(type)));
   };
   createQueue = function () {
 
@@ -123,8 +123,8 @@ composable("composites.QueueFactory_Allocable_isQueue", function (require, globa
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          -   870 byte
-composable("composites.QueueFactory_Allocable_isQueue",function(b,l,d){var g=b("components.Observable_SignalsAndSlots"),h=b("components.Allocable"),m=b("components.Allocable_all");b=b("components.Enumerable_first_last");var k=d.introspective.isFunction,e,f=[],n=function(a){g.call(a);h.call(a);return l.Object.keys(a).filter(function(c){return k(a[c])})}({enqueue:"",dequeue:""}),p=function(a){return n.every(function(c){return k(a[c])})};e=function(){var a=this,c=[];a.constructor=e;a.enqueue=function(b){c.push(b);a.dispatchEvent({type:"enqueue",item:b});return b};a.dequeue=function(){var b=c.shift();a.dispatchEvent({type:"dequeue",item:b});c.length||a.dispatchEvent("empty");return b};g.call(a,{hasEventListener:""});h.call(a,c)};d={isQueue:function(a){return a instanceof e||p(a)},create:function(){f.push(new e);return f.last()}};b.call(f);m.call(d,f);return d});
+- Simple          -   901 byte
+composable("composites.QueueFactory_Allocable_isQueue",function(b,l,d){var g=b("components.Observable_SignalsAndSlots"),h=b("components.Allocable"),m=b("components.Allocable_all");b=b("components.Enumerable_first_last");var k=d.introspective.isFunction,e,f=[],n=function(a){g.call(a,{hasEventListener:""});h.call(a);return l.Object.keys(a).filter(function(c){return k(a[c])})}({enqueue:"",dequeue:""}),p=function(a){return n.every(function(c){return k(a[c])})};e=function(){var a=this,c=[];a.constructor=e;a.enqueue=function(b){c.push(b);a.dispatchEvent({type:"enqueue",item:b});return b};a.dequeue=function(){var b=c.shift();a.dispatchEvent({type:"dequeue",item:b});c.length||a.dispatchEvent("empty");return b};g.call(a,{hasEventListener:""});h.call(a,c)};d={isQueue:function(a){return!(!a||!(a instanceof e||p(a)))},create:function(){f.push(new e);return f.last()}};b.call(f);m.call(d,f);return d});
 
 
 */

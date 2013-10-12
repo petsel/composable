@@ -35,8 +35,8 @@ composable("composites.QueueFactory_isQueue", function (require, global, interna
 
 
     methodAPIKeys = (function (obj) {
-      Observable.call(obj);
-      Allocable.call(obj);
+      Observable.call(obj, {hasEventListener: ""}); // - applying the Observable Mixin API without [hasEventListener].
+      Allocable.call(obj);                          // - applying the privileged Allocable Trait.
       return global.Object.keys(obj).filter(function (key/*, idx, list*/) {
         return isFunction(obj[key]);
       });
@@ -87,7 +87,7 @@ composable("composites.QueueFactory_isQueue", function (require, global, interna
 
 
   isQueue = function (type) {
-    return (type instanceof Queue) || doesMatchMethodAPI(type);
+    return !!(type && ((type instanceof Queue) || doesMatchMethodAPI(type)));
   };
   createQueue = function () {
     return (new Queue);
@@ -114,8 +114,8 @@ composable("composites.QueueFactory_isQueue", function (require, global, interna
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          -   735 byte
-composable("composites.QueueFactory_isQueue",function(e,k,l){var f=e("components.Observable_SignalsAndSlots"),g=e("components.Allocable"),h=l.introspective.isFunction,d,m=function(a){f.call(a);g.call(a);return k.Object.keys(a).filter(function(b){return h(a[b])})}({enqueue:"",dequeue:""}),n=function(a){return m.every(function(b){return h(a[b])})};d=function(){var a=this,b=[];a.constructor=d;a.enqueue=function(c){b.push(c);a.dispatchEvent({type:"enqueue",item:c});return c};a.dequeue=function(){var c=b.shift();a.dispatchEvent({type:"dequeue",item:c});b.length||a.dispatchEvent("empty");return c};f.call(a,{hasEventListener:""});g.call(a,b)};return{isQueue:function(a){return a instanceof d||n(a)},create:function(){return new d}}});
+- Simple          -   766 byte
+composable("composites.QueueFactory_isQueue",function(e,k,l){var f=e("components.Observable_SignalsAndSlots"),g=e("components.Allocable"),h=l.introspective.isFunction,d,m=function(a){f.call(a,{hasEventListener:""});g.call(a);return k.Object.keys(a).filter(function(b){return h(a[b])})}({enqueue:"",dequeue:""}),n=function(a){return m.every(function(b){return h(a[b])})};d=function(){var a=this,b=[];a.constructor=d;a.enqueue=function(c){b.push(c);a.dispatchEvent({type:"enqueue",item:c});return c};a.dequeue=function(){var c=b.shift();a.dispatchEvent({type:"dequeue",item:c});b.length||a.dispatchEvent("empty");return c};f.call(a,{hasEventListener:""});g.call(a,b)};return{isQueue:function(a){return!(!a||!(a instanceof d||n(a)))},create:function(){return new d}}});
 
 
 */

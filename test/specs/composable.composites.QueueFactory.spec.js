@@ -171,7 +171,7 @@ describe("»composites.QueueFactory« module", function () {
           it([
 
             "it should - for every invocation - return one of the internally stored items, ensuring the same precedence",
-            "as of each items \"enqueueing\". Thus working the way of a FIFO (first in first out) stack."
+            "as of each item's \"enqueueing\". Thus working the way of a FIFO (first in first out) stack."
 
           ].join(" "), function () {
 
@@ -311,6 +311,75 @@ describe("»composites.QueueFactory« module", function () {
             typeCollector.sort(); // - since "dequeue" dispatching still continues in parallel just before "empty" gets dispatched.
             expect(typeCollector.splice(0, 5).every(function (type) {return (type === "dequeue");})).toBe(true);
             expect(typeCollector.splice(5, 5).every(function (type) {return (type === "empty");})).toBe(true);
+          });
+        });
+
+        describe("As for every queue's [Allocable] method API", function () {
+          it([
+
+            "[size] returns the current amount of stored items as (integer) number value."
+
+          ].join(" "), function () {
+
+            expect(queue_3.size()).toBe(0);
+
+            wordList.forEach(function (word) {
+              queue_3.enqueue(word);
+            });
+
+            expect(queue_3.size()).toBe(wordListLength)
+          });
+
+          it([
+
+            "both [toArray] and [valueOf] return a copy of the stored",
+            "items in array form ensuring the items correct precedence."
+
+          ].join(" "), function () {
+
+            expect(queue_3.toArray().join("")).toBe(wordList.join(""));
+            expect(queue_3.valueOf().join("")).toBe(wordList.join(""));
+          });
+
+          it([
+
+            "[toString] does return the [toString] value of every queue's enclosed/wrapped item list."
+
+          ].join(" "), function () {
+
+            expect(queue_3.toString()).toBe(wordList.toString());
+            expect(queue_3.toString()).toBe(GLOBAL_OBJECT.String(wordList));
+            expect(queue_3.toString()).toBe("" + wordList);
+          });
+
+          it([
+
+            "[first] returns every queue's first item."
+
+          ].join(" "), function () {
+
+            expect(queue_3.first()).toBe(wordList[0]);
+          });
+
+          it([
+
+            "[last] returns every queue's last item."
+
+          ].join(" "), function () {
+
+            expect(queue_3.last()).toBe(wordList[wordListLength - 1]);
+          });
+
+          it([
+
+            "[item] accepts a sole argument that will be interpreted as integer value N.",
+            "It than returns every queue's N'th item."
+
+          ].join(" "), function () {
+
+            expect(queue_3.item(0)).toBe(queue_3.first());
+            expect(queue_3.item(queue_3.size() - 1)).toBe(queue_3.last());
+            expect(queue_3.item(5)).toBe(wordList[5]);
           });
         });
       });
