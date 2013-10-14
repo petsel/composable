@@ -77,11 +77,15 @@
     <script src="../../src/composites/Function/Function.modifiers.adviceTypes.afterThrowing-afterFinally.js"></script>        <!-- Controllable //-->
 
 
-    <!-- composable :: RECOMMENDED if one is in need of [Queue]s that e.g. do dispatch "enqueue" / "dequeue" events -->       <!-- QueueFactory composite //-->
-    <script src="../../src/composites/Queue/QueueFactory.js"></script>                                                        <!-- QueueFactory composite //-->
-    <script src="../../src/composites/Queue/QueueFactory.isQueue.js"></script>                                                <!-- QueueFactory composite //-->
-    <script src="../../src/composites/Queue/QueueFactory.Allocable.js"></script>                                              <!-- QueueFactory composite //-->
-    <script src="../../src/composites/Queue/QueueFactory.Allocable.isQueue.js"></script>                                      <!-- QueueFactory composite //-->
+    <!-- composable :: RECOMMENDED if one is in need of [Queue]s that e.g. do dispatch "enqueue" / "dequeue" events -->       <!-- Factory: Queue Type composite //-->
+    <script src="../../src/composites/Queue/QueueFactory.js"></script>                                                        <!-- Factory: Queue Type composite //-->
+    <script src="../../src/composites/Queue/QueueFactory.isQueue.js"></script>                                                <!-- Factory: Queue Type composite //-->
+    <script src="../../src/composites/Queue/QueueFactory.Allocable.js"></script>                                              <!-- Factory: Queue Type composite //-->
+    <script src="../../src/composites/Queue/QueueFactory.Allocable.isQueue.js"></script>                                      <!-- Factory: Queue Type composite //-->
+
+
+    <!-- composable :: RECOMMENDED if one is in need of a factory that creates customized [Iterable] Traits -->               <!-- Factory: custom Iterable Trait //-->
+    <script src="../../src/entities/Iterable/IterableFactory.js"></script>                                                    <!-- Factory: custom Iterable Trait //-->
 
 
 
@@ -97,6 +101,7 @@
 
     <!-- composable :: core :: MANDATORY -->                                                                                  <!-- Core //-->
     <script src="../specs/composable.core.spec.js"></script>                                                                  <!-- Core //-->
+
 
     <!-- composable :: core :: MANDATORY - heavily used core type detection methods -->                                       <!-- Core :: Introspection //-->
     <script src="../specs/composable.components.Introspective_isFunction_isCallable.spec.js"></script>                        <!-- Core :: Introspection //-->
@@ -153,11 +158,17 @@
     <script src="../specs/composable.composites.Function_modifiers_adviceTypes_afterThrowing_afterFinally.spec.js"></script>  <!-- Controllable //-->
 
 
-    <!-- composable :: RECOMMENDED if one is in need of [Queue]s that e.g. do dispatch "enqueue" / "dequeue" events -->       <!-- QueueFactory composite //-->
-    <script src="../specs/composable.composites.QueueFactory.spec.js"></script>                                               <!-- QueueFactory composite //-->
-    <script src="../specs/composable.composites.QueueFactory_isQueue.spec.js"></script>                                       <!-- QueueFactory composite //-->
-    <script src="../specs/composable.composites.QueueFactory_Allocable.spec.js"></script>                                     <!-- QueueFactory composite //-->
-    <script src="../specs/composable.composites.QueueFactory_Allocable_isQueue.spec.js"></script>                             <!-- QueueFactory composite //-->
+    <!-- composable :: RECOMMENDED if one is in need of [Queue]s that e.g. do dispatch "enqueue" / "dequeue" events -->       <!-- Factory: Queue Type composite //-->
+    <script src="../specs/composable.composites.QueueFactory.spec.js"></script>                                               <!-- Factory: Queue Type composite //-->
+    <script src="../specs/composable.composites.QueueFactory_isQueue.spec.js"></script>                                       <!-- Factory: Queue Type composite //-->
+    <script src="../specs/composable.composites.QueueFactory_Allocable.spec.js"></script>                                     <!-- Factory: Queue Type composite //-->
+    <script src="../specs/composable.composites.QueueFactory_Allocable_isQueue.spec.js"></script>                             <!-- Factory: Queue Type composite //-->
+
+
+    <!-- composable :: RECOMMENDED if one is in need of a factory that creates customized [Iterable] Traits -->               <!-- Factory: custom Iterable Trait //-->
+    <script src="../specs/composable.entities.IterableFactory.spec.js"></script>                                              <!-- Factory: custom Iterable Trait //-->
+
+
 
   <!-- run specs -->
   <!-- run specs -->

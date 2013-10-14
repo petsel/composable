@@ -61,6 +61,21 @@ composable("entities.IterableFactory", function (require, global, environment) {
       return UNDEFINED_VALUE;
     }
   ;
+
+
+/**
+ *
+ *  - Iterators and generators
+ *    [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators?redirectlocale=en-US&redirectslug=JavaScript%2FGuide%2FIterators_and_Generators]
+ *
+ *  - for...of
+ *    [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of]
+ *
+ *  - [[harmony:iterators]]
+ *    [http://wiki.ecmascript.org/doku.php?id=harmony:iterators]
+ */
+
+
 /*
 
   [http://apidock.com/ruby/Enumerable]
@@ -99,7 +114,6 @@ composable("entities.IterableFactory", function (require, global, environment) {
 
       stopIteration = (!!config.isThrowStopIteration && stopIterationByThrowStatement) || stopIterationWithUndefinedValue
     ;
-
 
     if (isFunction(compareTypes)) {                             // either a [compare] respectively a [compareTo] method
       if (compareTypes.length == 1) {                           // needs to be passed to each [Iterable]'s creation

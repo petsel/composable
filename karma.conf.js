@@ -71,11 +71,15 @@ files = [
   "src/composites/Function/Function.modifiers.adviceTypes.afterThrowing-afterFinally.js",                             //  Controllable
 
 
-  // composable :: RECOMMENDED if one is in need of [Queue]s that e.g. do dispatch "enqueue" / "dequeue" events       //  QueueFactory composites
-  "src/composites/Queue/QueueFactory.js",                                                                             //  QueueFactory composites
-  "src/composites/Queue/QueueFactory.isQueue.js",                                                                     //  QueueFactory composites
-  "src/composites/Queue/QueueFactory.Allocable.js",                                                                   //  QueueFactory composites
-  "src/composites/Queue/QueueFactory.Allocable.isQueue.js",                                                           //  QueueFactory composites
+  // composable :: RECOMMENDED if one is in need of [Queue]s that e.g. do dispatch "enqueue" / "dequeue" events       //  Factory: Queue Type composite
+  "src/composites/Queue/QueueFactory.js",                                                                             //  Factory: Queue Type composite
+  "src/composites/Queue/QueueFactory.isQueue.js",                                                                     //  Factory: Queue Type composite
+  "src/composites/Queue/QueueFactory.Allocable.js",                                                                   //  Factory: Queue Type composite
+  "src/composites/Queue/QueueFactory.Allocable.isQueue.js",                                                           //  Factory: Queue Type composite
+
+
+  // composable :: RECOMMENDED if one is in need of a factory that creates customized [Iterable] Traits               //  Factory: custom Iterable Trait
+  "src/entities/Iterable/IterableFactory.js",                                                                         //  Factory: custom Iterable Trait
 
 
 
@@ -134,11 +138,15 @@ files = [
  *  composable.composites.Function_modifiers_adviceTypes_before_after_around.spec                                     //  Controllable
  *  composable.composites.Function_modifiers_adviceTypes_afterThrowing_afterFinally.spec                              //  Controllable
  *
- *  // composable :: RECOMMENDED if one is in need of [Queue]s that e.g. do dispatch "enqueue" / "dequeue" events     //  QueueFactory composite
- *  composable.composites.QueueFactory.spec                                                                           //  QueueFactory composite
- *  composable.composites.QueueFactory_isQueue.spec                                                                   //  QueueFactory composite
- *  composable.composites.QueueFactory_Allocable.spec                                                                 //  QueueFactory composite
- *  composable.composites.QueueFactory_Allocable_isQueue.spec                                                         //  QueueFactory composite
+ *  // composable :: RECOMMENDED if one is in need of [Queue]s that e.g. do dispatch "enqueue" / "dequeue" events     //  Factory: Queue Type composite
+ *  composable.composites.QueueFactory.spec                                                                           //  Factory: Queue Type composite
+ *  composable.composites.QueueFactory_isQueue.spec                                                                   //  Factory: Queue Type composite
+ *  composable.composites.QueueFactory_Allocable.spec                                                                 //  Factory: Queue Type composite
+ *  composable.composites.QueueFactory_Allocable_isQueue.spec                                                         //  Factory: Queue Type composite
+ *
+ *  // composable :: RECOMMENDED if one is in need of a factory that creates customized [Iterable] Traits             //  Factory: custom Iterable Trait
+ *  composable.entities.IterableFactory.spec                                                                          //  Factory: custom Iterable Trait
+ *
  */
 
 ];
