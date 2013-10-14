@@ -487,6 +487,7 @@ describe("»entities.IterableFactory« module", function () {
               expect(iter_3.next()).toBe(6);
               expect(iter_3.next()).toBe(7);
 
+              stopIterationException = null;
               try {
                 expect(iter_3.next()).toBeUndefined();
               } catch (exc) {
