@@ -1,6 +1,6 @@
 
 
-composable("entities.ComparableFactory", function (require, global, environment) {
+composable("entities.ComparableFactory", function (require, global, internalBaseEnvironment) {
 
 
   "use strict";
@@ -10,9 +10,9 @@ composable("entities.ComparableFactory", function (require, global, environment)
     Factory, // the "Comparable" Trait Factory Module.
 
 
-    isFunction = environment.introspective.isFunction,
+    isFunction = internalBaseEnvironment.introspective.isFunction,
 
-    baseCompareTypes = environment.helpers.compareTypes
+    baseCompareTypes = internalBaseEnvironment.helpers.compareTypes
   ;
 
 
@@ -77,8 +77,8 @@ composable("entities.ComparableFactory", function (require, global, environment)
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          -   359 byte
-composable("entities.ComparableFactory",function(h,j,a){var f=a.introspective.isFunction,g=a.helpers.compareTypes;return{create:function(a){var b=f(a)&&a||g;return function(){this.compareTo=function(a,c){return b(this,a,c)};this.inBetween=function(a,c,d){var e=b(a,c,d);0>e?e=0<b(this,a,d)&&0>b(this,c,d):0<e&&(e=0<b(this,c,d)&&0>b(this,a,d));return!!e}}}}});
+- Simple          -   374 byte
+composable("entities.ComparableFactory",function(h,k,a){var f=a.introspective.isFunction,g=a.helpers.compareTypes;return{create:function(a){return function(b){return function(){this.compareTo=function(a,c){return b(this,a,c)};this.inBetween=function(a,c,d){var e=b(a,c,d);0>e?e=0<b(this,a,d)&&0>b(this,c,d):0<e&&(e=0<b(this,c,d)&&0>b(this,a,d));return!!e}}}(f(a)&&a||g)}}});
 
 
 */

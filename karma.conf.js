@@ -82,6 +82,10 @@ files = [
   "src/entities/Iterable/IterableFactory.js",                                                                         //  Factory: custom Iterable Trait
 
 
+  // composable :: RECOMMENDED if one is in need of a factory that creates customized [Comparable] Traits             //  Factory: custom Comparable Trait
+  "src/entities/Comparable/ComparableFactory.js",                                                                     //  Factory: custom Comparable Trait
+
+
 
 // load your spec files
 // load your spec files
