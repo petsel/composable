@@ -1,6 +1,6 @@
 
 
-composable("entities.IterableFactory", function (require, global, environment) {
+composable("entities.IterableFactory", function (require, global, internalBaseEnvironment) {
 
 
   "use strict";
@@ -10,8 +10,8 @@ composable("entities.IterableFactory", function (require, global, environment) {
     Factory,
 
 
-    env_introspective = environment.introspective,
-    env_helpers       = environment.helpers,
+    env_introspective = internalBaseEnvironment.introspective,
+    env_helpers       = internalBaseEnvironment.helpers,
 
 
     getClassSignature = env_introspective.getClassSignature,
@@ -20,8 +20,8 @@ composable("entities.IterableFactory", function (require, global, environment) {
     createClassSignaturePattern = env_helpers.createClassSignaturePattern,
     defaultCompareTypes         = env_helpers.compareTypes,
 
-    noop = environment.methods.noop,
-    regX = environment.objects.regX,
+    noop = internalBaseEnvironment.methods.noop,
+    regX = internalBaseEnvironment.objects.regX,
 
     UNDEFINED_VALUE,
 
@@ -73,6 +73,13 @@ composable("entities.IterableFactory", function (require, global, environment) {
  *
  *  - [[harmony:iterators]]
  *    [http://wiki.ecmascript.org/doku.php?id=harmony:iterators]
+ *
+ *  - ES Discuss - Generators: Why do generator expressions return generators?
+ *    [http://esdiscuss.org/topic/why-do-generator-expressions-return-generators]
+ *
+ *  - http://domenic.me/ - ES6 Iterators, Generators, and Iterables
+ *    [http://domenic.me/2013/09/06/es6-iterators-generators-and-iterables/]
+ *
  */
 
 
@@ -112,6 +119,7 @@ composable("entities.IterableFactory", function (require, global, environment) {
       getPrevious   = config.previous,
       compareTypes  = config.compare,
 
+    //isReturnTuple = !!config.isReturnTuple,
       stopIteration = (!!config.isThrowStopIteration && stopIterationByThrowStatement) || stopIterationWithUndefinedValue
     ;
 
@@ -140,21 +148,41 @@ composable("entities.IterableFactory", function (require, global, environment) {
 
     //compareTypes = defaultCompareTypes; // a possible fallback solution as well.
     }
-//console.log("+++ compareTypes +++", compareTypes);
 
     GetNextTrait = (isFunction(getNext) && (function (get_next, compare_types, stop_iteration, UNDEFINED_VALUE) {
-      return function () {
+      return/* (isReturnTuple &&*/ function () {/*
 
         this.next = function () {
+          var
+            curr = this,
 
+            next = get_next.call(curr),
+            comparison = (next !== UNDEFINED_VALUE) ? compare_types(curr, next) : next,
+
+            secondNext = ((comparison !== UNDEFINED_VALUE) && (comparison <= 0)) ? get_next.call(curr) : UNDEFINED_VALUE,
+            secondComparison = (secondNext !== UNDEFINED_VALUE) ? compare_types(curr, secondNext) : secondNext
+          ;
+          (this.previous && this.previous()); // does conceptually work till here. but then it relies on the
+                                              // counter operation that's availability can not be assured.
+          return (
+            ((comparison !== UNDEFINED_VALUE) && (comparison <= 0))
+            ? {
+
+              value : next,
+              done  : ((secondComparison === UNDEFINED_VALUE) || (secondComparison > 0))
+
+            } : stop_iteration()
+          );
+        };
+      }) || function () {*/
+
+        this.next = function () {
           var
             curr = this,
             next = get_next.call(curr),
 
             comparison = compare_types(curr, next)
           ;
-//console.log("next", [curr, next, comparison, ((next !== UNDEFINED_VALUE) && (comparison !== UNDEFINED_VALUE) && (comparison <= 0))]);
-
           return ((next !== UNDEFINED_VALUE) && (comparison !== UNDEFINED_VALUE) && (comparison <= 0)) ? next : stop_iteration();
         };
       };
@@ -171,8 +199,6 @@ composable("entities.IterableFactory", function (require, global, environment) {
 
             comparison = compare_types(curr, prev)
           ;
-//console.log("previous", [curr, prev, comparison, ((prev !== UNDEFINED_VALUE) && (comparison !== UNDEFINED_VALUE) && (comparison >= 0))]);
-
           return ((prev !== UNDEFINED_VALUE) && (comparison !== UNDEFINED_VALUE) && (comparison >= 0)) ? prev : stop_iteration();
         };
       };
@@ -212,8 +238,8 @@ composable("entities.IterableFactory", function (require, global, environment) {
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          - 1.083 byte
-composable("entities.IterableFactory",function(f,b,c){var d=c.introspective;f=c.helpers;var j=d.getClassSignature,g=d.isFunction,d=f.createClassSignaturePattern,l=f.compareTypes,k=c.methods.noop;if(!(b=c.objects.regX.compile(d("StopIteration")).test(j(b.StopIteration))&&b.StopIteration))b=function(){},b.prototype={},b.prototype.toString=function(){return"[object StopIteration]"},b.prototype.valueOf=function(){return this},b=new b;var h=b,m=function(){throw h;},n=function(){};return{create:function(a){a="object"==typeof a&&a||{};var b,c=a.next,d=a.previous,e=a.compare,f=!!a.isThrowStopIteration&&m||n;if(g(e)){if(1==e.length)var h=e,e=function(a,b){return h.call(a,b)}}else e=function(a,b){return g(a.compareTo)?a.compareTo(b):l(a,b)};if(a=g(c)){var j=e;a=function(){this.next=function(){var a=c.call(this),b=j(this,a);return void 0!==a&&void 0!==b&&0>=b?a:f()}}}b=a||k;if(a=g(d)){var p=e;a=function(){this.previous=function(){var a=d.call(this),b=p(this,a);return void 0!==a&&void 0!==b&&0<=b?a:f()}}}var q=a||k;return function(){b.call(this);q.call(this)}},isStopIteration:function(a){return a===h}}});
+- Simple          - 1.194 byte
+composable("entities.IterableFactory",function(m,n,f){var k=f.introspective;m=f.helpers;var r=k.getClassSignature,l=k.isFunction,k=m.createClassSignaturePattern,s=m.compareTypes,p=f.methods.noop,q=f.objects.regX.compile(k("StopIteration")).test(r(n.StopIteration))&&n.StopIteration||function(){var a=function(){};a.prototype={};a.prototype.toString=function(){return"[object StopIteration]"};a.prototype.valueOf=function(){return this};return new a}(),t=function(){throw q;},u=function(){};return{create:function(a){a="object"==typeof a&&a||{};var c,d;c=a.next;d=a.previous;var b=a.compare;a=!!a.isThrowStopIteration&&t||u;l(b)?1==b.length&&(b=function(a){return function(g,e){return a.call(g,e)}}(b)):b=function(a,g){return function(e,h){return a(e.compareTo)?e.compareTo(h):g(e,h)}}(l,s);c=l(c)&&function(a,g,e,h){return function(){this.next=function(){var b=a.call(this),c=g(this,b);return b!==h&&c!==h&&0>=c?b:e()}}}(c,b,a)||p;d=l(d)&&function(a,b,e,c){return function(){this.previous=function(){var d=a.call(this),f=b(this,d);return d!==c&&f!==c&&0<=f?d:e()}}}(d,b,a)||p;return function(a,b){return function(){a.call(this);b.call(this)}}(c,d)},isStopIteration:function(a){return a===q}}});
 
 
 */
