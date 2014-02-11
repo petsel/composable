@@ -87,6 +87,24 @@
     <!-- composable :: RECOMMENDED if one is in need of a factory that creates customized [Iterable] Traits -->               <!-- Factory: custom Iterable Trait //-->
     <script src="../../src/entities/Iterable/IterableFactory.js"></script>                                                    <!-- Factory: custom Iterable Trait //-->
 
+    <!-- composable :: RECOMMENDED if one is in need of a factory that creates customized [Comparable] Traits -->             <!-- Factory: custom Comparable Trait //-->
+    <script src="../../src/entities/Comparable/ComparableFactory.js"></script>                                                <!-- Factory: custom Comparable Trait //-->
+
+
+    <!-- composable :: NOT REALLY NECESSARY :: unless one likes iterating over INT like numbers by [next] and [previous] -->  <!-- Iterable Integer //-->
+    <script src="../../src/components/Iterable/Iterable.Integer.next.js"></script>                                            <!-- Iterable Integer //-->
+    <script src="../../src/components/Iterable/Iterable.Integer.next-previous.js"></script>                                   <!-- Iterable Integer //-->
+    <script src="../../src/components/Iterable/Iterable.Integer.next-previous.StopIteration.js"></script>                     <!-- Iterable Integer //-->
+
+
+    <!-- composable :: RECOMMENDED if one needs to augment the [Observable] implementation with propagating events -->        <!-- Propagable EventProxy //-->
+    <script src="../../src/components/Propagable/Propagable.EventProxy.js"></script>                                          <!-- Propagable EventProxy //-->
+
+    <!-- composable :: RECOMMENDED if one is in need of [DataNode]s in order to build custom event dispatching models -->     <!-- Factory: DataNode Type composite //-->
+    <script src="../../src/composites/DataNode/DataNodeFactory.js"></script>                                                  <!-- Factory: DataNode Type composite //-->
+
+
+    <script src="../../src/components/Introspective/Introspective.type.emptiness.js"></script>
 
 
   <!-- load jasmine -->
@@ -168,6 +186,21 @@
     <!-- composable :: RECOMMENDED if one is in need of a factory that creates customized [Iterable] Traits -->               <!-- Factory: custom Iterable Trait //-->
     <script src="../specs/composable.entities.IterableFactory.spec.js"></script>                                              <!-- Factory: custom Iterable Trait //-->
 
+    <!-- composable :: RECOMMENDED if one is in need of a factory that creates customized [Comparable] Traits -->             <!-- Factory: custom Comparable Trait //-->
+    <script src="../specs/composable.entities.ComparableFactory.spec.js"></script>                                            <!-- Factory: custom Comparable Trait //-->
+
+
+    <!-- composable :: NOT REALLY NECESSARY :: unless one likes iterating over INT like numbers by [next] and [previous] -->  <!-- Iterable Integer //-->
+    <script src="../specs/composable.components.Iterable_Integer_next.spec.js"></script>                                      <!-- Iterable Integer //-->
+<!--<script src="../specs/composable.components.Iterable_Integer_next_previous.spec.js"></script>//-->                        <!-- Iterable Integer //-->
+<!--<script src="../specs/composable.components.Iterable_Integer_next_previous_StopIteration.spec.js"></script>//-->          <!-- Iterable Integer //-->
+
+
+    <!-- composable :: RECOMMENDED if one is in need of [DataNode]s in order to build custom event dispatching models -->     <!-- Factory: DataNode Type composite //-->
+    <script src="../specs/composable.composites.DataNodeFactory.spec.js"></script>                                            <!-- Factory: DataNode Type composite //-->
+
+
+    <script src="../specs/composable.components.Introspective_type_emptiness.spec.js"></script>
 
 
   <!-- run specs -->

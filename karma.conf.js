@@ -81,10 +81,24 @@ files = [
   // composable :: RECOMMENDED if one is in need of a factory that creates customized [Iterable] Traits               //  Factory: custom Iterable Trait
   "src/entities/Iterable/IterableFactory.js",                                                                         //  Factory: custom Iterable Trait
 
-
   // composable :: RECOMMENDED if one is in need of a factory that creates customized [Comparable] Traits             //  Factory: custom Comparable Trait
   "src/entities/Comparable/ComparableFactory.js",                                                                     //  Factory: custom Comparable Trait
 
+
+  // composable :: NOT REALLY NECESSARY :: unless one likes iterating over INT like numbers by [next] and [previous]  //  Iterable Integer
+  "src/components/Iterable/Iterable.Integer.next.js",                                                                 //  Iterable Integer
+//"src/components/Iterable/Iterable.Integer.next-previous.js",                                                        //  Iterable Integer
+//"src/components/Iterable/Iterable.Integer.next-previous.StopIteration.js",                                          //  Iterable Integer
+
+
+  // composable :: RECOMMENDED if one needs to augment the [Observable] implementation with propagating events        //  Propagable EventProxy
+  "src/components/Propagable/Propagable.EventProxy.js",                                                               //  Propagable EventProxy
+
+  // composable :: RECOMMENDED if one is in need of [DataNode]s in order to build custom event dispatching models     //  Factory: DataNode Type composite
+  "src/composites/DataNode/DataNodeFactory.js",                                                                       //  Factory: DataNode Type composite
+
+
+  "src/components/Introspective/Introspective.type.emptiness.js",
 
 
 // load your spec files
@@ -151,6 +165,9 @@ files = [
  *  // composable :: RECOMMENDED if one is in need of a factory that creates customized [Iterable] Traits             //  Factory: custom Iterable Trait
  *  composable.entities.IterableFactory.spec                                                                          //  Factory: custom Iterable Trait
  *
+ *
+ *  composable.components.Introspective_type_emptiness.spec
+ *
  */
 
 ];
@@ -159,8 +176,8 @@ files = [
 autoWatch = true;
 
 browsers = [
-//"Firefox",
-//"Safari",
+  "Firefox",
+//"Safari",   // fails for "/test/specs/composable.components.Iterable_Integer_next.spec.js" for lines 41,42 and 44.
   "Chrome",
   "PhantomJS"
 ];
