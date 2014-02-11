@@ -19,11 +19,13 @@ composable("components.FiniteCallable_called", function (require, global, intern
     isFunction  = internalBaseEnvironment.introspective.isFunction,
 
 
-    isFinite  = global.isFinite,
-    floor     = Math.floor,
+    isFinite    = global.isFinite,
 
-    INTEGER_MINIMUM = Math.pow(-2, 53), //  (Math.pow(-2, 53) - 1) === (Math.pow(-2, 53)) // true // (Math.pow(-2, 53) + 1) === (Math.pow(-2, 53)) // false
-    INTEGER_MAXIMUM = Math.pow(2, 53),  //  - see [http://blog.vjeux.com/2010/javascript/javascript-max_int-number-limits.html]
+    math_floor  = Math.floor,
+    math_pow    = Math.pow,
+
+    INTEGER_MINIMUM = math_pow(-2, 53), //  (Math.pow(-2, 53) - 1) === (Math.pow(-2, 53)) // true // (Math.pow(-2, 53) + 1) === (Math.pow(-2, 53)) // false
+    INTEGER_MAXIMUM = math_pow(2, 53),  //  - see [http://blog.vjeux.com/2010/javascript/javascript-max_int-number-limits.html]
                                         //  - via [http://stackoverflow.com/questions/307179/what-is-javascripts-max-int-whats-the-highest-integer-value-a-number-can-go-to#answer-4375743]
     NULL_VALUE = null,
     UNDEFINED_VALUE,
@@ -31,7 +33,7 @@ composable("components.FiniteCallable_called", function (require, global, intern
 
     sanitizeInteger = function (type) {
 
-      return (isFinite(type = Number(type)) && ((type = floor(type)) <= INTEGER_MAXIMUM) && (type >= INTEGER_MINIMUM)) ? type : UNDEFINED_VALUE;
+      return (isFinite(type = Number(type)) && ((type = math_floor(type)) <= INTEGER_MAXIMUM) && (type >= INTEGER_MINIMUM)) ? type : UNDEFINED_VALUE;
     },
     sanitizeTarget = function (target) {
 
@@ -62,6 +64,10 @@ composable("components.FiniteCallable_called", function (require, global, intern
         };
       }(((isFunction(this) && this) || noop), 0, sanitizeInteger(amount), sanitizeTarget(target)));
     },
+    createCallableTriply = function (target) {
+
+      return createCallableTimes.call(this, 3, target);
+    },
     createCallableTwice = function (target) {
 
       return createCallableTimes.call(this, 2, target);
@@ -77,6 +83,8 @@ composable("components.FiniteCallable_called", function (require, global, intern
     var finiteCallable = this;
 
     finiteCallable.callableTimes  = createCallableTimes;
+    finiteCallable.callableTriply = createCallableTriply;
+  //finiteCallable.callableThrice = createCallableTriply;
     finiteCallable.callableTwice  = createCallableTwice;
     finiteCallable.callableOnce   = createCallableOnce;
   };
