@@ -37,7 +37,7 @@ describe("»components.Introspective_type_emptiness« module", function () {
       UNDEFINED_VALUE,
       NULL_VALUE = null,
       EMPTY_STRING = "",
-      NOT_A_NUMBER = Number.NaN,
+      NOT_A_NUMBER = GLOBAL_OBJECT.Number.NaN,
 
       args_empty = (function () {return arguments;}()),
       arr_empty = [],

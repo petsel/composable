@@ -98,7 +98,18 @@ files = [
   "src/composites/DataNode/DataNodeFactory.js",                                                                       //  Factory: DataNode Type composite
 
 
-  "src/components/Introspective/Introspective.type.emptiness.js",
+  // composable :: STRONGLY RECOMMENDED if one relies on testing for empty values, types and structures               //  Introspection
+  "src/components/Introspective/Introspective.type.emptiness.js",                                                     //  Introspection
+  "src/environment/environment.extended.introspective.emptiness.js",                                                  //  Introspection
+
+  // composable :: STRONGLY RECOMMENDED if one relies on testing for same values                                      //  Introspection
+  "src/components/Introspective/Introspective.type.sameness.js",                                                      //  Introspection
+  "src/environment/environment.extended.introspective.sameness.js",                                                   //  Introspection
+
+  // composable :: STRONGLY RECOMMENDED if one relies on testing for equal types                                      //  Introspection
+  "src/components/Introspective/Introspective.type.equality.js",                                                      //  Introspection
+  "src/environment/environment.extended.introspective.equality.js",                                                   //  Introspection
+
 
 
 // load your spec files
@@ -166,12 +177,21 @@ files = [
  *  composable.entities.IterableFactory.spec                                                                          //  Factory: custom Iterable Trait
  *
  *
- *  composable.components.Introspective_type_emptiness.spec
+ *  // composable :: STRONGLY RECOMMENDED if one relies on testing for empty values, types and structures             //  Introspection
+ *  composable.components.Introspective_type_emptiness.spec                                                           //  Introspection
+ *  composable.environment.extended.introspective.emptiness.spec                                                      //  Introspection
+ *
+ *  // composable :: STRONGLY RECOMMENDED if one relies on testing for same values                                    //  Introspection
+ *  composable.components.Introspective_type_sameness.spec                                                            //  Introspection
+ *  composable.environment.extended.introspective.sameness.spec                                                       //  Introspection
+ *
+ *  // composable :: STRONGLY RECOMMENDED if one relies on testing for equal types                                    //  Introspection
+ *  composable.components.Introspective_type_equality.spec                                                            //  Introspection
+ *  composable.environment.extended.introspective.equality.spec                                                       //  Introspection
  *
  */
 
 ];
-
 
 autoWatch = true;
 
