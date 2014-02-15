@@ -77,6 +77,7 @@ describe("»environment_extended_introspective_core« module", function () {
         isArray     = env_introspective.isArray,
         isArguments = env_introspective.isArguments,
         isListLike  = env_introspective.isListLike,
+        isRealList  = env_introspective.isRealList,
 
 
         isObjectObject = env_introspective.isObjectObject,
@@ -933,11 +934,12 @@ describe("»environment_extended_introspective_core« module", function () {
       describe("»Detect list types and distinguish between \"list like\"s, true [[Array]]s and true [[Argument]]s.«", function () {
 
         var
+          args = arguments,
           arr = [],
           str = "hallo world",
           obj = {},
           coll = {"length": 2, "0": "hallo", "1": "world"},
-          args = arguments,
+          noop = function () {},
 
           document = GLOBAL_OBJECT.document,
 
@@ -955,13 +957,15 @@ describe("»environment_extended_introspective_core« module", function () {
           ].join(" "), function () {
             expect(isListLike(EMPTY_STRING_VALUE)).toBe(true);
             expect(isListLike(str)).toBe(true);
-            expect(isListLike(coll)).toBe(true);
+
+            expect(isListLike(arr)).toBe(true);
+            expect(isListLike(args)).toBe(true);
 
             if (nodeList) {expect(isListLike(nodeList)).toBe(true);}
             if (htmlCollection) {expect(isListLike(htmlCollection)).toBe(true);}
 
-            expect(isListLike(arr)).toBe(true);
-            expect(isListLike(args)).toBe(true);
+            expect(isListLike(coll)).toBe(true); // accept the fake collection as list like.
+            expect(isListLike(noop)).toBe(true); // accept the function type as list like.
 
 
             expect(isListLike(UNDEFINED_VALUE)).toBe(false);
@@ -973,6 +977,39 @@ describe("»environment_extended_introspective_core« module", function () {
             expect(isListLike(Infinity)).toBe(false);
             expect(isListLike(TEST_OBJECT)).toBe(false);
             expect(isListLike(obj)).toBe(false);
+          });
+        });
+        describe("»environment.introspective.isRealList«", function () {
+
+          it("is a fundamental type detection method ...", function () {
+            expect(typeof isRealList).toBe("function");
+          });
+          it([
+            "... that should return true for what could be considered a real list type - thus it has to be at least",
+            "list like with an own non enumerable [length] property. [Function] types are not considered to be lists."
+          ].join(" "), function () {
+            expect(isRealList(EMPTY_STRING_VALUE)).toBe(true);
+            expect(isRealList(str)).toBe(true);
+
+            expect(isRealList(arr)).toBe(true);
+            expect(isRealList(args)).toBe(true);
+
+            if (nodeList) {expect(isListLike(nodeList)).toBe(true);}
+            if (htmlCollection) {expect(isListLike(htmlCollection)).toBe(true);}
+
+
+            expect(isRealList(coll)).toBe(false); // reject the fake collection for it is not recognized as real list.
+            expect(isRealList(noop)).toBe(false); // reject the function for it is not recognized as real list.
+
+            expect(isRealList(UNDEFINED_VALUE)).toBe(false);
+            expect(isRealList(NULL_VALUE)).toBe(false);
+            expect(isRealList(FALSE_VALUE)).toBe(false);
+            expect(isRealList(TRUE_VALUE)).toBe(false);
+            expect(isRealList(ZERO_NUMBER_VALUE)).toBe(false);
+            expect(isRealList(NAN_VALUE)).toBe(false);
+            expect(isRealList(Infinity)).toBe(false);
+            expect(isRealList(TEST_OBJECT)).toBe(false);
+            expect(isRealList(obj)).toBe(false);
           });
         });
         describe("»environment.introspective.isArray«", function () {

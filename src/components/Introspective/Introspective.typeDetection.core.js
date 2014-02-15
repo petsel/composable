@@ -88,10 +88,10 @@ composable("components.Introspective_typeDetection_core", function (require, glo
     },
 
     isUndefinedOrNull = function (type) {
-      return (!type && ((type === UNDEFINED_VALUE) || (type === NULL_VALUE)));
+      return (type == NULL_VALUE);
     },
     isNeitherUndefinedNorNull = function (type) {
-      return ((type !== UNDEFINED_VALUE) && (type !== NULL_VALUE));
+      return (type != NULL_VALUE);
     },
 
 
@@ -100,7 +100,7 @@ composable("components.Introspective_typeDetection_core", function (require, glo
      *  [boolean], [number] or [string] is this global functions argument.
      */
     isPrimitive = function (type) {
-      return ((typeof type == "string") || (typeof type == "number") || (typeof type == "boolean"));
+      return (isStringValue(type) || isNumberValue(type) || isBooleanValue(type));
     },
     /**
      *  returns true in case of one of the primitive ECMAScript values
@@ -120,6 +120,7 @@ composable("components.Introspective_typeDetection_core", function (require, glo
     isObject = function (type) { // @TODO - merge the final change into other branches of this type detection module.
       // (typeof type == "function") : as for real [[Function]] types or even mozillas older [[RegExp]] implementations.
       return (!!type && ((typeof type == "object") || (typeof type == "function")));
+    //return (type && ((typeof type == "object") || (typeof type == "function"))); // this variant immediately returns falsy types instead of [false] value.
     },
 
 
@@ -128,7 +129,7 @@ composable("components.Introspective_typeDetection_core", function (require, glo
      *  that is this global functions argument.
      */
     isNative = function (type) { // @TODO - merge the final change into other branches of this type detection module.
-    //return (isNeitherUndefinedNorNull(type) && (typeof type.constructor == "function"));
+    //return ((type != NULL_VALUE) && (typeof type.constructor == "function"));
       return (isNeitherUndefinedNorNull(type) && isFunction(type.constructor));
     },
 
@@ -198,7 +199,6 @@ composable("components.Introspective_typeDetection_core", function (require, glo
     isNumber = function (type) {
       // [isFinite] as of this implementation did prove its x-frame-safety.
       return ((isNumberValue(type) || isNumberObject(type)) && isFinite(type)); // additional test for a finite value.
-    //return (((typeof type == "number") || isNumberObject(type)) && isFinite(type)); // additional test for a finite value.
     },/*
 
     or was it even better discarding above implementations
@@ -235,8 +235,12 @@ composable("components.Introspective_typeDetection_core", function (require, glo
 //  isArray     = env_introspective.isArray,
 //  isArguments = env_introspective.isArguments,
     isListLike  = function (type) {
-      // [isNeitherUndefinedNorNull] due to e.g. empty string values that can't be detected by truthiness/falseness.
-      return (isNeitherUndefinedNorNull(type) && (typeof type.length == "number") && isFinite(type.length) && (type.length >= 0));
+    //return (isNeitherUndefinedNorNull(type) && isNumberValue(type.length) && isFinite(type.length) && (type.length >= 0));
+      return (isNeitherUndefinedNorNull(type) && isNumberValue(type = type.length) && isFinite(type) && (type >= 0)); // saves two look ups.
+    },
+    isRealList  = function (type) {
+    //return (isListLike(type) && !isFunction(type) && type.hasOwnProperty("length") && !type.propertyIsEnumerable("length"));
+      return (isListLike(type) && (typeof type != "function") && type.hasOwnProperty("length") && !type.propertyIsEnumerable("length")); // saves two look ups.
     },
 
 
@@ -376,9 +380,10 @@ composable("components.Introspective_typeDetection_core", function (require, glo
     obj.isStringObject  = isStringObject;
 
 
-    obj.isArray     = isArray;
-    obj.isArguments = isArguments;
     obj.isListLike  = isListLike;
+    obj.isRealList  = isRealList;
+    obj.isArguments = isArguments;
+    obj.isArray     = isArray;
 
 
     obj.isObjectObject = isObjectObject;
@@ -423,8 +428,8 @@ composable("components.Introspective_typeDetection_core", function (require, glo
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          - 3.045 byte
-composable("components.Introspective_typeDetection_core",function(c,p,k){c=k.introspective;var l=c.isFunction,A=c.isCallable,B=c.isArray,C=c.isArguments,q=c.isString,D=c.baseValueOf,h=k.helpers.createClassSignaturePattern,e=function(a){return["(?:^",a,":)|(?:^",a,"$)|(?:\\[",a,":\\s*name\\:\\s*",a,")"].join("")},b=k.objects.regX,E=h("Boolean"),F=h("Number"),G=h("Object"),H=h("RegExp"),I=h("Date"),J=h("Error"),K=e("Error"),L=e("EvalError"),M=e("RangeError"),N=e("ReferenceError"),O=e("SyntaxError"),P=e("TypeError"),Q=e("URIError"),f=c.getClassSignature,g=function(a){return function(b){return a.call(b)}}(p.Error.prototype.toString),r=p.isFinite,R=function(a){return void 0===a},S=function(a){return void 0!==a},T=function(a){return null===a},U=function(a){return null!==a},s=function(a){return!a&&(void 0===a||null===a)},m=function(a){return void 0!==a&&null!==a},t=function(a){return"string"==typeof a||"number"==typeof a||"boolean"==typeof a},V=function(a){return t(a)||s(a)},u=function(a){return!!a&&("object"==typeof a||"function"==typeof a)},v=function(a){return m(a)&&l(a.constructor)},W=function(a){return u(a)&&!l(a.constructor)},w=function(a){return b.compile(E).test(f(a))},x=function(a){return"boolean"==typeof a},X=function(a){return w(a)&&!x(a)},n=function(a){return"number"==typeof a},y=function(a){return b.compile(F).test(f(a))&&!n(a)},Y=function(a){return(n(a)||y(a))&&r(a)},z=function(a){return"string"==typeof a},Z=function(a){return q(a)&&!z(a)},$=function(a){return m(a)&&"number"==typeof a.length&&r(a.length)&&0<=a.length},aa=function(a){return v(a)&&b.compile(G).test(f(a))},ba=function(a){return b.compile(H).test(f(a))},ca=function(a){return b.compile(I).test(f(a))},d=function(a){return b.compile(J).test(f(a))},da=function(a){return d(a)&&(b.compile(K).test(g(a))||"Error"===a.name)},ea=function(a){return d(a)&&(b.compile(L).test(g(a))||"EvalError"===a.name)},fa=function(a){return d(a)&&(b.compile(M).test(g(a))||"RangeError"===a.name)},ga=function(a){return d(a)&&(b.compile(N).test(g(a))||"ReferenceError"===a.name)},ha=function(a){return d(a)&&(b.compile(O).test(g(a))||"SyntaxError"===a.name)},ia=function(a){return d(a)&&(b.compile(P).test(g(a))||"TypeError"===a.name)},ja=function(a){return d(a)&&(b.compile(Q).test(g(a))||"URIError"===a.name)};return function(){this.isUndefined=R;this.isDefined=S;this.isNull=T;this.isNotNull=U;this.isUndefinedOrNull=s;this.isNeitherUndefinedNorNull=m;this.isPrimitive=t;this.isValue=V;this.isObject=u;this.isNative=v;this.isAlien=W;this.isBoolean=w;this.isBooleanValue=x;this.isBooleanObject=X;this.isNumber=Y;this.isNumberValue=n;this.isNumberObject=y;this.isString=q;this.isStringValue=z;this.isStringObject=Z;this.isArray=B;this.isArguments=C;this.isListLike=$;this.isObjectObject=aa;this.isFunction=l;this.isCallable=A;this.isRegExp=ba;this.isDate=ca;this.isError=d;this.isGenericError=da;this.isEvalError=ea;this.isRangeError=fa;this.isReferenceError=ga;this.isSyntaxError=ha;this.isTypeError=ia;this.isURIError=ja;this.baseValueOf=D;this.getClassSignature=f}});
+- Simple          - 3.087 byte
+composable("components.Introspective_typeDetection_core",function(c,q,l){c=l.introspective;var m=c.isFunction,z=c.isCallable,A=c.isArray,B=c.isArguments,r=c.isString,C=c.baseValueOf,h=l.helpers.createClassSignaturePattern,e=function(a){return["(?:^",a,":)|(?:^",a,"$)|(?:\\[",a,":\\s*name\\:\\s*",a,")"].join("")},b=l.objects.regX,D=h("Boolean"),E=h("Number"),F=h("Object"),G=h("RegExp"),H=h("Date"),I=h("Error"),J=e("Error"),K=e("EvalError"),L=e("RangeError"),M=e("ReferenceError"),N=e("SyntaxError"),O=e("TypeError"),P=e("URIError"),f=c.getClassSignature,g=function(a){return function(b){return a.call(b)}}(q.Error.prototype.toString),s=q.isFinite,Q=function(a){return void 0===a},R=function(a){return void 0!==a},S=function(a){return null===a},T=function(a){return null!==a},U=function(a){return null==a},V=function(a){return null!=a},t=function(a){return n(a)||k(a)||p(a)},W=function(a){return t(a)||null==a},u=function(a){return!!a&&("object"==typeof a||"function"==typeof a)},v=function(a){return null!=a&&m(a.constructor)},X=function(a){return u(a)&&!m(a.constructor)},w=function(a){return b.compile(D).test(f(a))},p=function(a){return"boolean"==typeof a},Y=function(a){return w(a)&&!p(a)},k=function(a){return"number"==typeof a},x=function(a){return b.compile(E).test(f(a))&&!k(a)},Z=function(a){return(k(a)||x(a))&&s(a)},n=function(a){return"string"==typeof a},$=function(a){return r(a)&&!n(a)},y=function(a){return null!=a&&k(a=a.length)&&s(a)&&0<=a},aa=function(a){return y(a)&&"function"!=typeof a&&a.hasOwnProperty("length")&&!a.propertyIsEnumerable("length")},ba=function(a){return v(a)&&b.compile(F).test(f(a))},ca=function(a){return b.compile(G).test(f(a))},da=function(a){return b.compile(H).test(f(a))},d=function(a){return b.compile(I).test(f(a))},ea=function(a){return d(a)&&(b.compile(J).test(g(a))||"Error"===a.name)},fa=function(a){return d(a)&&(b.compile(K).test(g(a))||"EvalError"===a.name)},ga=function(a){return d(a)&&(b.compile(L).test(g(a))||"RangeError"===a.name)},ha=function(a){return d(a)&&(b.compile(M).test(g(a))||"ReferenceError"===a.name)},ia=function(a){return d(a)&&(b.compile(N).test(g(a))||"SyntaxError"===a.name)},ja=function(a){return d(a)&&(b.compile(O).test(g(a))||"TypeError"===a.name)},ka=function(a){return d(a)&&(b.compile(P).test(g(a))||"URIError"===a.name)};return function(){this.isUndefined=Q;this.isDefined=R;this.isNull=S;this.isNotNull=T;this.isUndefinedOrNull=U;this.isNeitherUndefinedNorNull=V;this.isPrimitive=t;this.isValue=W;this.isObject=u;this.isNative=v;this.isAlien=X;this.isBoolean=w;this.isBooleanValue=p;this.isBooleanObject=Y;this.isNumber=Z;this.isNumberValue=k;this.isNumberObject=x;this.isString=r;this.isStringValue=n;this.isStringObject=$;this.isListLike=y;this.isRealList=aa;this.isArguments=B;this.isArray=A;this.isObjectObject=ba;this.isFunction=m;this.isCallable=z;this.isRegExp=ca;this.isDate=da;this.isError=d;this.isGenericError=ea;this.isEvalError=fa;this.isRangeError=ga;this.isReferenceError=ha;this.isSyntaxError=ia;this.isTypeError=ja;this.isURIError=ka;this.baseValueOf=C;this.getClassSignature=f}});
 
 
 */
