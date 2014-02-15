@@ -74,7 +74,7 @@ describe("»components.Introspective_type_equality« module", function () {
         expect(isEqualType(NOT_A_NUMBER, parseInt(",2" ,10))).toBe(true); // same value
         expect(isEqualType(NOT_A_NUMBER, NOT_A_NUMBER)).toBe(true);       // same value
         expect(isEqualType(Math.pow(2, 53), Math.pow(2, 53))).toBe(true); // same value
-        expect(isEqualType((new Boolean()).valueOf(), false)).toBe(true); // same value
+        expect(isEqualType((new Boolean).valueOf(), false)).toBe(true);   // same value
         expect(isEqualType(0, 0)).toBe(true);                             // same value
         expect(isEqualType(-0, -0)).toBe(true);                           // same value
         expect(isEqualType((-1 * 0), -0)).toBe(true);                     // same value

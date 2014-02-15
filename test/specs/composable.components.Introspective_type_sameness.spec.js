@@ -63,7 +63,7 @@ describe("»components.Introspective_type_sameness« module", function () {
         expect(isSameValue(NOT_A_NUMBER, parseInt(",2" ,10))).toBe(true); // same value
         expect(isSameValue(NOT_A_NUMBER, NOT_A_NUMBER)).toBe(true);       // same value
         expect(isSameValue(Math.pow(2, 53), Math.pow(2, 53))).toBe(true); // same value
-        expect(isSameValue((new Boolean()).valueOf(), false)).toBe(true); // same value
+        expect(isSameValue((new Boolean).valueOf(), false)).toBe(true);   // same value
         expect(isSameValue(0, 0)).toBe(true);                             // same value
         expect(isSameValue(-0, -0)).toBe(true);                           // same value
         expect(isSameValue((-1 * 0), -0)).toBe(true);                     // same value

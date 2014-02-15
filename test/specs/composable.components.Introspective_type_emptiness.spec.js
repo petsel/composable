@@ -46,15 +46,10 @@ describe("»components.Introspective_type_emptiness« module", function () {
       coll_empty = {"length": 2},
       noop = (function () {}),
 
-      obj_01 = {x:{x:{x:"",y:[,[,,,],,[,{x:"",y:[,[,,,],,[,new RegExp,,new Function,"",,Number.NaN,"",,""]],z:{x:""}},,]],z:{x:""}}}},                // true   - non cyclic
-      obj_02 = {x:{x:{x:"",y:[,[,,,],,[,{x:"",y:[,[,,,],,[,new RegExp,,new Function,"",,Number.NaN,"",,""]],z:{x:""}},,]],z:{x:obj_02}}}},            // true   - cyclic
-      obj_03 = {x:{x:{x:"",y:[,[,,,],,[,{x:"",y:[,[,,,],,[,new RegExp,,new Function,"",,Number.NaN,"",obj_03,""]],z:{x:""}},,]],z:{x:obj_03}}}},      // true   - cyclic
-      obj_04 = {x:{x:{x:"",y:[,[,,,],,[,{x:"",y:[,[,,,],,[,new RegExp,,new Function,"",,Number.NaN,"",obj_04,""]],z:{x:""}},,]],z:{x:obj_04,y:0}}}},  // false  - cyclic
-
-      document = GLOBAL_OBJECT.document,
-
-      nodeList = document && document.getElementsByTagName(""),
-      htmlCollection = document && document.forms
+      obj_01 = {x:{x:{x:"",y:[,[,,,],,[,{x:"",y:[,[,,,],,[,new RegExp,,new Function,"",,Number.NaN,"",,""]],z:{x:""}},,]],z:{x:""}}}},              // true   - non cyclic
+      obj_02 = {x:{x:{x:"",y:[,[,,,],,[,{x:"",y:[,[,,,],,[,new RegExp,,new Function,"",,Number.NaN,"",,""]],z:{x:""}},,]],z:{x:obj_02}}}},          // true   - cyclic
+      obj_03 = {x:{x:{x:"",y:[,[,,,],,[,{x:"",y:[,[,,,],,[,new RegExp,,new Function,"",,Number.NaN,"",obj_03,""]],z:{x:""}},,]],z:{x:obj_03}}}},    // true   - cyclic
+      obj_04 = {x:{x:{x:"",y:[,[,,,],,[,{x:"",y:[,[,,,],,[,new RegExp,,new Function,"",,Number.NaN,"",obj_04,""]],z:{x:""}},,]],z:{x:obj_04,y:0}}}} // false  - cyclic
     ;
     describe("As for [isEmptyValue]", function () {
 
