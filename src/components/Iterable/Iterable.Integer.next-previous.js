@@ -30,7 +30,7 @@ composable("components.Iterable_Integer_next_previous", function (require, globa
   var
     sanitizeInteger = function (type) {
 
-      return (isFinite(type = Number(type)) && (type <= INTEGER_MAXIMUM) && (type >= INTEGER_MINIMUM)) ? floor(type) : UNDEFINED_VALUE;
+      return (isFinite(type = Number(type)) && ((type = floor(type)) <= INTEGER_MAXIMUM) && (type >= INTEGER_MINIMUM)) ? type : UNDEFINED_VALUE;
     },
     nextInteger = function () {
       var
@@ -54,6 +54,9 @@ composable("components.Iterable_Integer_next_previous", function (require, globa
 
       return ((isFinite(prevInt) && (prevInt !== currInt)) ? prevInt : UNDEFINED_VALUE);
     },
+  //compare = function (a, b) {
+  //  return (isFinite(a = Number(a)) && isFinite(b = Number(b))) ? (a - b) : UNDEFINED_VALUE;
+  //},
     compare = function (a, b) {return (a - b);}
   //compareTo = function (b) {return (this - b);}
   ;

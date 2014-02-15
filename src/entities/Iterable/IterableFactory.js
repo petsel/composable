@@ -207,9 +207,12 @@ composable("entities.IterableFactory", function (require, global, internalBaseEn
 
     IterableTrait = (function (GetNextTrait, GetPreviousTrait) {
       return function () {
+        var iterable = this;
 
-        GetNextTrait.call(this);
-        GetPreviousTrait.call(this);
+        GetNextTrait.call(iterable);
+        GetPreviousTrait.call(iterable);
+
+        return iterable;
       };
     }(GetNextTrait, GetPreviousTrait));
 
@@ -238,8 +241,8 @@ composable("entities.IterableFactory", function (require, global, internalBaseEn
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          - 1.194 byte
-composable("entities.IterableFactory",function(m,n,f){var k=f.introspective;m=f.helpers;var r=k.getClassSignature,l=k.isFunction,k=m.createClassSignaturePattern,s=m.compareTypes,p=f.methods.noop,q=f.objects.regX.compile(k("StopIteration")).test(r(n.StopIteration))&&n.StopIteration||function(){var a=function(){};a.prototype={};a.prototype.toString=function(){return"[object StopIteration]"};a.prototype.valueOf=function(){return this};return new a}(),t=function(){throw q;},u=function(){};return{create:function(a){a="object"==typeof a&&a||{};var c,d;c=a.next;d=a.previous;var b=a.compare;a=!!a.isThrowStopIteration&&t||u;l(b)?1==b.length&&(b=function(a){return function(g,e){return a.call(g,e)}}(b)):b=function(a,g){return function(e,h){return a(e.compareTo)?e.compareTo(h):g(e,h)}}(l,s);c=l(c)&&function(a,g,e,h){return function(){this.next=function(){var b=a.call(this),c=g(this,b);return b!==h&&c!==h&&0>=c?b:e()}}}(c,b,a)||p;d=l(d)&&function(a,b,e,c){return function(){this.previous=function(){var d=a.call(this),f=b(this,d);return d!==c&&f!==c&&0<=f?d:e()}}}(d,b,a)||p;return function(a,b){return function(){a.call(this);b.call(this)}}(c,d)},isStopIteration:function(a){return a===q}}});
+- Simple          - 1.206 byte
+composable("entities.IterableFactory",function(m,n,f){var k=f.introspective;m=f.helpers;var r=k.getClassSignature,l=k.isFunction,k=m.createClassSignaturePattern,s=m.compareTypes,p=f.methods.noop,q=f.objects.regX.compile(k("StopIteration")).test(r(n.StopIteration))&&n.StopIteration||function(){var a=function(){};a.prototype={};a.prototype.toString=function(){return"[object StopIteration]"};a.prototype.valueOf=function(){return this};return new a}(),t=function(){throw q;},u=function(){};return{create:function(a){a="object"==typeof a&&a||{};var c,d;c=a.next;d=a.previous;var b=a.compare;a=!!a.isThrowStopIteration&&t||u;l(b)?1==b.length&&(b=function(a){return function(g,e){return a.call(g,e)}}(b)):b=function(a,g){return function(e,h){return a(e.compareTo)?e.compareTo(h):g(e,h)}}(l,s);c=l(c)&&function(a,g,e,h){return function(){this.next=function(){var b=a.call(this),c=g(this,b);return b!==h&&c!==h&&0>=c?b:e()}}}(c,b,a)||p;d=l(d)&&function(a,b,e,c){return function(){this.previous=function(){var d=a.call(this),f=b(this,d);return d!==c&&f!==c&&0<=f?d:e()}}}(d,b,a)||p;return function(a,b){return function(){a.call(this);b.call(this);return this}}(c,d)},isStopIteration:function(a){return a===q}}});
 
 
 */

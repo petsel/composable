@@ -87,6 +87,40 @@
     <!-- composable :: RECOMMENDED if one is in need of a factory that creates customized [Iterable] Traits -->               <!-- Factory: custom Iterable Trait //-->
     <script src="../../src/entities/Iterable/IterableFactory.js"></script>                                                    <!-- Factory: custom Iterable Trait //-->
 
+    <!-- composable :: RECOMMENDED if one is in need of a factory that creates customized [Comparable] Traits -->             <!-- Factory: custom Comparable Trait //-->
+    <script src="../../src/entities/Comparable/ComparableFactory.js"></script>                                                <!-- Factory: custom Comparable Trait //-->
+
+
+    <!-- composable :: NOT REALLY NECESSARY :: unless one likes iterating over INT like numbers by [next] and [previous] -->  <!-- Iterable Integer //-->
+    <script src="../../src/components/Iterable/Iterable.Integer.next.js"></script>                                            <!-- Iterable Integer //-->
+    <script src="../../src/components/Iterable/Iterable.Integer.next-previous.js"></script>                                   <!-- Iterable Integer //-->
+    <script src="../../src/components/Iterable/Iterable.Integer.next-previous.StopIteration.js"></script>                     <!-- Iterable Integer //-->
+
+
+    <!-- composable :: RECOMMENDED if one needs to augment the [Observable] implementation with propagating events -->        <!-- Propagable EventProxy //-->
+    <script src="../../src/components/Propagable/Propagable.EventProxy.js"></script>                                          <!-- Propagable EventProxy //-->
+
+    <!-- composable :: RECOMMENDED if one is in need of [DataNode]s in order to build custom event dispatching models -->     <!-- Factory: DataNode Type composite //-->
+    <script src="../../src/composites/DataNode/DataNodeFactory.js"></script>                                                  <!-- Factory: DataNode Type composite //-->
+
+
+
+    <!-- composable :: STRONGLY RECOMMENDED if one relies on testing for empty values, types and structures -->               <!-- Introspection //-->
+    <script src="../../src/components/Introspective/Introspective.type.emptiness.js"></script>                                <!-- Introspection //-->
+    <script src="../../src/environment/environment.extended.introspective.emptiness.js"></script>                             <!-- Introspection //-->
+    <script src="../../src/composites/Array/Array.isSparse.js"></script>                                                      <!-- Introspection //-->
+    <script src="../../src/composites/Object/Object.isEmpty.js"></script>                                                     <!-- Introspection //-->
+
+    <!-- composable :: STRONGLY RECOMMENDED if one relies on testing for same values -->                                      <!-- Introspection //-->
+    <script src="../../src/components/Introspective/Introspective.type.sameness.js"></script>                                 <!-- Introspection //-->
+    <script src="../../src/environment/environment.extended.introspective.sameness.js"></script>                              <!-- Introspection //-->
+    <script src="../../src/composites/Object/Object.is.js"></script>                                                          <!-- Introspection //-->
+
+    <!-- composable :: STRONGLY RECOMMENDED if one relies on testing for equal types -->                                      <!-- Introspection //-->
+    <script src="../../src/components/Introspective/Introspective.type.equality.js"></script>                                 <!-- Introspection //-->
+    <script src="../../src/environment/environment.extended.introspective.equality.js"></script>                              <!-- Introspection //-->
+    <script src="../../src/composites/Object/Object.isEqual.js"></script>                                                     <!-- Introspection //-->
+
 
 
     <!-- composable :: STRONGLY RECOMMENDED if one relies on testing for empty values, types and structures -->               <!-- Introspection //-->
@@ -185,6 +219,37 @@
 
     <!-- composable :: RECOMMENDED if one is in need of a factory that creates customized [Iterable] Traits -->               <!-- Factory: custom Iterable Trait //-->
     <script src="../specs/composable.entities.IterableFactory.spec.js"></script>                                              <!-- Factory: custom Iterable Trait //-->
+
+    <!-- composable :: RECOMMENDED if one is in need of a factory that creates customized [Comparable] Traits -->             <!-- Factory: custom Comparable Trait //-->
+    <script src="../specs/composable.entities.ComparableFactory.spec.js"></script>                                            <!-- Factory: custom Comparable Trait //-->
+
+
+    <!-- composable :: NOT REALLY NECESSARY :: unless one likes iterating over INT like numbers by [next] and [previous] -->  <!-- Iterable Integer //-->
+    <script src="../specs/composable.components.Iterable_Integer_next.spec.js"></script>                                      <!-- Iterable Integer //-->
+<!--<script src="../specs/composable.components.Iterable_Integer_next_previous.spec.js"></script>//-->                        <!-- Iterable Integer //-->
+<!--<script src="../specs/composable.components.Iterable_Integer_next_previous_StopIteration.spec.js"></script>//-->          <!-- Iterable Integer //-->
+
+
+    <!-- composable :: RECOMMENDED if one is in need of [DataNode]s in order to build custom event dispatching models -->     <!-- Factory: DataNode Type composite //-->
+    <script src="../specs/composable.composites.DataNodeFactory.spec.js"></script>                                            <!-- Factory: DataNode Type composite //-->
+
+
+
+    <!-- composable :: STRONGLY RECOMMENDED if one relies on testing for empty values, types and structures -->               <!-- Introspection //-->
+    <script src="../specs/composable.components.Introspective_type_emptiness.spec.js"></script>                               <!-- Introspection //-->
+    <script src="../specs/composable.environment.extended.introspective.emptiness.spec.js"></script>                          <!-- Introspection //-->
+    <script src="../specs/composable.composites.Array_isSparse.spec.js"></script>                                             <!-- Introspection //-->
+    <script src="../specs/composable.composites.Object_isEmpty.spec.js"></script>                                             <!-- Introspection //-->
+
+    <!-- composable :: STRONGLY RECOMMENDED if one relies on testing for same values -->                                      <!-- Introspection //-->
+    <script src="../specs/composable.components.Introspective_type_sameness.spec.js"></script>                                <!-- Introspection //-->
+    <script src="../specs/composable.environment.extended.introspective.sameness.spec.js"></script>                           <!-- Introspection //-->
+    <script src="../specs/composable.composites.Object_is.spec.js"></script>                                                  <!-- Introspection //-->
+
+    <!-- composable :: STRONGLY RECOMMENDED if one relies on testing for equal types -->                                      <!-- Introspection //-->
+    <script src="../specs/composable.components.Introspective_type_equality.spec.js"></script>                                <!-- Introspection //-->
+    <script src="../specs/composable.environment.extended.introspective.equality.spec.js"></script>                           <!-- Introspection //-->
+    <script src="../specs/composable.composites.Object_isEqual.spec.js"></script>                                             <!-- Introspection //-->
 
 
 

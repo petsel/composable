@@ -31,14 +31,16 @@ composable("entities.ComparableFactory", function (require, global, internalBase
          *
          *  creation of a customized "Comparable" Trait.
          */
-        this.compareTo = function (type, customValueOf) {
+        var comparable = this;
+
+        comparable.compareTo = function (type, customValueOf) {
           /**
            *  @param type           - object [this] does compare to.
            *  @param customValueOf  - optional custom [valueOf] method that - during object comparison - will be called for each object right before comparing them to one another.
            */
           return compareTypes(this, type, customValueOf);
         };
-        this.inBetween = function (typeK, typeM, customValueOf) {
+        comparable.inBetween = function (typeK, typeM, customValueOf) {
           /**
            *  @param typeK, typeM   - objects [this] does compare to.
            *  @param customValueOf  - optional custom [valueOf] method that - during object comparison - will be called for each object right before comparing them to one another.
@@ -51,6 +53,8 @@ composable("entities.ComparableFactory", function (require, global, internalBase
           }
           return !!isInBetween;
         };
+
+        return comparable;
       };
     }((isFunction(compareTypes) && compareTypes) || baseCompareTypes));
 
@@ -77,8 +81,8 @@ composable("entities.ComparableFactory", function (require, global, internalBase
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          -   374 byte
-composable("entities.ComparableFactory",function(h,k,a){var f=a.introspective.isFunction,g=a.helpers.compareTypes;return{create:function(a){return function(b){return function(){this.compareTo=function(a,c){return b(this,a,c)};this.inBetween=function(a,c,d){var e=b(a,c,d);0>e?e=0<b(this,a,d)&&0>b(this,c,d):0<e&&(e=0<b(this,c,d)&&0>b(this,a,d));return!!e}}}(f(a)&&a||g)}}});
+- Simple          -   386 byte
+composable("entities.ComparableFactory",function(h,k,a){var f=a.introspective.isFunction,g=a.helpers.compareTypes;return{create:function(a){return function(b){return function(){this.compareTo=function(a,c){return b(this,a,c)};this.inBetween=function(a,c,d){var e=b(a,c,d);0>e?e=0<b(this,a,d)&&0>b(this,c,d):0<e&&(e=0<b(this,c,d)&&0>b(this,a,d));return!!e};return this}}(f(a)&&a||g)}}});
 
 
 */
