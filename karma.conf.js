@@ -108,6 +108,12 @@ files = [
   "src/components/Iterable/Iterable.Integer.next-previous.StopIteration.js",                                          //  Iterable Integer
 
 
+  // composable :: NOT REALLY NECESSARY :: unless one likes iterating over CHAR like strings by [next] and [previous] //  Iterable Character
+  "src/components/Iterable/Iterable.Character.next.js",                                                               //  Iterable Character
+  "src/components/Iterable/Iterable.Character.next-previous.js",                                                      //  Iterable Character
+  "src/components/Iterable/Iterable.Character.next-previous.StopIteration.js",                                        //  Iterable Character
+
+
   // @TODO - NEEDS TO BE ENTIRELY TESTED
   // composable :: RECOMMENDED if one needs to augment the [Observable] implementation with propagating events        //  Propagable EventProxy
   "src/components/Propagable/Propagable.EventProxy.js",                                                               //  Propagable EventProxy
@@ -220,6 +226,11 @@ files = [
  *  composable.components.Iterable_Integer_next.spec                                                                  //  Iterable Integer
  *  composable.components.Iterable_Integer_next_previous.spec                                                         //  Iterable Integer
  *  composable.components.Iterable_Integer_next_previous_StopIteration.spec                                           //  Iterable Integer
+ *
+ *  // composable :: NOT REALLY NECESSARY :: unless one likes iterating over CHAR like strings by [next] 'n [previous]//  Iterable Character
+ *  composable.components.Iterable_Character_next.spec                                                                //  Iterable Character
+ *  composable.components.Iterable_Character_next_previous.spec                                                       //  Iterable Character
+ *  composable.components.Iterable_Character_next_previous_StopIteration.spec                                         //  Iterable Character
  *
  *
  *  // @TODO - [[EventProxy]] NEEDS TO BE ENTIRELY TESTED
