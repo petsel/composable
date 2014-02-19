@@ -11,7 +11,10 @@ describe("»components.Iterable_Integer_next_previous« module", function () {
     Iterable_Integer_next_previous = require("components.Iterable_Integer_next_previous"),
 
 
-    isSafari = (GLOBAL_OBJECT.navigator && GLOBAL_OBJECT.navigator.userAgent && (GLOBAL_OBJECT.navigator.userAgent.toLowerCase().indexOf("safari") >= 0))
+    isSafari = (GLOBAL_OBJECT.navigator && GLOBAL_OBJECT.navigator.userAgent && (GLOBAL_OBJECT.navigator.userAgent.toLowerCase().indexOf("safari") >= 0)),
+
+
+    Number = GLOBAL_OBJECT.Number
   ;
 
 
