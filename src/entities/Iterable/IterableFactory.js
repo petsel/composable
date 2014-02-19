@@ -149,72 +149,64 @@ composable("entities.IterableFactory", function (require, global, internalBaseEn
     //compareTypes = defaultCompareTypes; // a possible fallback solution as well.
     }
 
-    GetNextTrait = (isFunction(getNext) && (function (get_next, compare_types, stop_iteration, UNDEFINED_VALUE) {
-      return/* (isReturnTuple &&*/ function () {/*
+    GetNextTrait = (isFunction(getNext) && /*((isReturnTuple && function () {
+      this.next = function () {
+        var
+          curr = this,
 
-        this.next = function () {
-          var
-            curr = this,
+          next = getNext.call(curr),
+          comparison = (next !== UNDEFINED_VALUE) ? compareTypes(curr, next) : next,
 
-            next = get_next.call(curr),
-            comparison = (next !== UNDEFINED_VALUE) ? compare_types(curr, next) : next,
+          secondNext = ((comparison !== UNDEFINED_VALUE) && (comparison <= 0)) ? getNext.call(curr) : UNDEFINED_VALUE,
+          secondComparison = (secondNext !== UNDEFINED_VALUE) ? compareTypes(curr, secondNext) : secondNext
+        ;
+        (this.previous && this.previous()); // does conceptually work till here. but then it relies on the
+                                            // counter operation that's availability can not be assured.
+        return (
+          ((comparison !== UNDEFINED_VALUE) && (comparison <= 0))
+          ? {
 
-            secondNext = ((comparison !== UNDEFINED_VALUE) && (comparison <= 0)) ? get_next.call(curr) : UNDEFINED_VALUE,
-            secondComparison = (secondNext !== UNDEFINED_VALUE) ? compare_types(curr, secondNext) : secondNext
-          ;
-          (this.previous && this.previous()); // does conceptually work till here. but then it relies on the
-                                              // counter operation that's availability can not be assured.
-          return (
-            ((comparison !== UNDEFINED_VALUE) && (comparison <= 0))
-            ? {
+            value : next,
+            done  : ((secondComparison === UNDEFINED_VALUE) || (secondComparison > 0))
 
-              value : next,
-              done  : ((secondComparison === UNDEFINED_VALUE) || (secondComparison > 0))
-
-            } : stop_iteration()
-          );
-        };
-      }) || function () {*/
-
-        this.next = function () {
-          var
-            curr = this,
-            next = get_next.call(curr),
-
-            comparison = compare_types(curr, next)
-          ;
-          return ((next !== UNDEFINED_VALUE) && (comparison !== UNDEFINED_VALUE) && (comparison <= 0)) ? next : stop_iteration();
-        };
+          } : stopIteration()
+        );
       };
-    }(getNext, compareTypes, stopIteration))) || noop;
+    }) ||*/ function () {
+      this.next = function () {
+        var
+          curr = this,
+          next = getNext.call(curr),
 
-    GetPreviousTrait = (isFunction(getPrevious) && (function (get_previous, compare_types, stop_iteration, UNDEFINED_VALUE) {
-      return function () {
-
-        this.previous = function () {
-
-          var
-            curr = this,
-            prev = get_previous.call(curr),
-
-            comparison = compare_types(curr, prev)
-          ;
-          return ((prev !== UNDEFINED_VALUE) && (comparison !== UNDEFINED_VALUE) && (comparison >= 0)) ? prev : stop_iteration();
-        };
+          comparison = compareTypes(curr, next)
+        ;
+        return ((next !== UNDEFINED_VALUE) && (comparison !== UNDEFINED_VALUE) && (comparison <= 0)) ? next : stopIteration();
       };
-    }(getPrevious, compareTypes, stopIteration))) || noop;
+      return this;
+    })/*)*/ || noop;
 
+    GetPreviousTrait = (isFunction(getPrevious) && function () {
+      this.previous = function () {
+        var
+          curr = this,
+          prev = getPrevious.call(curr),
 
-    IterableTrait = (function (GetNextTrait, GetPreviousTrait) {
-      return function () {
-        var iterable = this;
-
-        GetNextTrait.call(iterable);
-        GetPreviousTrait.call(iterable);
-
-        return iterable;
+          comparison = compareTypes(curr, prev)
+        ;
+        return ((prev !== UNDEFINED_VALUE) && (comparison !== UNDEFINED_VALUE) && (comparison >= 0)) ? prev : stopIteration();
       };
-    }(GetNextTrait, GetPreviousTrait));
+      return this;
+    }) || noop;
+
+
+    IterableTrait = function () {
+      var iterable =/* ((typeof this != "object") && (typeof this != "function") && global.Object(this)) ||*/ this;
+
+      GetNextTrait.call(iterable);
+      GetPreviousTrait.call(iterable);
+
+      return iterable;
+    };
 
 
     return IterableTrait;
@@ -241,8 +233,8 @@ composable("entities.IterableFactory", function (require, global, internalBaseEn
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          - 1.206 byte
-composable("entities.IterableFactory",function(m,n,f){var k=f.introspective;m=f.helpers;var r=k.getClassSignature,l=k.isFunction,k=m.createClassSignaturePattern,s=m.compareTypes,p=f.methods.noop,q=f.objects.regX.compile(k("StopIteration")).test(r(n.StopIteration))&&n.StopIteration||function(){var a=function(){};a.prototype={};a.prototype.toString=function(){return"[object StopIteration]"};a.prototype.valueOf=function(){return this};return new a}(),t=function(){throw q;},u=function(){};return{create:function(a){a="object"==typeof a&&a||{};var c,d;c=a.next;d=a.previous;var b=a.compare;a=!!a.isThrowStopIteration&&t||u;l(b)?1==b.length&&(b=function(a){return function(g,e){return a.call(g,e)}}(b)):b=function(a,g){return function(e,h){return a(e.compareTo)?e.compareTo(h):g(e,h)}}(l,s);c=l(c)&&function(a,g,e,h){return function(){this.next=function(){var b=a.call(this),c=g(this,b);return b!==h&&c!==h&&0>=c?b:e()}}}(c,b,a)||p;d=l(d)&&function(a,b,e,c){return function(){this.previous=function(){var d=a.call(this),f=b(this,d);return d!==c&&f!==c&&0<=f?d:e()}}}(d,b,a)||p;return function(a,b){return function(){a.call(this);b.call(this);return this}}(c,d)},isStopIteration:function(a){return a===q}}});
+- Simple          - 1.153 byte
+composable("entities.IterableFactory",function(e,f,b){var c=b.introspective;e=b.helpers;var l=c.getClassSignature,h=c.isFunction,c=e.createClassSignaturePattern,m=e.compareTypes,k=b.methods.noop,g=b.objects.regX.compile(c("StopIteration")).test(l(f.StopIteration))&&f.StopIteration||function(){var a=function(){};a.prototype={};a.prototype.toString=function(){return"[object StopIteration]"};a.prototype.valueOf=function(){return this};return new a}(),n=function(){throw g;},p=function(){};return{create:function(a){a="object"==typeof a&&a||{};var b,c,e=a.next,f=a.previous,d=a.compare,g=!!a.isThrowStopIteration&&n||p;h(d)?1==d.length&&(d=function(a){return function(q,b){return a.call(q,b)}}(d)):d=function(a,b){return function(c,d){return a(c.compareTo)?c.compareTo(d):b(c,d)}}(h,m);b=h(e)&&function(){this.next=function(){var a=e.call(this),b=d(this,a);return void 0!==a&&void 0!==b&&0>=b?a:g()};return this}||k;c=h(f)&&function(){this.previous=function(){var a=f.call(this),b=d(this,a);return void 0!==a&&void 0!==b&&0<=b?a:g()};return this}||k;return function(){b.call(this);c.call(this);return this}},isStopIteration:function(a){return a===g}}});
 
 
 */
