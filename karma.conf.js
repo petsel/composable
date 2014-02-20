@@ -80,6 +80,10 @@ files = [
   // composable :: STRONGLY RECOMMENDED if one needs to rely on a type safe event systems                             //  Observable
   "src/components/Observable/Observable.SignalsAndSlots.js",                                                          //  Observable
 
+  // composable :: SPECIAL CASE ONLY :: e.g. one has to augment custom event objects in order to make them propagable //  Propagable EventAdapter
+  // composable :: RECOMMENDED if one needs to augment the [Observable] implementation with propagating events        //  Propagable EventAdapter
+  "src/components/Propagable/Propagable.EventAdapter.js",                                                             //  Propagable EventAdapter
+
 
   // composable :: STRONGLY RECOMMENDED if one needs an AOP inspired pre stage for method modification/modifying      //  Controllable
   "src/components/Controllable/Controllable.adviceTypes.before-after-around.js",                                      //  Controllable
@@ -112,11 +116,6 @@ files = [
   "src/components/Iterable/Iterable.Character.next.js",                                                               //  Iterable Character
   "src/components/Iterable/Iterable.Character.next-previous.js",                                                      //  Iterable Character
   "src/components/Iterable/Iterable.Character.next-previous.StopIteration.js",                                        //  Iterable Character
-
-
-  // @TODO - NEEDS TO BE ENTIRELY TESTED
-  // composable :: RECOMMENDED if one needs to augment the [Observable] implementation with propagating events        //  Propagable EventProxy
-  "src/components/Propagable/Propagable.EventProxy.js",                                                               //  Propagable EventProxy
 
 
   // @TODO - NEEDS TO BE ENTIRELY TESTED
@@ -200,6 +199,10 @@ files = [
  *  // composable :: STRONGLY RECOMMENDED if one needs to rely on a type safe event systems                           //  Observable
  *  composable.components.Observable_SignalsAndSlots.spec                                                             //  Observable
  *
+ *  // composable :: SPECIAL CASE ONLY :: e.g. one has to augment custom event objects in order to make them propagable //  Propagable EventAdapter
+ *  // composable :: RECOMMENDED if one needs to augment the [Observable] implementation with propagating events        //  Propagable EventAdapter
+ *  composable.components.Propagable_EventAdapter.spec                                                                  //  Propagable EventAdapter
+ *
  *
  *  // composable :: STRONGLY RECOMMENDED if one needs an AOP inspired pre stage for method modification/modifying    //  Controllable
  *  composable.components.Controllable_adviceTypes_before_after_around.spec                                           //  Controllable
@@ -231,9 +234,6 @@ files = [
  *  composable.components.Iterable_Character_next.spec                                                                //  Iterable Character
  *  composable.components.Iterable_Character_next_previous.spec                                                       //  Iterable Character
  *  composable.components.Iterable_Character_next_previous_StopIteration.spec                                         //  Iterable Character
- *
- *
- *  // @TODO - [[EventProxy]] NEEDS TO BE ENTIRELY TESTED
  *
  *
  *  // @TODO - NEEDS TO BE ENTIRELY TESTED

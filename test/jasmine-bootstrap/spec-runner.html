@@ -86,6 +86,11 @@
     <!-- composable :: STRONGLY RECOMMENDED if one needs to rely on a type safe event systems -->                             <!-- Observable //-->
     <script src="../../src/components/Observable/Observable.SignalsAndSlots.js"></script>                                     <!-- Observable //-->
 
+    <!-- composable :: SPECIAL CASE ONLY :: e.g. one has to augment custom event objects in order to make them propagable --> <!-- Propagable EventAdapter //-->
+    <!-- composable :: RECOMMENDED if one needs to augment the [Observable] implementation with propagating events -->        <!-- Propagable EventAdapter //-->
+    <script src="../../src/components/Propagable/Propagable.EventAdapter.js"></script>                                        <!-- Propagable EventAdapter //-->
+
+
 
     <!-- composable :: STRONGLY RECOMMENDED if one needs an AOP inspired pre stage for method modification/modifying -->      <!-- Controllable //-->
     <script src="../../src/components/Controllable/Controllable.adviceTypes.before-after-around.js"></script>                 <!-- Controllable //-->
@@ -118,11 +123,6 @@
     <script src="../../src/components/Iterable/Iterable.Character.next.js"></script>                                          <!-- Iterable Character //-->
     <script src="../../src/components/Iterable/Iterable.Character.next-previous.js"></script>                                 <!-- Iterable Character //-->
     <script src="../../src/components/Iterable/Iterable.Character.next-previous.StopIteration.js"></script>                   <!-- Iterable Character //-->
-
-
-    <!-- @TODO - NEEDS TO BE ENTIRELY TESTED -->
-    <!-- composable :: RECOMMENDED if one needs to augment the [Observable] implementation with propagating events -->        <!-- Propagable EventProxy //-->
-    <script src="../../src/components/Propagable/Propagable.EventProxy.js"></script>                                          <!-- Propagable EventProxy //-->
 
 
     <!-- @TODO - NEEDS TO BE ENTIRELY TESTED -->
@@ -208,6 +208,10 @@
     <!-- composable :: STRONGLY RECOMMENDED if one needs to rely on a type safe event systems -->                             <!-- Observable //-->
     <script src="../specs/composable.components.Observable_SignalsAndSlots.spec.js"></script>                                 <!-- Observable //-->
 
+    <!-- composable :: SPECIAL CASE ONLY :: e.g. one has to augment custom event objects in order to make them propagable --> <!-- Propagable EventAdapter //-->
+    <!-- composable :: RECOMMENDED if one needs to augment the [Observable] implementation with propagating events -->        <!-- Propagable EventAdapter //-->
+    <script src="../specs/composable.components.Propagable_EventAdapter.spec.js"></script>                                    <!-- Propagable EventAdapter //-->
+
 
     <!-- composable :: STRONGLY RECOMMENDED if one needs an AOP inspired pre stage for method modification/modifying -->      <!-- Controllable //-->
     <script src="../specs/composable.components.Controllable_adviceTypes_before_after_around.spec.js"></script>               <!-- Controllable //-->
@@ -240,9 +244,6 @@
     <script src="../specs/composable.components.Iterable_Character_next.spec.js"></script>                                    <!-- Iterable Character //-->
     <script src="../specs/composable.components.Iterable_Character_next_previous.spec.js"></script>                           <!-- Iterable Character //-->
     <script src="../specs/composable.components.Iterable_Character_next_previous_StopIteration.spec.js"></script>             <!-- Iterable Character //-->
-
-
-    <!-- @TODO - [[EventProxy]] NEEDS TO BE ENTIRELY TESTED -->
 
 
     <!-- @TODO - NEEDS TO BE ENTIRELY TESTED -->
