@@ -24,7 +24,7 @@ describe("»components.Iterable_Integer_next« module", function () {
   });
 
 
-  describe("This module being a factory", function () {
+  describe("This module being a generated Trait", function () {
 
     describe("should - if applied onto a number object - ", function () {
       it([

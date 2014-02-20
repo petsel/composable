@@ -29,7 +29,7 @@ describe("»components.Iterable_Character_next_previous_StopIteration« module",
   });
 
 
-  describe("This module being a factory", function () {
+  describe("This module being a generated Trait", function () {
 
     describe("should - if applied onto a string object - ", function () {
       it([
