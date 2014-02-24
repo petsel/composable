@@ -123,6 +123,10 @@ files = [
   "src/composites/DataNode/DataNodeFactory.js",                                                                       //  Factory: DataNode Type composite
 
 
+  // composable :: RECOMMENDED if one needs to save (sub) data structures of custom models into the [localStorage]    //  LocallyStorable
+  "src/components/LocallyStorable/LocallyStorable.js",                                                                //  LocallyStorable
+
+
 
 // load your spec files
 // load your spec files
@@ -239,6 +243,10 @@ files = [
  *  // @TODO - NEEDS TO BE ENTIRELY TESTED
  *  // composable :: RECOMMENDED if one is in need of [DataNode]s in order to build custom event dispatching models   //  Factory: DataNode Type composite
  *  composable.composites.DataNodeFactory.spec                                                                        //  Factory: DataNode Type composite
+ *
+ *
+ *  // composable :: RECOMMENDED if one needs to save (sub) data structures of custom models into the [localStorage]  //  LocallyStorable
+ *  composable.components.LocallyStorable.spec                                                                        //  LocallyStorable
  *
  *
  */
