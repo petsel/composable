@@ -130,6 +130,10 @@
     <script src="../../src/composites/DataNode/DataNodeFactory.js"></script>                                                  <!-- Factory: DataNode Type composite //-->
 
 
+    <!-- composable :: RECOMMENDED if one needs to save (sub) data structures of custom models into the [localStorage] -->    <!-- LocallyStorable //-->
+    <script src="../../src/components/LocallyStorable/LocallyStorable.js"></script>                                           <!-- LocallyStorable //-->
+
+
 
   <!-- load jasmine -->
   <!-- load jasmine -->
@@ -249,6 +253,10 @@
     <!-- @TODO - NEEDS TO BE ENTIRELY TESTED -->
     <!-- composable :: RECOMMENDED if one is in need of [DataNode]s in order to build custom event dispatching models -->     <!-- Factory: DataNode Type composite //-->
     <script src="../specs/composable.composites.DataNodeFactory.spec.js"></script>                                            <!-- Factory: DataNode Type composite //-->
+
+
+    <!-- composable :: RECOMMENDED if one needs to save (sub) data structures of custom models into the [localStorage] -->    <!-- LocallyStorable //-->
+    <script src="../specs/composable.components.LocallyStorable.spec.js"></script>                                            <!-- LocallyStorable //-->
 
 
 
