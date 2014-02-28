@@ -6,16 +6,20 @@ describe("»composites.DataNodeFactory« module", function () {
   var
     GLOBAL_OBJECT = ((window && window.window === window) && window) || ((global && global.global === global) && global) || this,
 
-
-    object_keys = GLOBAL_OBJECT.Object.keys,
-
     require = GLOBAL_OBJECT.composable.require,
 
+
+    environment = require("environment_extended_introspective_core"),
 
     DataNodeFactory = require("composites.DataNodeFactory"),
 
 
-    config = {
+    object_keys = GLOBAL_OBJECT.Object.keys,
+
+    env_introspective = environment.introspective,
+
+
+    dataNodeConfig = {
 
       name        : "Hans",
       lastName    : "Sachs",
@@ -100,38 +104,41 @@ describe("»composites.DataNodeFactory« module", function () {
 
     dataNode,
 
-    enqueueListener,
-    dequeueListener,
-    emptyListener,
+//    enqueueListener,
+//    dequeueListener,
+//    emptyListener,
+//
+//    enqueueHandler = function (evt) {
+//      ++pushBufferLength;
+//      pushBuffer.push(evt.item);
+//
+//      targetCollector.push(evt.target);
+//      typeCollector.push(evt.type);
+//    },
+//    dequeueHandler = function (evt) {
+//      --pushBufferLength;
+//      var
+//        idx = pushBuffer.indexOf(evt.item),
+//        word = pushBuffer.splice(idx,1)[0]
+//      ;
+//      ++sliceBufferLength;
+//      sliceBuffer.push(evt.item === word && word || "");
+//
+//      targetCollector.push(evt.target);
+//      typeCollector.push(evt.type);
+//    },
+//    emptyHandler = function (evt) {
+//      var word = evt.item;
+//      if (word) {
+//        ++pushBufferLength;
+//        pushBuffer.push(word);
+//      }
+//      targetCollector.push(evt.target);
+//      typeCollector.push(evt.type);
+//    },
 
-    enqueueHandler = function (evt) {
-      ++pushBufferLength;
-      pushBuffer.push(evt.item);
-
-      targetCollector.push(evt.target);
-      typeCollector.push(evt.type);
-    },
-    dequeueHandler = function (evt) {
-      --pushBufferLength;
-      var
-        idx = pushBuffer.indexOf(evt.item),
-        word = pushBuffer.splice(idx,1)[0]
-      ;
-      ++sliceBufferLength;
-      sliceBuffer.push(evt.item === word && word || "");
-
-      targetCollector.push(evt.target);
-      typeCollector.push(evt.type);
-    },
-    emptyHandler = function (evt) {
-      var word = evt.item;
-      if (word) {
-        ++pushBufferLength;
-        pushBuffer.push(word);
-      }
-      targetCollector.push(evt.target);
-      typeCollector.push(evt.type);
-    }
+    NULL_VALUE = null,
+    UNDEFINED_VALUE
   ;
 
 
@@ -192,7 +199,55 @@ describe("»composites.DataNodeFactory« module", function () {
         expect(typeof dataNode.getParent).toBe("function");
       });
 
+
+      describe("it accepts two parameters - a [config] type and a future data node's parent node and ...", function () {
+
+        it([
+          "... if invoked without any of these parameters, it should return a [DataNode] type",
+          "without attributes nor child nodes nor a parent node associated to it."
+
+        ].join(" "), function () {
+
+          dataNode = DataNodeFactory.create();
+
+          expect(env_introspective.isEmptyType(dataNode.getAttrList())).toBe(true);
+          expect(env_introspective.isEmptyType(dataNode.getChildList())).toBe(true);
+          expect(dataNode.getParent()).toBeNull();
+        });
+
+        it([
+          "... if invoked with an invalid [config] type and an invalid parent node reference, it should return",
+          "a [DataNode] type without attributes nor child nodes nor this invalid parent node associated to it."
+
+        ].join(" "), function () {
+
+          dataNode = DataNodeFactory.create({}, {});
+
+          expect(env_introspective.isEmptyType(dataNode.getAttrList())).toBe(true);
+          expect(env_introspective.isEmptyType(dataNode.getChildList())).toBe(true);
+          expect(dataNode.getParent()).toBeNull();
+        });
+
+        it([
+          "... if invoked with a valid [config] type and a valid parent node reference, it should return",
+          "a [DataNode] type with attributes, child nodes and this parent node associated to it."
+
+        ].join(" "), function () {
+
+          dataNode = DataNodeFactory.create(dataNodeConfig, DataNodeFactory.create());
+
+          expect(env_introspective.isEmptyType(dataNode.getAttrList())).toBe(false);
+          expect(env_introspective.isEmptyType(dataNode.getChildList())).toBe(false);
+
+          expect(DataNodeFactory.isNodeConfig(dataNodeConfig)).toBe(true);
+          expect(DataNodeFactory.isDataNode(dataNode)).toBe(true);
+          expect(DataNodeFactory.isDataNode(dataNode.getParent())).toBe(true);
+        });
+      });
+
+
       describe("As for every returned [DataNode] type", function () {
+
         it([
 
           "it - in addition - should feature 3 methods out of the default",
@@ -208,272 +263,296 @@ describe("»composites.DataNodeFactory« module", function () {
           expect(dataNode.hasEventListener).toBeUndefined();
         });
 
-//        it([
+
+        describe([
+
+          "... as for [setAttr] ..."
+
+        ].join(" "), function () {
+
+          it([
+            "it accepts up to three parameters and expects at least [key] and [value]",
+            "as the first both mandatory ones and should add a key value pair to the",
+            "[DataNode] type if it did not exist before."
+
+          ].join(" "), function () {
+
+            dataNode = DataNodeFactory.create();
+            expect(dataNode.getAttr("foo")).toBeUndefined();    // GET - for counter checking only
+
+            expect(dataNode.setAttr.length).toBe(3);            // SET - for checking its arguments API
+
+            expect(dataNode.setAttr()).toBeUndefined();         // SET
+            expect(dataNode.setAttr("foo")).toBeUndefined();    // SET
+
+            expect(dataNode.getAttr("foo")).toBeUndefined();    // GET - for counter checking only
+
+            expect(dataNode.setAttr("foo", "bar")).toBe("bar"); // SET
+
+            expect(dataNode.getAttr("foo")).toBe("bar");        // GET - for counter checking only
+          });
+
+          it([
+            "its 1st [key] parameter should be a non empty and non blank string type in order to work properly."
+
+          ].join(" "), function () {
+
+            dataNode = DataNodeFactory.create();
+
+            expect(dataNode.setAttr("", "empty")).toBeUndefined();          // SET
+            expect(dataNode.getAttr("")).toBeUndefined();                   // GET - for counter checking only
+
+            expect(dataNode.setAttr(" ", "single blank")).toBeUndefined();  // SET
+            expect(dataNode.getAttr(" ")).toBeUndefined();                  // GET - for counter checking only
+            expect(dataNode.getAttr("  ")).toBeUndefined();                 // GET - for counter checking only
+            expect(dataNode.getAttr("")).toBeUndefined();                   // GET - for counter checking only
+
+            expect(dataNode.setAttr("  ", "double blank")).toBeUndefined(); // SET
+            expect(dataNode.getAttr("  ")).toBeUndefined();                 // GET - for counter checking only
+            expect(dataNode.getAttr(" ")).toBeUndefined();                  // GET - for counter checking only
+            expect(dataNode.getAttr("")).toBeUndefined();                   // GET - for counter checking only
+
+
+            expect(dataNode.getAttr("foo")).toBeUndefined();  // GET - for counter checking only
+            expect(dataNode.getAttr(5)).toBeUndefined();      // GET - for counter checking only
+
+            expect(dataNode.setAttr(5, 5)).toBeUndefined();   // SET
+            expect(dataNode.getAttr(5)).toBeUndefined();      // GET - for counter checking only
+            expect(dataNode.getAttr("5")).toBeUndefined();    // GET - for counter checking only
+
+            expect(dataNode.setAttr("5", 5)).toBe(5);         // SET
+            expect(dataNode.getAttr(5)).toBeUndefined();      // GET - for counter checking only
+            expect(dataNode.getAttr("5")).toBe(5);            // GET - for counter checking only
+          });
+
+          it([
+            "its 2nd [value] parameter should allowed to be any type distinct from [object Object]."
+
+          ].join(" "), function () {
+
+            dataNode = DataNodeFactory.create();
+
+            expect(dataNode.setAttr("foo", {})).toBe(false);          // SET
+            expect(dataNode.setAttr("foo", {bar:"baz"})).toBe(false); // SET
+
+            expect(dataNode.setAttr("boolean", true)).toBe(true);     // SET
+            expect(dataNode.setAttr("number", 3)).toBe(3);            // SET
+            expect(dataNode.setAttr("string", "3")).toBe("3");        // SET
+          });
+
+          it([
+            "invoked with an [object Object] type as 2nd parameter it should return a [false] value."
+
+          ].join(" "), function () {
+
+            dataNode = DataNodeFactory.create();
+
+            expect(dataNode.setAttr("foo", {})).toBe(false);          // SET
+            expect(dataNode.setAttr("foo", {bar:"baz"})).toBe(false); // SET
+          });
+
+          it([
+            "invoked with otherwise invalid arguments it should return the [undefined] value."
+
+          ].join(" "), function () {
+
+            dataNode = DataNodeFactory.create();
+
+            expect(dataNode.setAttr(UNDEFINED_VALUE, "undefined")).toBeUndefined(); // SET
+            expect(dataNode.setAttr(NULL_VALUE, "null")).toBeUndefined();           // SET
+
+            expect(dataNode.setAttr("foo")).toBeUndefined();      // SET
+            expect(dataNode.setAttr("", "bar")).toBeUndefined();  // SET
+            expect(dataNode.setAttr(" ", "bar")).toBeUndefined(); // SET
+            expect(dataNode.setAttr([], "")).toBeUndefined();     // SET
+            expect(dataNode.setAttr("[]", "")).toBe("");          // SET
+          });
+
+          it([
+            "validly invoked it should return the value that just got written as part of the key value pair."
+
+          ].join(" "), function () {
+
+            dataNode = DataNodeFactory.create();
+
+            expect(dataNode.setAttr("foo", "bar")).toBe("bar");       // SET
+            expect(dataNode.setAttr("foo", "baz")).toBe("baz");       // SET
+            expect(dataNode.getAttr("foo")).toBe("baz");              // GET - for counter checking only
+
+
+            expect(dataNode.setAttr("boolean", true)).toBe(true);     // SET
+            expect(dataNode.setAttr("number", 3)).toBe(3);            // SET
+            expect(dataNode.setAttr("string", "3")).toBe("3");        // SET
+
+            expect(dataNode.setAttr("number", 3)).toBe(3);            // SET
+            expect(dataNode.setAttr("string", "3")).toBe("3");        // SET
+
+            expect("" + dataNode.setAttr("Function", new Function)).toBe("" +(new Function)); // SET
+            expect("" + dataNode.setAttr("RegExp", new RegExp)).toBe("" + (/(?:)/));          // SET
+            expect("" + dataNode.setAttr("Array", new Array)).toBe("" + []);                  // SET
+          });
+        });
+
+
+        describe([
+
+          "... as for [getAttr] ..."
+
+        ].join(" "), function () {
+
+          it([
+            "it expects [key] as its sole parameter that should be a non empty and non blank string type."
+
+          ].join(" "), function () {
+
+            dataNode = DataNodeFactory.create();
+
+            expect(dataNode.getAttr.length).toBe(1);
+
+
+            dataNode.setAttr("", "empty");
+            expect(dataNode.getAttr("")).toBeUndefined();
+
+            dataNode.setAttr(" ", "single blank");
+            expect(dataNode.getAttr(" ")).toBeUndefined();
+
+            dataNode.setAttr("  ", "double blank");
+            expect(dataNode.getAttr("  ")).toBeUndefined();
+
+
+            expect(dataNode.getAttr("foo")).toBeUndefined();
+            expect(dataNode.getAttr(5)).toBeUndefined();
+
+            dataNode.setAttr(5, 5);
+            expect(dataNode.getAttr(5)).toBeUndefined();
+            expect(dataNode.getAttr("5")).toBeUndefined();
+
+            dataNode.setAttr("5", 5);
+            expect(dataNode.getAttr(5)).toBeUndefined();
+            expect(dataNode.getAttr("5")).toBe(5);
+
+            dataNode.setAttr("foo", "bar");
+            expect(dataNode.getAttr("foo")).toBe("bar");
+
+            expect(dataNode.getAttr()).toBeUndefined();
+          });
+
+          it([
+            "validly invoked it should return the value that is associated with the passed [key] argument."
+
+          ].join(" "), function () {
+
+            dataNode = DataNodeFactory.create();
+
+            dataNode.setAttr("foo", "baz");
+            expect(dataNode.getAttr("foo")).toBe("baz");
+
+            dataNode.setAttr("boolean", false);
+            expect(dataNode.getAttr("boolean")).toBe(false);
+
+            dataNode.setAttr("number", 3);
+            expect(dataNode.getAttr("number")).toBe(3);
+
+            dataNode.setAttr("string", "3");
+            expect(dataNode.getAttr("string")).toBe("3");
+
+            dataNode.setAttr("Function", new Function);
+            expect("" + dataNode.getAttr("Function")).toBe("" +(new Function));
+
+            dataNode.setAttr("RegExp", new RegExp);
+            expect("" + dataNode.getAttr("RegExp", new RegExp)).toBe("" + (/(?:)/));
+
+            dataNode.setAttr("Array", new Array);
+            expect("" + dataNode.getAttr("Array", new Array)).toBe("" + []);
+          });
+        });
+
+
+////"[setAttr], [getAttr], [removeAttr], [setChild], [getChild], [removeChild],",
+////"[getAttrKeys], [getAttrList], [getChildKeys], [getChildList] and [getParent]."
+//        xdescribe([
 //
-//          "it - also in addition - should feature all methods applied by the »components.Allocable« Trait -",
-//          "[toArray] / [valueOf], [toString] and [size] as well as [first], [last] and [item]."
+//          "... as for [removeAttr] ..."
 //
 //        ].join(" "), function () {
 //
-//          expect(typeof queue_3.toArray).toBe("function");
-//          expect(typeof queue_3.valueOf).toBe("function");
-//          expect(queue_3.toArray).toBe(queue_3.valueOf);
-//          expect(typeof queue_3.toString).toBe("function");
-//          expect(typeof queue_3.size).toBe("function");
-//
-//          expect(typeof queue_3.first).toBe("function");
-//          expect(typeof queue_3.last).toBe("function");
-//          expect(typeof queue_3.item).toBe("function");
-//        });
-//
-//        describe("As for [enqueue]", function () {
 //          it([
-//
-//            "it accepts a single parameter - the item that is going to be stored into the queue."
+//            "it expects [key] as its sole parameter that should be a non empty and non blank string type."
 //
 //          ].join(" "), function () {
 //
-//            expect(queue_1.enqueue.length).toBe(1);
-//            expect(queue_2.enqueue.length).toBe(1);
-//            expect(queue_3.enqueue.length).toBe(1);
+//            dataNode = DataNodeFactory.create();
+//
+//            expect(dataNode.getAttr.length).toBe(1);
+//
+//
+//            dataNode.setAttr("", "empty");
+//            expect(dataNode.getAttr("")).toBeUndefined();
+//
+//            dataNode.setAttr(" ", "single blank");
+//            expect(dataNode.getAttr(" ")).toBeUndefined();
+//
+//            dataNode.setAttr("  ", "double blank");
+//            expect(dataNode.getAttr("  ")).toBeUndefined();
+//
+//
+//            expect(dataNode.getAttr("foo")).toBeUndefined();
+//            expect(dataNode.getAttr(5)).toBeUndefined();
+//
+//            dataNode.setAttr(5, 5);
+//            expect(dataNode.getAttr(5)).toBeUndefined();
+//            expect(dataNode.getAttr("5")).toBeUndefined();
+//
+//            dataNode.setAttr("5", 5);
+//            expect(dataNode.getAttr(5)).toBeUndefined();
+//            expect(dataNode.getAttr("5")).toBe(5);
+//
+//            dataNode.setAttr("foo", "bar");
+//            expect(dataNode.getAttr("foo")).toBe("bar");
+//
+//            expect(dataNode.getAttr()).toBeUndefined();
 //          });
 //
 //          it([
-//
-//            "it should internally store a reference of the provided type or - if it was a primitive - this type itself.",
-//            "It also is supposed to return the stored reference or value again."
+//            "validly invoked it should return the value that is associated with the passed [key] argument."
 //
 //          ].join(" "), function () {
 //
-//            expect(queue_1.size()).toBe(0);
-//            expect(queue_1.enqueue(wordList[1])).toBe(wordList[1]);
-//            expect(queue_1.size()).toBe(1);
-//            expect(queue_1.enqueue(wordList[3])).toBe(wordList[3]);
-//            expect(queue_1.enqueue(wordList[5])).toBe(wordList[5]);
-//            expect(queue_1.size()).toBe(3);
-//          });
-//        });
+//            dataNode = DataNodeFactory.create();
 //
-//        describe("As for [dequeue]", function () {
-//          it([
+//            dataNode.setAttr("foo", "baz");
+//            expect(dataNode.getAttr("foo")).toBe("baz");
 //
-//            "it should - for every invocation - return one of the internally stored items, ensuring the same precedence",
-//            "as of each item's \"enqueueing\". Thus working the way of a FIFO (first in first out) stack."
+//            dataNode.setAttr("boolean", false);
+//            expect(dataNode.getAttr("boolean")).toBe(false);
 //
-//          ].join(" "), function () {
+//            dataNode.setAttr("number", 3);
+//            expect(dataNode.getAttr("number")).toBe(3);
 //
-//            expect(queue_1.size()).toBe(3);
-//            expect(queue_1.dequeue()).toBe(wordList[1]);
-//            expect(queue_1.size()).toBe(2);
-//            expect(queue_1.dequeue()).toBe(wordList[3]);
-//            expect(queue_1.dequeue()).toBe(wordList[5]);
-//            expect(queue_1.size()).toBe(0);
-//          });
+//            dataNode.setAttr("string", "3");
+//            expect(dataNode.getAttr("string")).toBe("3");
 //
-//          it([
-//            "it should - in case of an empty queue - return the [undefined] value."
+//            dataNode.setAttr("Function", new Function);
+//            expect("" + dataNode.getAttr("Function")).toBe("" +(new Function));
 //
-//          ].join(" "), function () {
+//            dataNode.setAttr("RegExp", new RegExp);
+//            expect("" + dataNode.getAttr("RegExp", new RegExp)).toBe("" + (/(?:)/));
 //
-//            expect(queue_1.size()).toBe(0);
-//            expect(queue_1.dequeue()).toBeUndefined();
-//            expect(queue_1.size()).toBe(0);
-//            expect(queue_1.dequeue()).toBeUndefined();
-//            expect(queue_1.size()).toBe(0);
-//          });
-//        });
-//
-//        describe("As for listening to \"enqueue\"", function () {
-//          it([
-//
-//            "it needs subscribing to it - »queue.addEventListener(\"enqueue\", enqueueHandler)«."
-//
-//          ].join(" "), function () {
-//
-//            enqueueListener = queue_2.addEventListener("enqueue", enqueueHandler);
-//
-//            expect(enqueueListener.getType()).toBe("enqueue");
-//            expect(enqueueListener.getHandler()).toBe(enqueueHandler);
-//          });
-//
-//          it([
-//
-//            "the [event] object that is passed into the event handler - in addition to both of its",
-//            "standard fields [type] and [target] - exposes [item]. The latter equals the \"enqueued\" type."
-//
-//          ].join(" "), function () {
-//
-//            targetCollector = [];
-//            typeCollector = [];
-//
-//            wordList.forEach(function (word) {
-//              queue_2.enqueue(word);
-//            });
-//
-//            expect(sliceBufferLength).toBe(0);
-//
-//            expect(pushBufferLength).toBe(wordListLength);
-//            expect(pushBufferLength).toBe(pushBuffer.length);
-//
-//            expect(targetCollector.every(function (target) {return (target === queue_2);})).toBe(true);
-//            expect(typeCollector.every(function (type) {return (type === "enqueue");})).toBe(true);
+//            dataNode.setAttr("Array", new Array);
+//            expect("" + dataNode.getAttr("Array", new Array)).toBe("" + []);
 //          });
 //        });
-//
-//        describe("As for listening to \"dequeue\"", function () {
-//          it([
-//
-//            "it needs subscribing to it - »queue.addEventListener(\"dequeue\", dequeueHandler)«."
-//
-//          ].join(" "), function () {
-//
-//            dequeueListener = queue_2.addEventListener("dequeue", dequeueHandler);
-//
-//            expect(dequeueListener.getType()).toBe("dequeue");
-//            expect(dequeueListener.getHandler()).toBe(dequeueHandler);
-//          });
-//
-//          it([
-//
-//            "the [event] object that is passed into the event handler - in addition to both of its",
-//            "standard fields [type] and [target] - exposes [item]. The latter equals the \"dequeued\" type."
-//
-//          ].join(" "), function () {
-//
-//            targetCollector = [];
-//            typeCollector = [];
-//
-//            while (queue_2.size() >= 1) {
-//              queue_2.dequeue();
-//            }
-//
-//            expect(pushBufferLength).toBe(0);
-//
-//            expect(sliceBufferLength).toBe(wordListLength);
-//            expect(sliceBufferLength).toBe(sliceBuffer.length);
-//
-//            expect(targetCollector.every(function (target) {return (target === queue_2);})).toBe(true);
-//            expect(typeCollector.every(function (type) {return (type === "dequeue");})).toBe(true);
-//          });
-//        });
-//
-//        describe("As for listening to \"empty\" that will be dispatched whenever [dequeue] was operated on or has ended up with an empty queue", function () {
-//          it([
-//
-//            "it needs subscribing to it - »queue.addEventListener(\"empty\", emptyHandler)«."
-//
-//          ].join(" "), function () {
-//
-//            emptyListener = queue_2.addEventListener("empty", emptyHandler);
-//
-//            expect(emptyListener.getType()).toBe("empty");
-//            expect(emptyListener.getHandler()).toBe(emptyHandler);
-//          });
-//
-//          it([
-//
-//            "the [event] object that is passed into the event handler does not expose any fields in addition",
-//            "to both of its standard fields [type] and [target] - NOTE: \"dequeue\" dispatching still continues",
-//            "in parallel just before \"empty\" gets dispatched."
-//
-//          ].join(" "), function () {
-//
-//            targetCollector = [];
-//            typeCollector = [];
-//
-//            queue_2.dequeue();
-//            queue_2.dequeue();
-//            queue_2.dequeue();
-//            queue_2.dequeue();
-//            queue_2.dequeue();
-//
-//            expect(pushBufferLength).toBe(-5);  // - since "dequeue" dispatching still continues in parallel.
-//            expect(pushBuffer.length).toBe(0);  // - since an array's minimum length always will be zero.
-//
-//            expect(targetCollector.length).toBe(10);  // - since "dequeue" dispatching still continues in parallel ...
-//            expect(typeCollector.length).toBe(10);    //   ... just before "empty" gets dispatched.
-//
-//            expect(targetCollector.every(function (target) {return (target === queue_2);})).toBe(true);
-//
-//            typeCollector.sort(); // - since "dequeue" dispatching still continues in parallel just before "empty" gets dispatched.
-//            expect(typeCollector.splice(0, 5).every(function (type) {return (type === "dequeue");})).toBe(true);
-//            expect(typeCollector.splice(5, 5).every(function (type) {return (type === "empty");})).toBe(true);
-//          });
-//        });
-//
-//        describe("As for every queue's [Allocable] method API", function () {
-//          it([
-//
-//            "[size] returns the current amount of stored items as (integer) number value."
-//
-//          ].join(" "), function () {
-//
-//            expect(queue_3.size()).toBe(0);
-//
-//            wordList.forEach(function (word) {
-//              queue_3.enqueue(word);
-//            });
-//
-//            expect(queue_3.size()).toBe(wordListLength);
-//          });
-//
-//          it([
-//
-//            "both [toArray] and [valueOf] return a copy of the stored",
-//            "items in array form ensuring the items correct precedence."
-//
-//          ].join(" "), function () {
-//
-//            expect(queue_3.toArray().join("")).toBe(wordList.join(""));
-//            expect(queue_3.valueOf().join("")).toBe(wordList.join(""));
-//          });
-//
-//          it([
-//
-//            "[toString] does return the [toString] value of every queue's enclosed/wrapped item list."
-//
-//          ].join(" "), function () {
-//
-//            expect(queue_3.toString()).toBe(wordList.toString());
-//            expect(queue_3.toString()).toBe(GLOBAL_OBJECT.String(wordList));
-//            expect(queue_3.toString()).toBe("" + wordList);
-//          });
-//
-//          it([
-//
-//            "[first] returns every queue's first item."
-//
-//          ].join(" "), function () {
-//
-//            expect(queue_3.first()).toBe(wordList[0]);
-//          });
-//
-//          it([
-//
-//            "[last] returns every queue's last item."
-//
-//          ].join(" "), function () {
-//
-//            expect(queue_3.last()).toBe(wordList[wordListLength - 1]);
-//          });
-//
-//          it([
-//
-//            "[item] accepts a sole argument that will be interpreted as integer value N.",
-//            "It than returns every queue's N'th item."
-//
-//          ].join(" "), function () {
-//
-//            expect(queue_3.item(0)).toBe(queue_3.first());
-//            expect(queue_3.item(queue_3.size() - 1)).toBe(queue_3.last());
-//            expect(queue_3.item(5)).toBe(wordList[5]);
-//          });
-//        });
+
+
       });
     });
 
 
-    describe("In addition to its [create] method this factory does feature an [isDataNode] method", function () {
+    describe([
+
+      "In addition to its static [create] method this factory does feature a static [isDataNode] method"
+
+    ].join(" "), function () {
 
       it([
 
@@ -490,6 +569,34 @@ describe("»composites.DataNodeFactory« module", function () {
 
         // method API comparison
         expect(DataNodeFactory.isDataNode(require("composites.DataNodeFactory").create())).toBe(true);
+      });
+    });
+
+
+    describe([
+
+      "In addition to its both methods [create] and [isDataNode] this factory does feature",
+      "[isNodeConfig] as its 3rd static method."
+
+    ].join(" "), function () {
+
+      it([
+
+        "that expects a single parameter - the object that is going to be tested",
+        "of whether being a valid [config] type or not."
+
+      ].join(" "), function () {
+
+        expect(DataNodeFactory.isNodeConfig(dataNode)).toBe(false);
+
+        expect(DataNodeFactory.isNodeConfig()).toBe(false);
+        expect(DataNodeFactory.isNodeConfig([])).toBe(false);
+        expect(DataNodeFactory.isNodeConfig(GLOBAL_OBJECT.Number.NaN)).toBe(false);
+        expect(DataNodeFactory.isNodeConfig(new GLOBAL_OBJECT.Number)).toBe(false);
+        expect(DataNodeFactory.isNodeConfig(new GLOBAL_OBJECT.String)).toBe(false);
+
+        expect(DataNodeFactory.isNodeConfig({})).toBe(true);
+        expect(DataNodeFactory.isNodeConfig(dataNodeConfig)).toBe(true);
       });
     });
 

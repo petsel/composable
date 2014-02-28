@@ -1,22 +1,30 @@
 
 
-composable("composites.DataNodeFactory", function (require, global, internalBaseEnvironment) {
+composable("composites.DataNodeFactory", function (require, global/*, internalBaseEnvironment*/) {
 
 
   "use strict";
 
 
   var
-    Propagable  = require("components.Propagable_EventProxy"),
+    environment = require("environment_extended_introspective_core"),
+
+
     Observable  = require("components.Observable_SignalsAndSlots"),
+    Propagable  = require("components.Propagable_EventProxy"),
+
   //Storable    = require("components.LocallyStorable"),
   //Allocable   = require("components.Allocable"),
 
 
-    isValue         = internalBaseEnvironment.introspective.isValue,
-    isString        = internalBaseEnvironment.introspective.isString,
-    isFunction      = internalBaseEnvironment.introspective.isFunction,
-    isObjectObject  = internalBaseEnvironment.introspective.isObjectObject,
+    env_introspective = environment.introspective,
+
+
+    isValue         = env_introspective.isValue,
+    isString        = env_introspective.isString,
+    isFunction      = env_introspective.isFunction,
+    isObjectObject  = env_introspective.isObjectObject,
+
 
     object_keys = global.Object.keys,
 
@@ -522,8 +530,8 @@ DNF.isNodeConfig(config);
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          - 3.286 byte
-composable("composites.DataNodeFactory",function(u,x,p){var y=u("components.Propagable_EventProxy"),v=u("components.Observable_SignalsAndSlots"),q=p.introspective.isValue,z=p.introspective.isString,w=p.introspective.isFunction,l=p.introspective.isObjectObject,f=x.Object.keys,r,g,n,A=function(a){v.call(a,{hasEventListener:""});return f(a).filter(function(c){return w(a[c])})}({setAttr:"",getAttr:"",removeAttr:"",setChild:"",getChild:"",removeChild:"",getAttrKeys:"",getAttrList:"",getChildKeys:"",getChildList:"",getParent:""}),B=function(a){return A.every(function(c){return w(a[c])})},C=function(a){var c=!1,b,c=f(a),d=c.length;return c="attributes"in a&&1==d?l(b=a.attributes)&&f(b).every(function(a){return q(b[a])}):"children"in a&&1==d?l(b=a.children)&&f(b).every(function(a){return g(b[a])}):"attributes"in a&&"children"in a&&2==d?l(b=a.attributes)&&f(b).every(function(a){return q(b[a])})&&l(b=a.children)&&f(b).every(function(a){return g(b[a])}):c.every(function(e){e=a[e];return q(e)||g(e)})},s=function(a,c){var b=new r(c),d,e=f(a),t=e.length;"attributes"in a&&1==t?(d=a.attributes,f(d).forEach(function(a){b.setAttr(a,d.key,!0)})):"children"in a&&1==t?(d=a.children,f(d).forEach(function(a){b.setChild(a,s(d.key,b),!0)})):"attributes"in a&&"children"in a&&2==t?(d=a.attributes,f(d).forEach(function(a){b.setAttr(a,d.key,!0)}),d=a.children,f(d).forEach(function(a){b.setChild(a,s(d.key,b),!0)})):e.forEach(function(e){var c=a[e];q(c)?b.setAttr(e,c,!0):b.setChild(e,s(c,b),!0)});return b},m=function(a){return z(a)&&a.trim()||""},k=function(a,c,b){b&&y.call(a);for(c.dispatchEvent(a);b&&!a.isStopPropagation();)a.currentTarget=b,b.dispatchEvent(a),b=b.getParent(),!b&&a.stopPropagation()};r=function(a){var c=this,b={},d={};c.constructor=r;c.setAttr=function(e,d,f){var h,g=(h=(e=m(e))||void 0)&&(h=!l(d))&&(b[e]=d);!f&&h&&g===d&&(k({type:"attributechange",currentTarget:c,key:e,value:d},this,a),k({type:"change",specificType:"attributechange",currentTarget:c,key:e,value:d},this,a));return g};c.getAttr=function(a){return b[m(a)]};c.removeAttr=function(e,d){var f=b[e=m(e)],h=e in b;delete b[e];!d&&h&&(k({type:"attributeremove",currentTarget:c,key:e,value:f},this,a),k({type:"change",specificType:"attributeremove",currentTarget:c,key:e,value:f},this,a));return f};c.setChild=function(e,b,f){var h,g=(h=(e=m(e))||void 0)&&(h=n(b))&&(d[e]=b);!f&&h&&g===b&&(k({type:"childchange",currentTarget:c,key:e,value:b},this,a),k({type:"change",specificType:"childchange",currentTarget:c,key:e,value:b},this,a));return g};c.getChild=function(a){return d[m(a)]};c.removeChild=function(b,f){var g=d[b=m(b)],h=b in d;delete d[b];!f&&h&&(k({type:"childremove",currentTarget:c,key:b,value:g},this,a),k({type:"change",specificType:"childremove",currentTarget:c,key:b,value:g},this,a));return g};c.getAttrKeys=function(){return f(b)};c.getAttrList=function(){return f(b).map(function(a){return{key:a,value:b[a]}})};c.getChildKeys=function(){return f(d)};c.getChildList=function(){return f(d).map(function(a){return{key:a,value:d[a]}})};c.getParent=function(){return a};v.call(c,{hasEventListener:""})};g=function(a){return l(a)&&!n(a)&&C(a)};n=function(a){return!(!a||!(a instanceof r||B(a)))};return{isNodeConfig:g,isDataNode:n,create:function(a,c){return s(g(a)&&a||{},n(c)&&c||null)}}});
+- Simple          - 3.293 byte
+composable("composites.DataNodeFactory",function(t,x){var g=t("environment_extended_introspective_core"),v=t("components.Observable_SignalsAndSlots"),y=t("components.Propagable_EventProxy"),g=g.introspective,q=g.isValue,z=g.isString,w=g.isFunction,l=g.isObjectObject,f=x.Object.keys,r,m,p,A=function(a){v.call(a,{hasEventListener:""});return f(a).filter(function(c){return w(a[c])})}({setAttr:"",getAttr:"",removeAttr:"",setChild:"",getChild:"",removeChild:"",getAttrKeys:"",getAttrList:"",getChildKeys:"",getChildList:"",getParent:""}),B=function(a){return A.every(function(c){return w(a[c])})},C=function(a){var c=!1,b,c=f(a),d=c.length;return c="attributes"in a&&1==d?l(b=a.attributes)&&f(b).every(function(a){return q(b[a])}):"children"in a&&1==d?l(b=a.children)&&f(b).every(function(a){return m(b[a])}):"attributes"in a&&"children"in a&&2==d?l(b=a.attributes)&&f(b).every(function(a){return q(b[a])})&&l(b=a.children)&&f(b).every(function(a){return m(b[a])}):c.every(function(e){e=a[e];return q(e)||m(e)})},s=function(a,c){var b=new r(c),d,e=f(a),u=e.length;"attributes"in a&&1==u?(d=a.attributes,f(d).forEach(function(a){b.setAttr(a,d.key,!0)})):"children"in a&&1==u?(d=a.children,f(d).forEach(function(a){b.setChild(a,s(d.key,b),!0)})):"attributes"in a&&"children"in a&&2==u?(d=a.attributes,f(d).forEach(function(a){b.setAttr(a,d.key,!0)}),d=a.children,f(d).forEach(function(a){b.setChild(a,s(d.key,b),!0)})):e.forEach(function(e){var c=a[e];q(c)?b.setAttr(e,c,!0):b.setChild(e,s(c,b),!0)});return b},n=function(a){return z(a)&&a.trim()||""},k=function(a,c,b){b&&y.call(a);for(c.dispatchEvent(a);b&&!a.isStopPropagation();)a.currentTarget=b,b.dispatchEvent(a),b=b.getParent(),!b&&a.stopPropagation()};r=function(a){var c=this,b={},d={};c.constructor=r;c.setAttr=function(e,d,f){var h,g=(h=(e=n(e))||void 0)&&(h=!l(d))&&(b[e]=d);!f&&h&&g===d&&(k({type:"attributechange",currentTarget:c,key:e,value:d},this,a),k({type:"change",specificType:"attributechange",currentTarget:c,key:e,value:d},this,a));return g};c.getAttr=function(a){return b[n(a)]};c.removeAttr=function(e,d){var f=b[e=n(e)],h=e in b;delete b[e];!d&&h&&(k({type:"attributeremove",currentTarget:c,key:e,value:f},this,a),k({type:"change",specificType:"attributeremove",currentTarget:c,key:e,value:f},this,a));return f};c.setChild=function(e,b,f){var h,g=(h=(e=n(e))||void 0)&&(h=p(b))&&(d[e]=b);!f&&h&&g===b&&(k({type:"childchange",currentTarget:c,key:e,value:b},this,a),k({type:"change",specificType:"childchange",currentTarget:c,key:e,value:b},this,a));return g};c.getChild=function(a){return d[n(a)]};c.removeChild=function(b,f){var g=d[b=n(b)],h=b in d;delete d[b];!f&&h&&(k({type:"childremove",currentTarget:c,key:b,value:g},this,a),k({type:"change",specificType:"childremove",currentTarget:c,key:b,value:g},this,a));return g};c.getAttrKeys=function(){return f(b)};c.getAttrList=function(){return f(b).map(function(a){return{key:a,value:b[a]}})};c.getChildKeys=function(){return f(d)};c.getChildList=function(){return f(d).map(function(a){return{key:a,value:d[a]}})};c.getParent=function(){return a};v.call(c,{hasEventListener:""})};m=function(a){return l(a)&&!p(a)&&C(a)};p=function(a){return!(!a||!(a instanceof r||B(a)))};return{isNodeConfig:m,isDataNode:p,create:function(a,c){return s(m(a)&&a||{},p(c)&&c||null)}}});
 
 
 */
