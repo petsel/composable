@@ -1,26 +1,35 @@
-composable("modification.ao", function (require, global, environment) {
+composable("modification.ao", function (require, global/*, internalBaseEnvironment*/) {
 
 
   "use strict";
 
 
-  require("composites.Function_modifiers_adviceTypes_before_after_returning_throwing_around");
-  environment   = require("environment");
+//require("composites.Function_modifiers_adviceTypes_before_after_returning_throwing_around");
+  require("composites.Function_modifiers_adviceTypes_before_after_throwing_finally_around");
 
 
   var
+    environment   = require("environment_extended_introspective_core"),
+
+
     Allocable_all = require("components.Allocable_all"),
     Observable    = require("components.Observable_SignalsAndSlots"),
 
 
-    isUndefined   = environment.introspective.isUndefined,
-    isFunction    = environment.introspective.isFunction,
-    isObject      = environment.introspective.isObject,
-    isStringValue = environment.introspective.isStringValue,
+    Array         = global.Array,
 
-    math_random   = global.Math.random,
 
-    makeArray     = environment.helpers.makeArray,
+    env_introspective = environment.introspective,
+
+    isUndefined       = env_introspective.isUndefined,
+    isFunction        = env_introspective.isFunction,
+    isObject          = env_introspective.isObject,
+    isStringValue     = env_introspective.isStringValue,
+
+
+    math_random = global.Math.random,
+
+    array_from  = (isFunction(Array.from) && Array.from) || environment.helpers.makeArray,
 
 
     mutateArray_removeItemsByFilter = function (arr, filter) {
@@ -145,7 +154,7 @@ composable("modification.ao", function (require, global, environment) {
         return (type instanceof Constructor);
       },
       isJoinpointLike = function (type) {
-        return (
+        return !!(
           type && (typeof type == "object")
 
           && isFunction(type.getLabel) && isFunction(type.getTarget)
@@ -185,30 +194,10 @@ composable("modification.ao", function (require, global, environment) {
       },
 
       addJoinpoint = function (configOrJoinpoint) {
-        var joinpoint;
-        if (isJoinpointConfig(configOrJoinpoint)) {
-
-          joinpoint = createJoinpoint(configOrJoinpoint);
-
-        } else if (isJoinpoint(configOrJoinpoint) || isJoinpointLike(configOrJoinpoint)) {
-
-          joinpoint = configOrJoinpoint;
-        }
-        if (joinpoint && !joinpointList.some(makeFilter_equalsJoinpoint(joinpoint))) { // @TODO - enable 3rd return value [false] as for [removeJoinpoint]
-
-        // addJoinpoint
-          joinpointList.push(joinpoint);
-
-          EventProxy.emit({
-
-            type      : "joinpoint:add",
-            joinpoint : joinpoint
-          });
-        }
-        return joinpoint;
-      },
-      removeJoinpoint = function (configOrJoinpoint) {
-        var joinpoint;
+        var
+          joinpoint,
+          listItem
+        ;
         if (isJoinpointConfig(configOrJoinpoint)) {
 
           joinpoint = createJoinpoint(configOrJoinpoint);
@@ -219,21 +208,53 @@ composable("modification.ao", function (require, global, environment) {
         }
         if (joinpoint) {
 
-          var equalsJoinpoint = makeFilter_equalsJoinpoint(joinpoint);
-          if (joinpointList.some(equalsJoinpoint)) {
+          listItem = array_getItemByFilter(joinpointList, makeFilter_equalsJoinpoint(joinpoint));
+          if (!listItem) {
 
-          // this approach keeps the list reference that was passed into the privileged "Allocable_all" Trait Module.
+            // add Joinpoint
+            joinpointList.push(joinpoint);
+
+            EventProxy.emit({
+              type      : "joinpoint:add",
+              joinpoint : joinpoint
+            });
+          } else {
+            joinpoint = listItem;
+          }
+        }
+        return joinpoint; // :Joinpoint|undefined
+      },
+      removeJoinpoint = function (configOrJoinpoint) {
+        var
+          joinpoint,
+          equalsJoinpoint
+        ;
+        if (isJoinpointConfig(configOrJoinpoint)) {
+
+          joinpoint = createJoinpoint(configOrJoinpoint);
+
+        } else if (isJoinpoint(configOrJoinpoint) || isJoinpointLike(configOrJoinpoint)) {
+
+          joinpoint = configOrJoinpoint;
+        }
+        if (joinpoint) {
+
+          equalsJoinpoint = makeFilter_equalsJoinpoint(joinpoint);
+          joinpoint = array_getItemByFilter(joinpointList, equalsJoinpoint);
+
+          if (joinpoint) {
+
+            // remove Joinpoint
+            // this approach keeps the list reference that was passed into the privileged "Allocable_all" Trait Module.
             mutateArray_removeItemsByFilter(joinpointList, equalsJoinpoint);
 
             EventProxy.emit({
-
               type      : "joinpoint:remove",
               joinpoint : joinpoint
             });
           } else {
             joinpoint = false;
           }
-          equalsJoinpoint = null;
         }
         return joinpoint;
       }
@@ -319,7 +340,7 @@ composable("modification.ao", function (require, global, environment) {
 
       getPointcutById = function (id) {
         var pointcut;
-        if (isStringValue(id)) {
+        if (id && isStringValue(id)) {
           pointcut = pointcutMap[id];
         }
         return pointcut;
@@ -340,7 +361,6 @@ composable("modification.ao", function (require, global, environment) {
           if (pc) {
             pointcut = (pc.getId() === id) ? pc : false;
           }
-          isPointcutFilter = null;
         }
         return pointcut; // :Pointcut|false|undefined
       },
@@ -358,10 +378,16 @@ composable("modification.ao", function (require, global, environment) {
       },
 
       addPointcut = function (configOrPointcut) {
-        var config, pointcut;
+        var
+          config,
+          pointcut,
+          listItem
+        ;
         if (isPointcutConfig(configOrPointcut)) {
-          config = configOrPointcut;
-
+          config = {
+            id    : configOrPointcut.id,
+            filter: configOrPointcut.filter
+          };
           pointcut = getPointcutByConfig(config);               // :Pointcut|false|undefined
 
           if (isUndefined(pointcut)) {
@@ -385,17 +411,23 @@ composable("modification.ao", function (require, global, environment) {
             });                                                 // :Pointcut
           }
         }
-        if (pointcut && !pointcutList.some(makeFilter_equalsPointcut(pointcut))) {
+      //if (pointcut && !pointcutList.some(makeFilter_equalsPointcut(pointcut))) {
+        if (pointcut) {
 
-        // addPointcut
-          pointcutList.push(pointcut);
-          pointcutMap[pointcut.getId()] = pointcut;
+          listItem = array_getItemByFilter(pointcutList, makeFilter_equalsPointcut(pointcut));
+          if (!listItem) {
 
-          EventProxy.emit({
+            // add Pointcut
+            pointcutList.push(pointcut);
+            pointcutMap[pointcut.getId()] = pointcut;
 
-            type      : "pointcut:add",
-            pointcut  : pointcut
-          });
+            EventProxy.emit({
+              type      : "pointcut:add",
+              pointcut  : pointcut
+            });
+          } else {
+            pointcut = listItem;
+          }
         }
         return pointcut; // :Pointcut|false|undefined
       },
@@ -697,7 +729,7 @@ composable("modification.ao", function (require, global, environment) {
         handler(linkAdviceToPointcut, AspectOrientedModule); // Aspect Handler Arguments (API)
 
         aspect.getLinkList = function () {
-          return makeArray(linkList);
+          return array_from(linkList);
         };
         aspect.getHandler = function () {
           return handler;

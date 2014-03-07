@@ -84,6 +84,8 @@ composable("modification.ao", function (require, global, environment) {
     Observable    = require("components.Observable_SignalsAndSlots"),
 
 
+    Array         = global.Array,
+
     isUndefined   = environment.introspective.isUndefined,
     isFunction    = environment.introspective.isFunction,
     isObject      = environment.introspective.isObject, // (type && ((typeof type == "object") || (typeof type == "function")))
@@ -93,7 +95,7 @@ composable("modification.ao", function (require, global, environment) {
 
     math_random   = global.Math.random,
 
-    makeArray     = environment.helpers.makeArray,
+    array_from    = (isFunction(Array.from) && Array.from) || environment.helpers.makeArray,
 
 
     mutateArray_removeItemsByFilter = function (arr, filter) {
@@ -773,7 +775,7 @@ console.log("markForReconfirmation", [aspect.getId(), confirmationState.current,
         handler(linkAdviceToPointcut, AspectOrientedModule); // Aspect Handler Arguments (API)
 
         aspect.getLinkList = function () {
-          return makeArray(linkList);
+          return array_from(linkList);
         };
         aspect.getHandler = function () {
           return handler;

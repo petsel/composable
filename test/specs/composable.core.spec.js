@@ -116,7 +116,7 @@ describe("»composable« core", function () {
   describe("[composable.all]", function () {
 
 
-    var REG_X_MODULE_NAME = (/^(?:components|composites|entities\.[^.\s]+)|(?:environment(_[a-z]+)*\1*)$/);
+    var REG_X_MODULE_NAME = (/^(?:components|composites|entities|modification\.[^.\s]+)|(?:environment(_[a-z]+)*\1*)$/);
 
 
     it("should be a property of [composable].", function () {

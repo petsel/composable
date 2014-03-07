@@ -128,6 +128,13 @@ files = [
 
 
 
+  // @TODO - NEEDS TO BE ENTIRELY TESTED
+  // composable :: STRONGLY RECOMMENDED for Aspect Oriented Method Modification - a true Aspect Oriented System       //  fully Aspect Oriented Domain/System
+  "src/modification/modification.ao.js",                                                                              //  fully Aspect Oriented Domain/System
+//"src/modification/ao.js",                                                                                           //  fully Aspect Oriented Domain/System
+
+
+
 // load your spec files
 // load your spec files
 
@@ -247,6 +254,12 @@ files = [
  *
  *  // composable :: RECOMMENDED if one needs to save (sub) data structures of custom models into the [localStorage]  //  LocallyStorable
  *  composable.components.LocallyStorable.spec                                                                        //  LocallyStorable
+ *
+ *
+ *
+ *  // @TODO - NEEDS TO BE ENTIRELY TESTED
+ *  // composable :: STRONGLY RECOMMENDED for Aspect Oriented Method Modification - a true Aspect Oriented System     //  fully Aspect Oriented Domain/System
+ *  composable.modification.ao.spec                                                                                   //  fully Aspect Oriented Domain/System
  *
  *
  */
