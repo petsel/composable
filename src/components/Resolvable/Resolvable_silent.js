@@ -1,77 +1,44 @@
 
 
-composable("components.Resolvable_silent", function (require, global, internalBaseEnvironment) {
+composable("components.Resolvable_silent", function (require/*, global, internalBaseEnvironment*/) {
 
 
   "use strict";
 
 
 //require("components.Controllable_adviceTypes_before_after_around").call(global.Function.prototype);
-  require("composites.Function_modifiers_adviceTypes_before_after_around");
+//require("composites.Function_modifiers_adviceTypes_before_after_around");
 
 
   var
+    environment     = require("environment_extended_introspective_core"),
+    Resolvable      = require("components.Resolvable"),
+
+
     SilentTrait,
 
 
-    env_introspective = internalBaseEnvironment.introspective,
+    isObjectObject  = environment.introspective.isObjectObject,
 
 
-    isString        = env_introspective.isString,
-    isFunction      = env_introspective.isFunction,
-    isObjectObject  = env_introspective.isObjectObject,
+    hook = {}
+  ;
+  Resolvable.call(hook);
 
 
-    resolveBefore = function (methodName, rivalingMethod) {
-      if (isString(methodName) && isFunction(rivalingMethod)) {
+  var
+    resolveBefore     = hook.resolveBefore,
+    resolveAfter      = hook.resolveAfter,
+    resolveAround     = hook.resolveAround,
 
-        var type = this;
-        if (isFunction(type[methodName])) {
-
-          type[methodName] = type[methodName].before(rivalingMethod, type);
-        } else {
-          type[methodName] = rivalingMethod;
-        }
-      }
-    },
-    resolveAfter = function (methodName, rivalingMethod) {
-      if (isString(methodName) && isFunction(rivalingMethod)) {
-
-        var type = this;
-        if (isFunction(type[methodName])) {
-
-          type[methodName] = type[methodName].after(rivalingMethod, type);
-        } else {
-          type[methodName] = rivalingMethod;
-        }
-      }
-    },
-    resolveAround = function (methodName, rivalingMethod) {
-      if (isString(methodName) && isFunction(rivalingMethod)) {
-
-        var type = this;
-        if (isFunction(type[methodName])) {
-
-          type[methodName] = type[methodName].around(rivalingMethod, type);
-        } else {
-          type[methodName] = rivalingMethod;
-        }
-      }
-    },
-
-    resolveWithAlias = function (methodName, aliasName, rivalingMethod) {
-      if (isString(methodName) && isString(aliasName) && (methodName != aliasName) && isFunction(rivalingMethod)) {
-
-        this[aliasName] = rivalingMethod;
-      }
-    }
+    resolveWithAlias  = hook.resolveWithAlias
   ;
 
 
   SilentTrait = function (localProxy) { // Privileged Silent Trait using a Local Proxy (or rather a Mixin?)
     if (isObjectObject(localProxy)) {
 
-  //if (localProxy && (typeof localProxy == "object")) {
+    //if (localProxy && (typeof localProxy == "object")) {
       var type = this;
 
       localProxy.resolveBefore    = function (/*methodName, rivalingMethod*/) {resolveBefore.apply(type, arguments);};
@@ -95,8 +62,8 @@ composable("components.Resolvable_silent", function (require, global, internalBa
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          -   738 byte
-composable("components.Resolvable_silent",function(c,n,f){c("composites.Function_modifiers_adviceTypes_before_after_around");c=f.introspective;var e=c.isString,d=c.isFunction,g=c.isObjectObject,h=function(a,b){e(a)&&d(b)&&(d(this[a])?this[a]=this[a].before(b,this):this[a]=b)},k=function(a,b){e(a)&&d(b)&&(d(this[a])?this[a]=this[a].after(b,this):this[a]=b)},l=function(a,b){e(a)&&d(b)&&(d(this[a])?this[a]=this[a].around(b,this):this[a]=b)},m=function(a,b,c){e(a)&&e(b)&&a!=b&&d(c)&&(this[b]=c)};return function(a){if(g(a)){var b=this;a.resolveBefore=function(){h.apply(b,arguments)};a.resolveAfter=function(){k.apply(b,arguments)};a.resolveAround=function(){l.apply(b,arguments)};a.resolveWithAlias=function(){m.apply(b,arguments)}}}});
+- Simple          -   505 byte
+composable("components.Resolvable_silent",function(b){var a=b("environment_extended_introspective_core");b=b("components.Resolvable");var c=a.introspective.isObjectObject,a={};b.call(a);var d=a.resolveBefore,e=a.resolveAfter,f=a.resolveAround,g=a.resolveWithAlias;return function(a){if(c(a)){var b=this;a.resolveBefore=function(){d.apply(b,arguments)};a.resolveAfter=function(){e.apply(b,arguments)};a.resolveAround=function(){f.apply(b,arguments)};a.resolveWithAlias=function(){g.apply(b,arguments)}}}});
 
 
 */
@@ -105,88 +72,59 @@ composable("components.Resolvable_silent",function(c,n,f){c("composites.Function
 
 /*
 
-var Resolvable_silent = (function () {
+//https://gist.github.com/petsel/5592016
+(function(g){var b=function(a){return"function"==typeof a&&"function"==typeof a.call&&"function"==typeof a.apply},h=function(a,e,c,b){return function(){var d=arguments;e.call(c,d,b);return a.apply(c,d)}},k=function(a,e,c,d){return function(){var b,f=arguments;b=a.apply(c,f);e.call(c,b,f,d);return b}},l=function(a,b,c,d){return function(){return b.call(c,a,b,arguments,d)}},d=function(a){return a||void 0!==a&&null!==a?a:null},m=function(a,e,c){return b(this)&&b(a)&&h(this,a,d(e),d(c))||this},n=function(a,e,c){return b(this)&&b(a)&&k(this,a,d(e),d(c))||this},p=function(a,e,c){return b(this)&&b(a)&&l(this,a,d(e),d(c))||this};(function(){this.before=m;this.after=n;this.around=p}).call(g.prototype)})(Function);
 
-  "use strict";
+
+var Resolvable=function(){var d=function(a){return"string"==typeof a},c=function(a){return"function"==typeof a},f=function(a,b){d(a)&&c(b)&&(c(this[a])?this[a]=this[a].before(b,this):this[a]=b)},g=function(a,b){d(a)&&c(b)&&(c(this[a])?this[a]=this[a].after(b,this):this[a]=b)},h=function(a,b){d(a)&&c(b)&&(c(this[a])?this[a]=this[a].around(b,this):this[a]=b)},k=function(a,b,e){d(a)&&d(b)&&a!=b&&c(e)&&(this[b]=e)};return function(){this.resolveBefore=f;this.resolveAfter=g;this.resolveAround=h;this.resolveWithAlias=k}}();
+
+
+var Resolvable_silent = (function (global) {
 
   var
+    Resolvable = global.Resolvable,
+
     SilentTrait,
 
-    isString    = function (type) {
-      return (typeof type == "string");
-    },
-    isFunction  = function (type) {
-      return (typeof type == "function");
+
+    isObjectObject = function (type) {
+      return (type && (typeof type == "object"));
     },
 
-    resolveBefore = function (methodName, rivalingMethod) {
-      if (isString(methodName) && isFunction(rivalingMethod)) {
 
-        var type = this;
-        if (isFunction(type[methodName])) {
+    hook = {}
+  ;
+  Resolvable.call(hook);
 
-          type[methodName] = type[methodName].before(rivalingMethod, type);
-        } else {
-          type[methodName] = rivalingMethod;
-        }
-      }
-    },
-    resolveAfter = function (methodName, rivalingMethod) {
-      if (isString(methodName) && isFunction(rivalingMethod)) {
 
-        var type = this;
-        if (isFunction(type[methodName])) {
+  var
+    resolveBefore = hook.resolveBefore,
+    resolveAfter = hook.resolveAfter,
+    resolveAround = hook.resolveAround,
 
-          type[methodName] = type[methodName].after(rivalingMethod, type);
-        } else {
-          type[methodName] = rivalingMethod;
-        }
-      }
-    },
-    resolveAround = function (methodName, rivalingMethod) {
-      if (isString(methodName) && isFunction(rivalingMethod)) {
-
-        var type = this;
-        if (isFunction(type[methodName])) {
-
-          type[methodName] = type[methodName].around(rivalingMethod, type);
-        } else {
-          type[methodName] = rivalingMethod;
-        }
-      }
-    },
-
-    resolveWithAlias = function (methodName, aliasName, rivalingMethod) {
-      if (isString(methodName) && isString(aliasName) && (methodName != aliasName) && isFunction(rivalingMethod)) {
-
-        this[aliasName] = rivalingMethod;
-      }
-    }
+    resolveWithAlias = hook.resolveWithAlias
   ;
 
-  SilentTrait = function (localProxy) { // Privileged Silent Trait using a Local Proxy (or rather a Mixin?)
-    if (localProxy && (typeof localProxy == "object")) {
 
+  SilentTrait = function (localProxy) { // Privileged Silent Trait using a Local Proxy (or rather a Mixin?)
+    if (isObjectObject(localProxy)) {
+
+    //if (localProxy && (typeof localProxy == "object")) {
       var type = this;
 
-      localProxy.resolveBefore    = function (/ *methodName, rivalingMethod* /) {resolveBefore.apply(type, arguments);};
-      localProxy.resolveAfter     = function (/ *methodName, rivalingMethod* /) {resolveAfter.apply(type, arguments);};
-      localProxy.resolveAround    = function (/ *methodName, rivalingMethod* /) {resolveAround.apply(type, arguments);};
-      localProxy.resolveWithAlias = function (/ *methodName, aliasName, rivalingMethod* /) {resolveWithAlias.apply(type, arguments);};
+      localProxy.resolveBefore = function () {resolveBefore.apply(type, arguments);};
+      localProxy.resolveAfter = function () {resolveAfter.apply(type, arguments);};
+      localProxy.resolveAround = function () {resolveAround.apply(type, arguments);};
+      localProxy.resolveWithAlias = function () {resolveWithAlias.apply(type, arguments);};
     }
   };
 
+
   return SilentTrait;
 
-}());
 
-*/
+}(window || global || this));
 
-
-
-/*
-
-var Resolvable_silent=function(){var d=function(a){return"string"==typeof a},c=function(a){return"function"==typeof a},f=function(a,b){d(a)&&c(b)&&(c(this[a])?this[a]=this[a].before(b,this):this[a]=b)},g=function(a,b){d(a)&&c(b)&&(c(this[a])?this[a]=this[a].after(b,this):this[a]=b)},h=function(a,b){d(a)&&c(b)&&(c(this[a])?this[a]=this[a].around(b,this):this[a]=b)},k=function(a,b,e){d(a)&&d(b)&&a!=b&&c(e)&&(this[b]=e)};return function(a){if(a&&"object"==typeof a){var b=this;a.resolveBefore=function(){f.apply(b,arguments)};a.resolveAfter=function(){g.apply(b,arguments)};a.resolveAround=function(){h.apply(b,arguments)};a.resolveWithAlias=function(){k.apply(b,arguments)}}}}();
 
 
 var Floatable = function () {
