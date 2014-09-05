@@ -44,7 +44,7 @@ composable("components.Requiring_silent", function (require, global, internalBas
 /*
 
 
-[http://closure-compiler.appspot.com/home]
+  [http://closure-compiler.appspot.com/home]
 
 
 - Simple          -   242 byte

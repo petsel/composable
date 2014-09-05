@@ -1,3 +1,5 @@
+
+
 composable("components.Requiring", function (require, global, internalBaseEnvironment) {
 
 
@@ -92,7 +94,7 @@ composable("components.Requiring", function (require, global, internalBaseEnviro
 /*
 
 
-[http://closure-compiler.appspot.com/home]
+  [http://closure-compiler.appspot.com/home]
 
 
 - Simple          -   538 byte
