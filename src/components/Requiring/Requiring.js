@@ -1,26 +1,30 @@
 
 
-composable("components.Requiring", function (require, global, internalBaseEnvironment) {
+composable("components.Requiring", function (require, global/*, internalBaseEnvironment*/) {
 
 
   "use strict";
 
 
   var
+    environment   = require("environment_extended_introspective_core"),
+
+
     Trait,
 
 
-    env_introspective = internalBaseEnvironment.introspective,
-
-    isFunction = env_introspective.isFunction,
-    isString = env_introspective.isString,
-    isArray = env_introspective.isArray,
-    isArguments = env_introspective.isArguments,
+    env_introspective = environment.introspective,
 
 
-    Array = global.Array,
+    isFunction    = env_introspective.isFunction,
+    isString      = env_introspective.isString,
+    isArray       = env_introspective.isArray,
+    isArguments   = env_introspective.isArguments,
 
-    array_from = (isFunction(Array.from) && Array.from) || internalBaseEnvironment.helpers.makeArray,
+
+    Array         = global.Array,
+
+    array_from    = (isFunction(Array.from) && Array.from) || environment.helpers.makeArray,
 
     array_flatten = function flatten (list) {
       list = (isArguments(list) && array_from(list)) || list;
@@ -55,10 +59,10 @@ composable("components.Requiring", function (require, global, internalBaseEnviro
       array_flatten(
         arguments
       ).filter(
-          isString
-        ).forEach(function (methodName) {
-          isFunction(type[methodName]) || missingMethodNames.push(methodName);
-        });
+        isString
+      ).forEach(function (methodName) {
+        isFunction(type[methodName]) || missingMethodNames.push(methodName);
+      });
 
       if (missingMethodNames.length) {
         throw (new TypeError([
@@ -97,8 +101,8 @@ composable("components.Requiring", function (require, global, internalBaseEnviro
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          -   538 byte
-composable("components.Requiring",function(b,c,d){b=d.introspective;var e=b.isFunction,f=b.isString,g=b.isArray,h=b.isArguments;c=c.Array;var k=e(c.from)&&c.from||d.helpers.makeArray,m=function l(a){a=h(a)&&k(a)||a;g(a)&&(a=a.reduce(function(a,b){return a.concat(l(b))},[]));return a},n=function(){var b=this,a=[];m(arguments).filter(f).forEach(function(c){e(b[c])||a.push(c)});if(a.length)throw new TypeError(["The",b,"type misses following required methods -",'["'+a.join('", "')+'"]'].join(" "));};return function(){this.requires=n}});
+- Simple          -   579 byte
+composable("components.Requiring",function(e,f){var c=e("environment_extended_introspective_core"),b=c.introspective,d=b.isFunction,g=b.isString,h=b.isArray,k=b.isArguments,b=f.Array,l=d(b.from)&&b.from||c.helpers.makeArray,n=function m(a){a=k(a)&&l(a)||a;h(a)&&(a=a.reduce(function(a,b){return a.concat(m(b))},[]));return a},p=function(){var b=this,a=[];n(arguments).filter(g).forEach(function(c){d(b[c])||a.push(c)});if(a.length)throw new TypeError(["The",b,"type misses following required methods -",'["'+a.join('", "')+'"]'].join(" "));};return function(){this.requires=p}});
 
 
 */
