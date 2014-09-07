@@ -1,6 +1,6 @@
 
 
-composable("components.Resolvable", function (require, global, internalBaseEnvironment) {
+composable("components.Resolvable", function (require/*, global, internalBaseEnvironment*/) {
 
 
   "use strict";
@@ -11,14 +11,17 @@ composable("components.Resolvable", function (require, global, internalBaseEnvir
 
 
   var
+    environment   = require("environment_extended_introspective_core"),
+
+
     Trait,
 
 
-    env_introspective = internalBaseEnvironment.introspective,
+    env_introspective = environment.introspective,
 
 
-    isString        = env_introspective.isString,
-    isFunction      = env_introspective.isFunction,
+    isFunction    = env_introspective.isFunction,
+    isString      = env_introspective.isString,
 
 
     resolveBefore = function (methodName, rivalingMethod) {
@@ -90,8 +93,8 @@ composable("components.Resolvable", function (require, global, internalBaseEnvir
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          -   578 byte
-composable("components.Resolvable",function(c,m,f){c("composites.Function_modifiers_adviceTypes_before_after_around");c=f.introspective;var e=c.isString,d=c.isFunction,g=function(a,b){e(a)&&d(b)&&(d(this[a])?this[a]=this[a].before(b,this):this[a]=b)},h=function(a,b){e(a)&&d(b)&&(d(this[a])?this[a]=this[a].after(b,this):this[a]=b)},k=function(a,b){e(a)&&d(b)&&(d(this[a])?this[a]=this[a].around(b,this):this[a]=b)},l=function(a,b,c){e(a)&&e(b)&&a!=b&&d(c)&&(this[b]=c)};return function(){this.resolveBefore=g;this.resolveAfter=h;this.resolveAround=k;this.resolveWithAlias=l}});
+- Simple          -   617 byte
+composable("components.Resolvable",function(c){c("composites.Function_modifiers_adviceTypes_before_after_around");c=c("environment_extended_introspective_core").introspective;var d=c.isFunction,e=c.isString,f=function(a,b){e(a)&&d(b)&&(d(this[a])?this[a]=this[a].before(b,this):this[a]=b)},g=function(a,b){e(a)&&d(b)&&(d(this[a])?this[a]=this[a].after(b,this):this[a]=b)},h=function(a,b){e(a)&&d(b)&&(d(this[a])?this[a]=this[a].around(b,this):this[a]=b)},k=function(a,b,c){e(a)&&e(b)&&a!=b&&d(c)&&(this[b]=c)};return function(){this.resolveBefore=f;this.resolveAfter=g;this.resolveAround=h;this.resolveWithAlias=k}});
 
 
 */
