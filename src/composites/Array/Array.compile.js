@@ -28,16 +28,17 @@ composable(/*"composites.Array_compile"*/"", function (require, global/*, intern
 
         thisArr.length = arr.length;
 
-      //arr.forEach(function (entry, idx/*, arr*/) {
-      //  thisArr[idx] = entry;
-      //});
-        thisArr.map(function (entry, idx/*, thisArr*/) {
-          return arr[idx];
+        arr.forEach(function (entry, idx/*, arr*/) {
+          thisArr[idx] = entry;
         });
       }
       return thisArr;
-    }
+    },
+
+    hook = {}
   ;
+  array_initialize.call(hook);
+  array_initialize = hook.initializeArray;
 
 
   (!isFunction(array_prototype.compile) || (array_prototype.compile.length !== 2)) && (array_prototype.compile = compileArray);
@@ -53,11 +54,11 @@ composable(/*"composites.Array_compile"*/"", function (require, global/*, intern
 /*
 
 
-  [http://closure-compiler.appspot.com/home]
+[http://closure-compiler.appspot.com/home]
 
 
-- Simple          -   381 byte
-composable("",function(d,e){var a=d("environment_extended_introspective_core"),f=d("components.Enumerable_initializeArray"),b=e.Array.prototype,g=a.introspective.isFunction,h=a.introspective.isArray,a=function(a,b){var c;h(this)&&(c=f.apply(c,arguments))&&(this.length=c.length,this.map(function(a,b){return c[b]}));return this};g(b.compile)&&2===b.compile.length||(b.compile=a)});
+- Simple          -   410 byte
+composable("",function(f,h){var a=f("environment_extended_introspective_core"),e=f("components.Enumerable_initializeArray"),b=h.Array.prototype,k=a.introspective.isFunction,l=a.introspective.isArray,a=function(a,b){var c=this,d;l(c)&&(d=e.apply(d,arguments))&&(c.length=d.length,d.forEach(function(a,b){c[b]=a}));return c},g={};e.call(g);e=g.initializeArray;k(b.compile)&&2===b.compile.length||(b.compile=a)});
 
 
 */
