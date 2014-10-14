@@ -32,7 +32,7 @@ composable("components.Excluding_silent", function (require/*, global, internalB
       var type = this;
 
       localProxy.excludes = function (/*methodName:string[, methodName:string[, ...]] | [methodName:string, methodName:string, ...]*/) {
-        excludes.apply(type, arguments);
+        return excludes.apply(type, arguments);
       };
     }
   };
@@ -51,8 +51,8 @@ composable("components.Excluding_silent", function (require/*, global, internalB
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          -   288 byte
-composable("components.Excluding_silent",function(a){var b=a("environment_extended_introspective_core");a=a("components.Excluding");var c=b.introspective.isObjectObject,b={};a.call(b);var d=b.excludes;return function(a){if(c(a)){var b=this;a.excludes=function(){d.apply(b,arguments)}}}});
+- Simple          -   295 byte
+composable("components.Excluding_silent",function(a){var b=a("environment_extended_introspective_core");a=a("components.Excluding");var c=b.introspective.isObjectObject,b={};a.call(b);var d=b.excludes;return function(a){if(c(a)){var b=this;a.excludes=function(){return d.apply(b,arguments)}}}});
 
 
 */
