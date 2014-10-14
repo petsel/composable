@@ -50,15 +50,28 @@ composable("components.Excluding", function (require, global/*, internalBaseEnvi
 
 
     excludes = function (/*methodName:string[, methodName:string[, ...]] | [methodName:string, methodName:string, ...]*/) {
-      var type = this;
+      var
+        type = this,
+
+        excludedMethodsMap = null,
+
+        deleteMethod = function (type, methodName) {
+          (excludedMethodsMap || (excludedMethodsMap = {}));
+
+          excludedMethodsMap[methodName] = type[methodName];
+          delete type[methodName];
+        }
+      ;
 
       array_flatten(
         arguments
       ).filter(
         isString
       ).forEach(function (methodName) {
-        isFunction(type[methodName]) && (delete type[methodName]);
+        isFunction(type[methodName]) && deleteMethod(type, methodName);
       });
+
+      return excludedMethodsMap;
     }
   ;
 
@@ -83,8 +96,8 @@ composable("components.Excluding", function (require, global/*, internalBaseEnvi
   [http://closure-compiler.appspot.com/home]
 
 
-- Simple          -   454 byte
-composable("components.Excluding",function(e,f){var c=e("environment_extended_introspective_core"),b=c.introspective,d=b.isFunction,g=b.isString,h=b.isArray,k=b.isArguments,b=f.Array,l=d(b.from)&&b.from||c.helpers.makeArray,n=function m(a){a=k(a)&&l(a)||a;h(a)&&(a=a.reduce(function(a,b){return a.concat(m(b))},[]));return a},p=function(){var b=this;n(arguments).filter(g).forEach(function(a){d(b[a])&&delete b[a]})};return function(){this.excludes=p}});
+- Simple          -   502 byte
+composable("components.Excluding",function(f,g){var c=f("environment_extended_introspective_core"),b=c.introspective,e=b.isFunction,h=b.isString,k=b.isArray,l=b.isArguments,b=g.Array,m=e(b.from)&&b.from||c.helpers.makeArray,p=function n(a){a=l(a)&&m(a)||a;k(a)&&(a=a.reduce(function(a,b){return a.concat(n(b))},[]));return a},q=function(){var b=this,a=null;p(arguments).filter(h).forEach(function(d){if(e(b[d])){var c=b;a||(a={});a[d]=c[d];delete c[d]}});return a};return function(){this.excludes=q}});
 
 
 */
