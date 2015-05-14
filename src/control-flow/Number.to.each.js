@@ -54,6 +54,37 @@ composable("control_flow.Number_to_each", function (require, global) {
 
 
   var
+    toArray = function (from, to) {
+      var
+        arr,
+
+        count,
+        len,
+        idx = -1
+      ;
+      if (from <= to) {
+
+        count = (from - 1);
+        len = (to - count);
+
+        arr = [];
+        while (++idx < len) {
+          arr.push(++count);
+        }
+      } else {
+
+        count = (from + 1);
+        len = math_abs(to - count);
+
+        arr = [];
+        while (++idx < len) {
+          arr.push(--count);
+        }
+      }
+      return arr;
+    },
+
+
     each = function (from, to, fct, target) {
 
       if (isFunction(fct)) {
@@ -100,6 +131,10 @@ composable("control_flow.Number_to_each", function (require, global) {
       };
       this.toString = function () {
         return ("" + initialValue);
+      };
+
+      this.toArray = function () {
+        return toArray(startValue, endValue);
       };
 
       this.each = function (fct, target) {
