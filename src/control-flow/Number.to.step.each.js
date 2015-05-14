@@ -29,7 +29,6 @@ composable("control_flow.Number_to_step_each", function (require, global) {
     Math    = global.Math,
 
 
-
     math_floor  = Math.floor,
     math_abs    = Math.abs,
 
@@ -55,6 +54,37 @@ composable("control_flow.Number_to_step_each", function (require, global) {
 
 
   var
+    toArray = function (step, from, to) {
+      var
+        arr,
+
+        count,
+        len,
+        idx = -1
+      ;
+      if (from <= to) {
+
+        count = (from - step);
+        len = math_floor((to - count) / step);
+
+        arr = [];
+        while (++idx < len) {
+          arr.push(count = count + step);
+        }
+      } else {
+
+        count = (from + step);
+        len = math_floor(math_abs(to - count) / step);
+
+        arr = [];
+        while (++idx < len) {
+          arr.push(count = count - step);
+        }
+      }
+      return arr;
+    },
+
+
     each = function (from, to, fct, target) {
 
       if (isFunction(fct)) {
@@ -133,6 +163,10 @@ composable("control_flow.Number_to_step_each", function (require, global) {
       };
       this.toString = function () {
         return ("" + initialValue);
+      };
+
+      this.toArray = function () {
+        return toArray(stepValue, startValue, endValue);
       };
 
       this.step = function (step) {
